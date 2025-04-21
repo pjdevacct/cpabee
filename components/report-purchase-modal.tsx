@@ -23,11 +23,13 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
   const [selectedReport, setSelectedReport] = useState<ReportType | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
+  const [debugInfo, setDebugInfo] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setError("")
+    setDebugInfo(null)
 
     try {
       // For FREE type, we don't need to validate report selection anymore
@@ -38,6 +40,8 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
         return
       }
 
+      console.log(`Submitting ${type} report request for ${email}`)
+
       // Create payment - for FREE type, we always use "SAMPLE" as reportType
       const result = await createPayment({
         email,
@@ -45,23 +49,29 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
         paymentType: type,
       })
 
+      console.log("Payment result:", result)
+
       if (result.success) {
         if (result.redirectUrl) {
           // Redirect to Square payment page
+          console.log("Redirecting to:", result.redirectUrl)
           window.location.href = result.redirectUrl
         } else {
           // Show success message for free reports
+          console.log("Free report request successful")
           onClose()
           // You could show a toast notification here
           alert(result.message || "Your free sample report has been sent to your email.")
         }
       } else {
+        console.error("Payment request failed:", result.message)
         setError(result.message || "Failed to process your request. Please try again.")
         setIsSubmitting(false)
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error in submission:", error)
       setError("An unexpected error occurred. Please try again.")
+      setDebugInfo(error.message || "Unknown error")
       setIsSubmitting(false)
     }
   }
@@ -182,7 +192,18 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
             </div>
           )}
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && (
+            <div className="text-sm text-red-500 p-3 bg-red-50 rounded-md">
+              <p className="font-medium">Error:</p>
+              <p>{error}</p>
+              {debugInfo && (
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-xs">Technical Details</summary>
+                  <p className="text-xs mt-1 break-words">{debugInfo}</p>
+                </details>
+              )}
+            </div>
+          )}
 
           <div className="flex justify-end">
             <Button

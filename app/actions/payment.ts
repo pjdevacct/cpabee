@@ -12,10 +12,19 @@ const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN
 const SQUARE_LOCATION_ID = process.env.SQUARE_LOCATION_ID
 
 // Initialize Square client
-const squareClient = new Client({
-  accessToken: SQUARE_ACCESS_TOKEN,
-  environment: process.env.NODE_ENV === "production" ? Environment.Production : Environment.Sandbox,
-})
+let squareClient: Client | null = null
+try {
+  if (SQUARE_ACCESS_TOKEN) {
+    squareClient = new Client({
+      accessToken: SQUARE_ACCESS_TOKEN,
+      environment: process.env.NODE_ENV === "production" ? Environment.Production : Environment.Sandbox,
+    })
+  } else {
+    console.warn("Square client not initialized: Missing SQUARE_ACCESS_TOKEN")
+  }
+} catch (error) {
+  console.error("Failed to initialize Square client:", error)
+}
 
 // Mock database for tracking free samples (in a real app, use a database)
 // This is just for demonstration - in production use a real database
@@ -28,11 +37,20 @@ interface PaymentData {
 }
 
 export async function createPayment(data: PaymentData) {
+  console.log("Starting createPayment with data:", {
+    email: data.email,
+    reportType: data.reportType,
+    paymentType: data.paymentType,
+  })
+
   try {
     // For free samples, check if email has already received one
     if (data.paymentType === "FREE") {
+      console.log("Processing free sample request")
+
       // In a real app, query your database here
       if (freeSampleEmails.has(data.email)) {
+        console.log("Email already received a free sample:", data.email)
         return {
           success: false,
           message: "This email has already received a free sample report.",
@@ -41,32 +59,54 @@ export async function createPayment(data: PaymentData) {
 
       // Mark this email as having received a free sample
       freeSampleEmails.add(data.email)
+      console.log("Added email to free sample list:", data.email)
 
-      // Always use SAMPLE report type for free samples
-      await deliverReport(data.email, "SAMPLE", true)
+      try {
+        // Always use SAMPLE report type for free samples
+        console.log("Attempting to deliver sample report")
+        await deliverReport(data.email, "SAMPLE", true)
+        console.log("Sample report delivered successfully")
 
-      return {
-        success: true,
-        message: "Your free sample report has been sent to your email.",
+        return {
+          success: true,
+          message: "Your free sample report has been sent to your email.",
+        }
+      } catch (deliveryError) {
+        console.error("Error delivering sample report:", deliveryError)
+        return {
+          success: false,
+          message: "We encountered an issue sending your sample report. Please try again or contact support.",
+        }
       }
     }
 
     // For paid reports, create a Square payment
+    console.log("Processing paid report request")
     const amount = data.paymentType === "SINGLE" ? 1900 : 4900 // in cents - updated from 2900 to 1900
     const itemName =
       data.paymentType === "SINGLE" ? `CPA Report: ${data.reportType}` : "CPA Reports: Full Access Bundle"
 
     // Store payment info in cookies for retrieval after payment completion
-    cookies().set("cpabee_payment_data", JSON.stringify(data), {
-      maxAge: 60 * 30, // 30 minutes
-      path: "/",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-    })
+    try {
+      cookies().set("cpabee_payment_data", JSON.stringify(data), {
+        maxAge: 60 * 30, // 30 minutes
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      })
+      console.log("Payment data stored in cookie")
+    } catch (cookieError) {
+      console.error("Error setting payment cookie:", cookieError)
+      // Continue even if cookie setting fails
+    }
 
-    if (!SQUARE_ACCESS_TOKEN || !SQUARE_LOCATION_ID) {
-      console.error("Square credentials not configured")
+    if (!SQUARE_ACCESS_TOKEN || !SQUARE_LOCATION_ID || !squareClient) {
+      console.error("Square credentials not configured", {
+        hasToken: !!SQUARE_ACCESS_TOKEN,
+        hasLocationId: !!SQUARE_LOCATION_ID,
+        hasClient: !!squareClient,
+      })
       return {
         success: false,
         message: "Payment system is not properly configured. Please contact support.",
@@ -75,10 +115,13 @@ export async function createPayment(data: PaymentData) {
 
     // Create a Square payment link
     try {
-      const redirectUrl = new URL(process.env.VERCEL_URL || "http://localhost:3000")
-      redirectUrl.pathname = "/checkout/success"
+      console.log("Creating Square payment link")
+      const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"
 
-      const cancelUrl = new URL(process.env.VERCEL_URL || "http://localhost:3000")
+      console.log("Using base URL:", baseUrl)
+
+      const redirectUrl = new URL(baseUrl)
+      redirectUrl.pathname = "/checkout/success"
 
       const paymentLinkRequest: CreatePaymentLinkRequest = {
         idempotencyKey: `cpabee-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`,
@@ -100,15 +143,25 @@ export async function createPayment(data: PaymentData) {
         },
       }
 
+      console.log("Payment link request prepared:", {
+        idempotencyKey: paymentLinkRequest.idempotencyKey,
+        name: itemName,
+        amount: amount,
+        redirectUrl: redirectUrl.toString(),
+      })
+
       const response = await squareClient.checkoutApi.createPaymentLink(paymentLinkRequest)
+      console.log("Square API response received")
 
       if (response.result.paymentLink?.url) {
+        console.log("Payment link created successfully")
         return {
           success: true,
           redirectUrl: response.result.paymentLink.url,
         }
       } else {
-        throw new Error("Failed to create payment link")
+        console.error("No payment link URL in Square response")
+        throw new Error("Failed to create payment link - no URL returned")
       }
     } catch (error) {
       console.error("Square API error:", error)
@@ -127,10 +180,13 @@ export async function createPayment(data: PaymentData) {
 }
 
 export async function handlePaymentSuccess(paymentId: string) {
+  console.log("Processing successful payment:", paymentId)
+
   try {
     // Retrieve the payment data from cookies
     const paymentDataCookie = cookies().get("cpabee_payment_data")
     if (!paymentDataCookie?.value) {
+      console.error("Payment data cookie not found")
       return {
         success: false,
         message: "Payment data not found.",
@@ -138,17 +194,39 @@ export async function handlePaymentSuccess(paymentId: string) {
     }
 
     const paymentData = JSON.parse(paymentDataCookie.value) as PaymentData
+    console.log("Retrieved payment data from cookie:", {
+      email: paymentData.email,
+      reportType: paymentData.reportType,
+      paymentType: paymentData.paymentType,
+    })
 
     // Deliver the report(s) based on the payment type
-    if (paymentData.paymentType === "SINGLE") {
-      await deliverReport(paymentData.email, paymentData.reportType)
-    } else if (paymentData.paymentType === "BUNDLE") {
-      // Deliver all reports
-      await deliverAllReports(paymentData.email)
+    try {
+      if (paymentData.paymentType === "SINGLE") {
+        console.log("Delivering single report:", paymentData.reportType)
+        await deliverReport(paymentData.email, paymentData.reportType)
+      } else if (paymentData.paymentType === "BUNDLE") {
+        console.log("Delivering all reports bundle")
+        // Deliver all reports
+        await deliverAllReports(paymentData.email)
+      }
+    } catch (deliveryError) {
+      console.error("Error delivering report(s):", deliveryError)
+      return {
+        success: false,
+        message:
+          "Payment was successful, but we encountered an issue delivering your report(s). Our team has been notified and will send your report(s) manually.",
+      }
     }
 
     // Clear the payment data cookie
-    cookies().delete("cpabee_payment_data")
+    try {
+      cookies().delete("cpabee_payment_data")
+      console.log("Payment data cookie cleared")
+    } catch (cookieError) {
+      console.error("Error clearing payment cookie:", cookieError)
+      // Continue even if cookie deletion fails
+    }
 
     return {
       success: true,
@@ -165,12 +243,16 @@ export async function handlePaymentSuccess(paymentId: string) {
 
 // Helper function to deliver a single report
 async function deliverReport(email: string, reportType: ReportType | "ALL" | "SAMPLE", isSample = false) {
+  console.log(`Starting report delivery: ${reportType} to ${email}`)
+
   // Get the actual report URL
   let reportUrl: string | null = null
 
   try {
     // Try to get the URL
+    console.log(`Getting signed URL for report type: ${reportType}`)
     reportUrl = await getSignedReportUrl(reportType)
+    console.log(`Report URL obtained: ${reportUrl ? "Success" : "Not found"}`)
   } catch (error) {
     console.error(`Error getting report URL: ${error}`)
   }
@@ -182,6 +264,7 @@ async function deliverReport(email: string, reportType: ReportType | "ALL" | "SA
 
   // Prepare email content
   const subject = `Your CPABee Report: ${reportName}`
+  console.log(`Preparing email with subject: ${subject}`)
 
   // Different email content based on whether we have a report URL
   const text = hasReport
@@ -317,9 +400,43 @@ async function deliverReport(email: string, reportType: ReportType | "ALL" | "SA
       </html>
     `
 
+  // Check if we have the required token for sending emails
+  if (!MAILSEND_TOKEN) {
+    console.error("MAILSEND_TOKEN is not configured")
+    throw new Error("Email service is not properly configured")
+  }
+
   // Send email using MailSend API
   try {
+    console.log("Sending email via MailSend API")
     const webhookUrl = `https://api.mailersend.com/v1/email`
+
+    const emailPayload = {
+      from: {
+        email: "reports@cpabee.com",
+        name: "CPABee Reports",
+      },
+      to: [
+        {
+          email: email,
+          name: "CPABee Customer",
+        },
+      ],
+      subject: subject,
+      text: text,
+      html: html,
+      reply_to: {
+        email: ADMIN_EMAIL,
+        name: "CPABee Support",
+      },
+    }
+
+    console.log("Email payload prepared:", {
+      to: email,
+      subject: subject,
+      hasHtml: !!html,
+      hasText: !!text,
+    })
 
     const response = await fetch(webhookUrl, {
       method: "POST",
@@ -328,35 +445,26 @@ async function deliverReport(email: string, reportType: ReportType | "ALL" | "SA
         Authorization: `Bearer ${MAILSEND_TOKEN}`,
         "X-Requested-With": "XMLHttpRequest",
       },
-      body: JSON.stringify({
-        from: {
-          email: "reports@cpabee.com",
-          name: "CPABee Reports",
-        },
-        to: [
-          {
-            email: email,
-            name: "CPABee Customer",
-          },
-        ],
-        subject: subject,
-        text: text,
-        html: html,
-        reply_to: {
-          email: ADMIN_EMAIL,
-          name: "CPABee Support",
-        },
-      }),
+      body: JSON.stringify(emailPayload),
     })
 
     if (!response.ok) {
-      const responseData = await response.json()
+      const responseData = await response.json().catch(() => ({}))
       console.error("Email API error:", responseData)
+      console.error("Response status:", response.status, response.statusText)
       throw new Error(`Failed to send report: ${responseData.message || response.statusText}`)
     }
 
+    console.log("Email sent successfully")
+
     // Also send a notification to admin
-    await sendAdminNotification(email, reportType, isSample, hasReport)
+    try {
+      await sendAdminNotification(email, reportType, isSample, hasReport)
+      console.log("Admin notification sent")
+    } catch (notificationError) {
+      console.error("Failed to send admin notification:", notificationError)
+      // Continue even if admin notification fails
+    }
 
     return true
   } catch (error) {
@@ -367,8 +475,16 @@ async function deliverReport(email: string, reportType: ReportType | "ALL" | "SA
 
 // Helper function to deliver all reports
 async function deliverAllReports(email: string) {
+  console.log(`Starting delivery of all reports to ${email}`)
+
   // Option 1: Send a single email with all reports bundled
-  await deliverReport(email, "ALL")
+  try {
+    await deliverReport(email, "ALL")
+    console.log("All reports bundle delivered successfully")
+  } catch (error) {
+    console.error("Error delivering all reports bundle:", error)
+    throw error
+  }
 
   // Option 2: Send individual emails for each report
   // Uncomment this if you prefer to send separate emails
@@ -389,6 +505,8 @@ async function sendAdminNotification(
   isSample = false,
   reportDelivered = true,
 ) {
+  console.log(`Sending admin notification for ${reportType} report to ${email}`)
+
   const subject = `New CPABee Report ${isSample ? "Sample Request" : "Purchase"}: ${email}`
   const text = `
     New report ${isSample ? "sample request" : "purchase"} from CPABee website:
@@ -407,10 +525,16 @@ async function sendAdminNotification(
     <p><strong>Time:</strong> ${new Date().toISOString()}</p>
   `
 
+  // Check if we have the required token for sending emails
+  if (!MAILSEND_TOKEN) {
+    console.error("MAILSEND_TOKEN is not configured for admin notification")
+    return // Don't throw, just return
+  }
+
   try {
     const webhookUrl = `https://api.mailersend.com/v1/email`
 
-    await fetch(webhookUrl, {
+    const response = await fetch(webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -437,6 +561,14 @@ async function sendAdminNotification(
         },
       }),
     })
+
+    if (!response.ok) {
+      const responseData = await response.json().catch(() => ({}))
+      console.error("Admin notification API error:", responseData)
+      console.error("Response status:", response.status, response.statusText)
+    } else {
+      console.log("Admin notification sent successfully")
+    }
   } catch (error) {
     console.error("Error sending admin notification:", error)
     // Don't throw here, as this is just a notification
