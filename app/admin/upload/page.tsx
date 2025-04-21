@@ -14,7 +14,9 @@ export default function UploadReportPage() {
   const [reportType, setReportType] = useState("SAMPLE")
   const [adminSecret, setAdminSecret] = useState("")
   const [isUploading, setIsUploading] = useState(false)
-  const [result, setResult] = useState<{ success?: boolean; url?: string; error?: string } | null>(null)
+  const [result, setResult] = useState<{ success?: boolean; url?: string; error?: string; details?: string } | null>(
+    null,
+  )
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -47,10 +49,18 @@ export default function UploadReportPage() {
       if (response.ok) {
         setResult({ success: true, url: data.url })
       } else {
-        setResult({ success: false, error: data.error || "Failed to upload report" })
+        setResult({
+          success: false,
+          error: data.error || "Failed to upload report",
+          details: data.details || "No additional details available",
+        })
       }
-    } catch (error) {
-      setResult({ success: false, error: "An unexpected error occurred" })
+    } catch (error: any) {
+      setResult({
+        success: false,
+        error: "An unexpected error occurred",
+        details: error.message || "Check the console for more information",
+      })
     } finally {
       setIsUploading(false)
     }
@@ -100,6 +110,11 @@ export default function UploadReportPage() {
             <div className="space-y-2">
               <Label htmlFor="file">Report PDF</Label>
               <Input id="file" type="file" accept=".pdf" onChange={handleFileChange} required />
+              {selectedFile && (
+                <p className="text-xs text-gray-500">
+                  Selected file: {selectedFile.name} ({Math.round(selectedFile.size / 1024)} KB)
+                </p>
+              )}
             </div>
 
             <Button type="submit" className="w-full" disabled={isUploading}>
@@ -126,6 +141,7 @@ export default function UploadReportPage() {
               <div className="text-red-600">
                 <p className="font-medium">Upload failed</p>
                 <p className="text-sm mt-1">{result.error}</p>
+                {result.details && <p className="text-xs mt-1 bg-red-50 p-2 rounded">Details: {result.details}</p>}
               </div>
             )}
           </CardFooter>

@@ -7,20 +7,25 @@ export type ExtendedReportType = ReportType | "ALL" | "SAMPLE"
 // Function to upload a report to Vercel Blob
 export async function uploadReport(reportType: ExtendedReportType, file: File | Buffer) {
   try {
+    console.log(`Starting upload for ${reportType} report, file type:`, typeof file)
+
     // Generate a unique filename with timestamp
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
     const filename = `${reportType}_Report_${timestamp}.pdf`
+
+    console.log(`Uploading to path: reports/${reportType}/${filename}`)
 
     // Upload to Vercel Blob
     const blob = await put(`reports/${reportType}/${filename}`, file, {
       access: "private",
     })
 
-    console.log(`Uploaded ${reportType} report:`, blob.url)
+    console.log(`Upload successful for ${reportType} report:`, blob.url)
     return blob.url
-  } catch (error) {
-    console.error(`Error uploading ${reportType} report:`, error)
-    throw error
+  } catch (error: any) {
+    console.error(`Error uploading ${reportType} report:`, error.message || error)
+    // Re-throw with more context for better debugging
+    throw new Error(`Blob upload failed: ${error.message || "Unknown error"}`)
   }
 }
 
