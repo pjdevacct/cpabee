@@ -23,7 +23,7 @@ const freeSampleEmails = new Set<string>()
 
 interface PaymentData {
   email: string
-  reportType: ReportType | "ALL"
+  reportType: ReportType | "ALL" | "SAMPLE"
   paymentType: "FREE" | "SINGLE" | "BUNDLE"
 }
 
@@ -42,8 +42,8 @@ export async function createPayment(data: PaymentData) {
       // Mark this email as having received a free sample
       freeSampleEmails.add(data.email)
 
-      // Deliver the free sample report
-      await deliverReport(data.email, data.reportType, true)
+      // Always use SAMPLE report type for free samples
+      await deliverReport(data.email, "SAMPLE", true)
 
       return {
         success: true,
@@ -164,13 +164,13 @@ export async function handlePaymentSuccess(paymentId: string) {
 }
 
 // Helper function to deliver a single report
-async function deliverReport(email: string, reportType: ReportType | "ALL", isSample = false) {
+async function deliverReport(email: string, reportType: ReportType | "ALL" | "SAMPLE", isSample = false) {
   // Get the actual report URL
   let reportUrl: string | null = null
 
   try {
     // Try to get the URL
-    reportUrl = await getSignedReportUrl(isSample ? "SAMPLE" : reportType)
+    reportUrl = await getSignedReportUrl(reportType)
   } catch (error) {
     console.error(`Error getting report URL: ${error}`)
   }
@@ -178,7 +178,7 @@ async function deliverReport(email: string, reportType: ReportType | "ALL", isSa
   // If we couldn't get a URL, use a fallback message
   const hasReport = !!reportUrl
 
-  const reportName = reportType === "ALL" ? "All CPA Exam Sections" : getReportName(reportType as ReportType)
+  const reportName = reportType === "ALL" ? "All CPA Exam Sections" : getReportName(reportType as ReportType | "SAMPLE")
 
   // Prepare email content
   const subject = `Your CPABee Report: ${reportName}`
@@ -385,7 +385,7 @@ async function deliverAllReports(email: string) {
 // Helper function to send admin notification
 async function sendAdminNotification(
   email: string,
-  reportType: ReportType | "ALL",
+  reportType: ReportType | "ALL" | "SAMPLE",
   isSample = false,
   reportDelivered = true,
 ) {
@@ -444,7 +444,7 @@ async function sendAdminNotification(
 }
 
 // Helper function to get report name
-function getReportName(reportType: ReportType): string {
+function getReportName(reportType: ReportType | "SAMPLE" | "ALL"): string {
   const reportNames: Record<string, string> = {
     AUD: "Auditing and Attestation",
     FAR: "Financial Accounting and Reporting",

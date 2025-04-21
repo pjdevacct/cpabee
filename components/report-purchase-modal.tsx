@@ -30,17 +30,18 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
     setError("")
 
     try {
-      // Validate report selection for FREE and SINGLE types
-      if ((type === "FREE" || type === "SINGLE") && !selectedReport) {
+      // For FREE type, we don't need to validate report selection anymore
+      // For SINGLE type, we still need to validate
+      if (type === "SINGLE" && !selectedReport) {
         setError("Please select a report.")
         setIsSubmitting(false)
         return
       }
 
-      // Create payment
+      // Create payment - for FREE type, we always use "SAMPLE" as reportType
       const result = await createPayment({
         email,
-        reportType: type === "BUNDLE" ? "ALL" : (selectedReport as ReportType),
+        reportType: type === "FREE" ? "SAMPLE" : type === "BUNDLE" ? "ALL" : (selectedReport as ReportType),
         paymentType: type,
       })
 
@@ -111,10 +112,29 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
             />
           </div>
 
-          {type !== "BUNDLE" && (
+          {/* Only show report selector for SINGLE type */}
+          {type === "SINGLE" && (
             <div className="space-y-2">
               <label className="text-sm font-medium">Select a Report</label>
               <ReportSelector onSelect={setSelectedReport} selectedReport={selectedReport} />
+            </div>
+          )}
+
+          {/* For FREE type, show sample report description */}
+          {type === "FREE" && (
+            <div className="bg-teal-50 p-4 rounded-lg">
+              <h4 className="font-medium text-sm mb-2">Sample Report Information</h4>
+              <p className="text-sm text-gray-600 mb-2">
+                Our free sample report gives you a preview of our comprehensive CPA exam trend analysis. You'll see:
+              </p>
+              <ul className="space-y-1 text-sm list-disc pl-5 text-gray-600">
+                <li>How we analyze candidate discussions</li>
+                <li>The format of our topic distribution data</li>
+                <li>Our study recommendations based on trending topics</li>
+              </ul>
+              <p className="text-sm text-gray-600 mt-2">
+                The sample will be delivered instantly to your email address.
+              </p>
             </div>
           )}
 

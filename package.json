@@ -61,8 +61,8 @@
     "@emotion/is-prop-valid": "latest",
     "framer-motion": "latest",
     "path": "latest",
-    "square": "latest",
-    "@vercel/blob": "latest"
+    "@vercel/blob": "latest",
+    "square": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
