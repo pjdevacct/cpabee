@@ -38,10 +38,10 @@ export default function PayPalCheckoutButton({ amount, itemName, onSuccess, onEr
 
       console.log("Loading PayPal SDK...")
 
-      // Create the script element
+      // Create the script element with LIVE client ID
       const script = document.createElement("script")
       script.src =
-        "https://www.paypal.com/sdk/js?client-id=AVvCrlrR_ilRDujegiWTwJJnm8NgIwapO5VVRj-rn1IULNQ-CBwGAXAUF2P7VIBWbvKPFeTl9mWWpj5L&currency=USD"
+        "https://www.paypal.com/sdk/js?client-id=AflZFQKRJJyvPRMHZJqHpamBHE3Q5QF1nk5pYCdxFvQQxdma2vW5-6lCjIiX9KonWDbLIsovoTSWJqeg&currency=USD"
       script.async = true
 
       // Set up event handlers
@@ -81,6 +81,14 @@ export default function PayPalCheckoutButton({ amount, itemName, onSuccess, onEr
     try {
       window.paypal
         .Buttons({
+          // Style the buttons
+          style: {
+            color: "gold", // gold | blue | silver | white | black
+            shape: "rect", // pill | rect
+            label: "pay", // pay | checkout | buynow
+            height: 40, // Default height
+          },
+
           createOrder: (data: any, actions: any) => {
             return actions.order.create({
               purchase_units: [
@@ -94,12 +102,22 @@ export default function PayPalCheckoutButton({ amount, itemName, onSuccess, onEr
             })
           },
           onApprove: async (data: any, actions: any) => {
-            const order = await actions.order.capture()
-            onSuccess(order)
+            try {
+              console.log("Payment approved, capturing order...")
+              const order = await actions.order.capture()
+              console.log("Order captured successfully:", order)
+              onSuccess(order)
+            } catch (captureError) {
+              console.error("Error capturing order:", captureError)
+              onError(captureError)
+            }
           },
           onError: (err: any) => {
             console.error("PayPal error:", err)
             onError(err)
+          },
+          onCancel: () => {
+            console.log("Payment cancelled by user")
           },
         })
         .render(paypalButtonRef.current)
