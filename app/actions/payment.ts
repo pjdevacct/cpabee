@@ -1,7 +1,6 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { Client as SquareClient, Environment } from "square"
 import type { ReportType } from "@/components/report-selector"
 import { getSignedReportUrl } from "@/lib/report-storage"
 
@@ -11,28 +10,14 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "info@cpabee.com"
 const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN
 const SQUARE_LOCATION_ID = process.env.SQUARE_LOCATION_ID
 
-// Initialize Square client
-let squareClient: SquareClient | null = null
-let squareInitError: string | null = null
-
-try {
-  if (SQUARE_ACCESS_TOKEN) {
-    // Log the environment we're using
-    const environment = process.env.NODE_ENV === "production" ? Environment.Production : Environment.Sandbox
-    console.log(`Initializing Square client with environment: ${environment}`)
-
-    squareClient = new SquareClient({
-      accessToken: SQUARE_ACCESS_TOKEN,
-      environment: environment,
-    })
-    console.log("Square client initialized successfully")
-  } else {
-    squareInitError = "Missing SQUARE_ACCESS_TOKEN"
-    console.warn("Square client not initialized: Missing SQUARE_ACCESS_TOKEN")
-  }
-} catch (error: any) {
-  squareInitError = error.message || "Unknown error during Square client initialization"
-  console.error("Failed to initialize Square client:", error)
+// PayPal payment record interface
+interface PayPalPaymentRecord {
+  email: string
+  reportType: ReportType | "ALL" | "SAMPLE"
+  paymentType: "FREE" | "SINGLE" | "BUNDLE"
+  paypalOrderId: string
+  paypalPayerId: string
+  amount: string
 }
 
 // Mock database for tracking free samples (in a real app, use a database)
@@ -43,6 +28,7 @@ interface PaymentData {
   email: string
   reportType: ReportType | "ALL" | "SAMPLE"
   paymentType: "FREE" | "SINGLE" | "BUNDLE"
+  manualRequest?: boolean
 }
 
 export async function createPayment(data: PaymentData) {
@@ -89,13 +75,37 @@ export async function createPayment(data: PaymentData) {
       }
     }
 
-    // For paid reports, create a Square payment
-    console.log("Processing paid report request")
-    const amount = data.paymentType === "SINGLE" ? 1900 : 4900 // in cents - updated from 2900 to 1900
-    const itemName =
-      data.paymentType === "SINGLE" ? `CPA Report: ${data.reportType}` : "CPA Reports: Full Access Bundle"
+    // Check if this is a manual request
+    if (data.manualRequest) {
+      console.log("Processing manual payment request")
 
-    // Store payment info in cookies for retrieval after payment completion
+      // Calculate amount based on payment type
+      const amount = data.paymentType === "SINGLE" ? 19 : 49 // in dollars
+      const itemName =
+        data.paymentType === "BUNDLE" ? "CPA Reports: Full Access Bundle" : `CPA Report: ${data.reportType}`
+
+      // Send admin notification about manual request
+      try {
+        const additionalInfo = `
+          MANUAL PAYMENT REQUEST: Customer requested ${data.paymentType} report (${itemName}) for $${amount}.
+          Please contact the customer to arrange payment and delivery.
+        `
+        await sendAdminNotification(data.email, data.reportType, false, false, additionalInfo)
+        console.log("Admin notification sent for manual request")
+      } catch (notifyError) {
+        console.error("Failed to send admin notification about manual request:", notifyError)
+      }
+
+      // Return success with manual request message
+      return {
+        success: true,
+        manualRequest: true,
+        message:
+          "Thank you for your interest! Our team will contact you shortly with payment instructions to complete your purchase.",
+      }
+    }
+
+    // For regular paid reports, we'll store the payment data in a cookie for later use
     try {
       cookies().set("cpabee_payment_data", JSON.stringify(data), {
         maxAge: 60 * 30, // 30 minutes
@@ -110,116 +120,72 @@ export async function createPayment(data: PaymentData) {
       // Continue even if cookie setting fails
     }
 
-    // Check Square client initialization
-    if (!squareClient) {
-      console.error("Square client not initialized", {
-        hasToken: !!SQUARE_ACCESS_TOKEN,
-        hasLocationId: !!SQUARE_LOCATION_ID,
-        initError: squareInitError,
-      })
-      return {
-        success: false,
-        message: `Payment system is not properly configured: ${squareInitError || "Unknown error"}. Please contact support.`,
-      }
-    }
-
-    // Check location ID
-    if (!SQUARE_LOCATION_ID) {
-      console.error("Missing Square location ID")
-      return {
-        success: false,
-        message: "Payment system is not properly configured: Missing location ID. Please contact support.",
-      }
-    }
-
-    // Create a Square payment link
-    try {
-      console.log("Creating Square payment link")
-
-      // Get the base URL for redirects
-      let baseUrl: string
-      if (process.env.VERCEL_URL) {
-        baseUrl = `https://${process.env.VERCEL_URL}`
-      } else if (process.env.NEXT_PUBLIC_VERCEL_URL) {
-        baseUrl = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-      } else {
-        baseUrl = "http://localhost:3000"
-      }
-
-      console.log("Using base URL:", baseUrl)
-
-      const redirectUrl = new URL(baseUrl)
-      redirectUrl.pathname = "/checkout/success"
-
-      // Generate a unique idempotency key
-      const idempotencyKey = `cpabee-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`
-
-      // Create the payment link request
-      const paymentLinkRequest = {
-        idempotencyKey: idempotencyKey,
-        quickPay: {
-          name: itemName,
-          priceMoney: {
-            amount: BigInt(amount),
-            currency: "USD",
-          },
-          locationId: SQUARE_LOCATION_ID,
-        },
-        checkoutOptions: {
-          redirectUrl: redirectUrl.toString(),
-          askForShippingAddress: false,
-          merchantSupportEmail: ADMIN_EMAIL,
-        },
-        prePopulatedData: {
-          buyerEmail: data.email,
-        },
-      }
-
-      console.log("Payment link request prepared:", {
-        idempotencyKey: paymentLinkRequest.idempotencyKey,
-        name: itemName,
-        amount: amount,
-        redirectUrl: redirectUrl.toString(),
-        locationId: SQUARE_LOCATION_ID,
-      })
-
-      // Make the API call to Square
-      console.log("Calling Square API to create payment link...")
-      const response = await squareClient.checkoutApi.createPaymentLink(paymentLinkRequest)
-      console.log("Square API response received:", response.statusCode)
-
-      // Check if we got a payment link URL
-      if (response.result.paymentLink?.url) {
-        console.log("Payment link created successfully:", response.result.paymentLink.url)
-        return {
-          success: true,
-          redirectUrl: response.result.paymentLink.url,
-        }
-      } else {
-        console.error("No payment link URL in Square response:", response.result)
-        throw new Error("Failed to create payment link - no URL returned")
-      }
-    } catch (error: any) {
-      console.error("Square API error:", error)
-
-      // Extract more detailed error information
-      let errorDetails = "Unknown error"
-      if (error.errors && Array.isArray(error.errors)) {
-        errorDetails = error.errors.map((e: any) => e.detail || e.message || "Unknown error").join("; ")
-      } else if (error.message) {
-        errorDetails = error.message
-      }
-
-      return {
-        success: false,
-        message: `Failed to create payment: ${errorDetails}. Please try again later.`,
-      }
+    // For paid reports, we'll return success to show the PayPal buttons
+    return {
+      success: true,
     }
   } catch (error: any) {
     console.error("Payment creation error:", error)
     return {
       success: false,
       message: `Failed to process payment: ${error.message || "Unknown error"}. Please try again later.`,
+    }
+  }
+}
+
+// New function to record a successful PayPal payment
+export async function recordPayPalPayment(paymentRecord: PayPalPaymentRecord) {
+  console.log("Recording PayPal payment:", {
+    email: paymentRecord.email,
+    reportType: paymentRecord.reportType,
+    paymentType: paymentRecord.paymentType,
+    orderId: paymentRecord.paypalOrderId,
+    amount: paymentRecord.amount,
+  })
+
+  try {
+    // In a production app, you would store this payment record in your database
+
+    // Send admin notification about the payment
+    try {
+      const additionalInfo = `
+        PayPal Payment Received
+        Order ID: ${paymentRecord.paypalOrderId}
+        Payer ID: ${paymentRecord.paypalPayerId}
+        Amount: $${paymentRecord.amount}
+      `
+      await sendAdminNotification(paymentRecord.email, paymentRecord.reportType, false, false, additionalInfo)
+    } catch (notifyError) {
+      console.error("Failed to send admin notification about PayPal payment:", notifyError)
+    }
+
+    // Deliver the report(s) based on the payment type
+    try {
+      if (paymentRecord.paymentType === "SINGLE") {
+        console.log("Delivering single report:", paymentRecord.reportType)
+        await deliverReport(paymentRecord.email, paymentRecord.reportType)
+      } else if (paymentRecord.paymentType === "BUNDLE") {
+        console.log("Delivering all reports bundle")
+        await deliverAllReports(paymentRecord.email)
+      }
+    } catch (deliveryError) {
+      console.error("Error delivering report(s):", deliveryError)
+      return {
+        success: false,
+        message:
+          "Payment was successful, but we encountered an issue delivering your report(s). Our team has been notified and will send your report(s) manually.",
+      }
+    }
+
+    return {
+      success: true,
+      message: "Payment successful! Your report(s) have been sent to your email.",
+    }
+  } catch (error: any) {
+    console.error("Error recording PayPal payment:", error)
+    return {
+      success: false,
+      message: `Failed to process your payment: ${error.message || "Unknown error"}. Please contact support.`,
     }
   }
 }
@@ -530,17 +496,6 @@ async function deliverAllReports(email: string) {
     console.error("Error delivering all reports bundle:", error)
     throw error
   }
-
-  // Option 2: Send individual emails for each report
-  // Uncomment this if you prefer to send separate emails
-  /*
-  const reportTypes: ReportType[] = ["AUD", "FAR", "REG", "TCP", "ISC", "BAR"]
-  for (const reportType of reportTypes) {
-    await deliverReport(email, reportType)
-    // Add a small delay between emails to avoid rate limiting
-    await new Promise(resolve => setTimeout(resolve, 1000))
-  }
-  */
 }
 
 // Helper function to send admin notification
@@ -549,6 +504,7 @@ async function sendAdminNotification(
   reportType: ReportType | "ALL" | "SAMPLE",
   isSample = false,
   reportDelivered = true,
+  additionalInfo = "",
 ) {
   console.log(`Sending admin notification for ${reportType} report to ${email}`)
 
@@ -560,6 +516,7 @@ async function sendAdminNotification(
     Report Type: ${reportType === "ALL" ? "Full Access Bundle" : reportType}
     Report Delivered: ${reportDelivered ? "Yes" : "No - Report not found"}
     Time: ${new Date().toISOString()}
+    ${additionalInfo ? `\nAdditional Info: ${additionalInfo}` : ""}
   `
 
   const html = `
@@ -568,6 +525,7 @@ async function sendAdminNotification(
     <p><strong>Report Type:</strong> ${reportType === "ALL" ? "Full Access Bundle" : reportType}</p>
     <p><strong>Report Delivered:</strong> ${reportDelivered ? "Yes" : "No - Report not found"}</p>
     <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+    ${additionalInfo ? `<p><strong>Additional Info:</strong> ${additionalInfo}</p>` : ""}
   `
 
   // Check if we have the required token for sending emails

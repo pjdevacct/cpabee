@@ -756,7 +756,7 @@ export default function LandingPage() {
         onClose={() => setIsSingleReportModalOpen(false)}
         type="SINGLE"
         title="Purchase a Single Report"
-        description="Select one report section to purchase for $29."
+        description="Select one report section to purchase for $19."
       />
 
       <ReportPurchaseModal
