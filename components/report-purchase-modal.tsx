@@ -42,30 +42,68 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
 
       console.log(`Submitting ${type} report request for ${email}`)
 
-      // Create payment - for FREE type, we always use "SAMPLE" as reportType
-      const result = await createPayment({
-        email,
-        reportType: type === "FREE" ? "SAMPLE" : type === "BUNDLE" ? "ALL" : (selectedReport as ReportType),
-        paymentType: type,
-      })
+      // Special handling for free sample reports - direct email option
+      if (type === "FREE") {
+        try {
+          // Create payment - for FREE type, we always use "SAMPLE" as reportType
+          const result = await createPayment({
+            email,
+            reportType: "SAMPLE",
+            paymentType: "FREE",
+          })
 
-      console.log("Payment result:", result)
+          console.log("Free sample result:", result)
 
-      if (result.success) {
-        if (result.redirectUrl) {
-          // Redirect to Square payment page
-          console.log("Redirecting to:", result.redirectUrl)
-          window.location.href = result.redirectUrl
-        } else {
-          // Show success message for free reports
-          console.log("Free report request successful")
-          onClose()
-          // You could show a toast notification here
-          alert(result.message || "Your free sample report has been sent to your email.")
+          if (result.success) {
+            // Show success message for free reports
+            console.log("Free report request successful")
+            onClose()
+            alert(result.message || "Your free sample report has been sent to your email.")
+          } else {
+            console.error("Free sample request failed:", result.message)
+            setError(result.message || "Failed to process your request. Please try again.")
+            setIsSubmitting(false)
+          }
+        } catch (error: any) {
+          console.error("Error in free sample submission:", error)
+          setError(
+            "We're having trouble processing your request. Please email info@cpabee.com directly for a sample report.",
+          )
+          setDebugInfo(error.message || "Unknown error")
+          setIsSubmitting(false)
         }
-      } else {
-        console.error("Payment request failed:", result.message)
-        setError(result.message || "Failed to process your request. Please try again.")
+        return
+      }
+
+      // For paid reports
+      try {
+        const result = await createPayment({
+          email,
+          reportType: type === "BUNDLE" ? "ALL" : (selectedReport as ReportType),
+          paymentType: type,
+        })
+
+        console.log("Payment result:", result)
+
+        if (result.success) {
+          if (result.redirectUrl) {
+            // Redirect to Square payment page
+            console.log("Redirecting to:", result.redirectUrl)
+            window.location.href = result.redirectUrl
+          } else {
+            // Unexpected case for paid reports
+            setError("Payment was processed but no redirect URL was provided. Please contact support.")
+            setIsSubmitting(false)
+          }
+        } else {
+          console.error("Payment request failed:", result.message)
+          setError(result.message || "Failed to process your request. Please try again.")
+          setIsSubmitting(false)
+        }
+      } catch (error: any) {
+        console.error("Error in payment submission:", error)
+        setError("An unexpected error occurred. Please try again or contact support.")
+        setDebugInfo(error.message || "Unknown error")
         setIsSubmitting(false)
       }
     } catch (error: any) {

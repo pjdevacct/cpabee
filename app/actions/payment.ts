@@ -1,7 +1,7 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { Client, Environment, type CreatePaymentLinkRequest } from "square"
+import { Client as SquareClient, Environment } from "square"
 import type { ReportType } from "@/components/report-selector"
 import { getSignedReportUrl } from "@/lib/report-storage"
 
@@ -12,17 +12,26 @@ const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN
 const SQUARE_LOCATION_ID = process.env.SQUARE_LOCATION_ID
 
 // Initialize Square client
-let squareClient: Client | null = null
+let squareClient: SquareClient | null = null
+let squareInitError: string | null = null
+
 try {
   if (SQUARE_ACCESS_TOKEN) {
-    squareClient = new Client({
+    // Log the environment we're using
+    const environment = process.env.NODE_ENV === "production" ? Environment.Production : Environment.Sandbox
+    console.log(`Initializing Square client with environment: ${environment}`)
+
+    squareClient = new SquareClient({
       accessToken: SQUARE_ACCESS_TOKEN,
-      environment: process.env.NODE_ENV === "production" ? Environment.Production : Environment.Sandbox,
+      environment: environment,
     })
+    console.log("Square client initialized successfully")
   } else {
+    squareInitError = "Missing SQUARE_ACCESS_TOKEN"
     console.warn("Square client not initialized: Missing SQUARE_ACCESS_TOKEN")
   }
-} catch (error) {
+} catch (error: any) {
+  squareInitError = error.message || "Unknown error during Square client initialization"
   console.error("Failed to initialize Square client:", error)
 }
 
@@ -101,30 +110,53 @@ export async function createPayment(data: PaymentData) {
       // Continue even if cookie setting fails
     }
 
-    if (!SQUARE_ACCESS_TOKEN || !SQUARE_LOCATION_ID || !squareClient) {
-      console.error("Square credentials not configured", {
+    // Check Square client initialization
+    if (!squareClient) {
+      console.error("Square client not initialized", {
         hasToken: !!SQUARE_ACCESS_TOKEN,
         hasLocationId: !!SQUARE_LOCATION_ID,
-        hasClient: !!squareClient,
+        initError: squareInitError,
       })
       return {
         success: false,
-        message: "Payment system is not properly configured. Please contact support.",
+        message: `Payment system is not properly configured: ${squareInitError || "Unknown error"}. Please contact support.`,
+      }
+    }
+
+    // Check location ID
+    if (!SQUARE_LOCATION_ID) {
+      console.error("Missing Square location ID")
+      return {
+        success: false,
+        message: "Payment system is not properly configured: Missing location ID. Please contact support.",
       }
     }
 
     // Create a Square payment link
     try {
       console.log("Creating Square payment link")
-      const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"
+
+      // Get the base URL for redirects
+      let baseUrl: string
+      if (process.env.VERCEL_URL) {
+        baseUrl = `https://${process.env.VERCEL_URL}`
+      } else if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+        baseUrl = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      } else {
+        baseUrl = "http://localhost:3000"
+      }
 
       console.log("Using base URL:", baseUrl)
 
       const redirectUrl = new URL(baseUrl)
       redirectUrl.pathname = "/checkout/success"
 
-      const paymentLinkRequest: CreatePaymentLinkRequest = {
-        idempotencyKey: `cpabee-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`,
+      // Generate a unique idempotency key
+      const idempotencyKey = `cpabee-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`
+
+      // Create the payment link request
+      const paymentLinkRequest = {
+        idempotencyKey: idempotencyKey,
         quickPay: {
           name: itemName,
           priceMoney: {
@@ -148,33 +180,46 @@ export async function createPayment(data: PaymentData) {
         name: itemName,
         amount: amount,
         redirectUrl: redirectUrl.toString(),
+        locationId: SQUARE_LOCATION_ID,
       })
 
+      // Make the API call to Square
+      console.log("Calling Square API to create payment link...")
       const response = await squareClient.checkoutApi.createPaymentLink(paymentLinkRequest)
-      console.log("Square API response received")
+      console.log("Square API response received:", response.statusCode)
 
+      // Check if we got a payment link URL
       if (response.result.paymentLink?.url) {
-        console.log("Payment link created successfully")
+        console.log("Payment link created successfully:", response.result.paymentLink.url)
         return {
           success: true,
           redirectUrl: response.result.paymentLink.url,
         }
       } else {
-        console.error("No payment link URL in Square response")
+        console.error("No payment link URL in Square response:", response.result)
         throw new Error("Failed to create payment link - no URL returned")
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Square API error:", error)
+
+      // Extract more detailed error information
+      let errorDetails = "Unknown error"
+      if (error.errors && Array.isArray(error.errors)) {
+        errorDetails = error.errors.map((e: any) => e.detail || e.message || "Unknown error").join("; ")
+      } else if (error.message) {
+        errorDetails = error.message
+      }
+
       return {
         success: false,
-        message: "Failed to create payment. Please try again later.",
+        message: `Failed to create payment: ${errorDetails}. Please try again later.`,
       }
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Payment creation error:", error)
     return {
       success: false,
-      message: "Failed to process payment. Please try again later.",
+      message: `Failed to process payment: ${error.message || "Unknown error"}. Please try again later.`,
     }
   }
 }
