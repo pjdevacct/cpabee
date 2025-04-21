@@ -1,5 +1,4 @@
 "use client"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 
 export type ReportType = "AUD" | "FAR" | "REG" | "TCP" | "ISC" | "BAR"
@@ -20,30 +19,40 @@ export default function ReportSelector({ onSelect, selectedReport, disabled = fa
     { id: "BAR", name: "Business Analysis and Reporting", description: "Discipline section (choose one)" },
   ]
 
+  // Handle report selection
+  const handleReportSelect = (reportId: ReportType) => {
+    if (!disabled) {
+      onSelect(reportId)
+    }
+  }
+
   return (
-    <RadioGroup
-      value={selectedReport || ""}
-      onValueChange={(value) => onSelect(value as ReportType)}
-      className="space-y-3"
-      disabled={disabled}
-    >
+    <div className="space-y-3">
       {reports.map((report) => (
         <div
           key={report.id}
           className={`flex items-center space-x-2 border rounded-lg p-3 ${
             selectedReport === report.id ? "border-yellow-500 bg-yellow-50" : "border-gray-200"
           } ${disabled ? "opacity-60" : "hover:border-yellow-300 cursor-pointer"}`}
-          onClick={() => !disabled && onSelect(report.id as ReportType)}
+          onClick={() => handleReportSelect(report.id as ReportType)}
         >
-          <RadioGroupItem value={report.id} id={report.id} className="text-yellow-500" />
+          <div className="flex items-center justify-center h-4 w-4">
+            <div
+              className={`h-4 w-4 rounded-full border ${
+                selectedReport === report.id ? "border-yellow-500 bg-yellow-500" : "border-gray-300 bg-white"
+              } flex items-center justify-center`}
+            >
+              {selectedReport === report.id && <div className="h-2 w-2 rounded-full bg-white"></div>}
+            </div>
+          </div>
           <div className="flex-1">
-            <Label htmlFor={report.id} className="text-base font-medium cursor-pointer">
+            <Label className="text-base font-medium cursor-pointer">
               {report.id} - {report.name}
             </Label>
             <p className="text-sm text-gray-500">{report.description}</p>
           </div>
         </div>
       ))}
-    </RadioGroup>
+    </div>
   )
 }
