@@ -15,9 +15,9 @@ export async function uploadReport(reportType: ExtendedReportType, file: File | 
 
     console.log(`Uploading to path: reports/${reportType}/${filename}`)
 
-    // Upload to Vercel Blob
+    // Upload to Vercel Blob - using public access as required by the error message
     const blob = await put(`reports/${reportType}/${filename}`, file, {
-      access: "private",
+      access: "public",
     })
 
     console.log(`Upload successful for ${reportType} report:`, blob.url)
