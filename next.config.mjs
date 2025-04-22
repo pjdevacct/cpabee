@@ -11,6 +11,20 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Add this to ensure proper title handling
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'index, follow',
+          },
+        ],
+      },
+    ]
+  },
 }
 
 export default nextConfig

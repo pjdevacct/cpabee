@@ -11,12 +11,18 @@ export const metadata: Metadata = {
   title: "CPABee - Track What's Buzzing on the CPA Exam",
   description:
     "Get real-time intel on the topics CPA candidates are talking about most. Focus your study time on what's actually being tested.",
+  applicationName: "CPABee",
+  authors: [{ name: "CPABee" }],
+  generator: "Next.js",
+  keywords: ["CPA exam", "CPA study", "CPA trending topics", "CPA preparation", "CPABee"],
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : "https://cpabee.com",
   ),
   openGraph: {
     title: "CPABee - CPA Exam Trending Topics",
     description: "Get real-time intel on the topics CPA candidates are talking about most.",
+    url: "https://cpabee.com",
+    siteName: "CPABee",
     images: [
       {
         url: "/images/cpabee-logo.png",
@@ -49,7 +55,9 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/site.webmanifest",
-    generator: 'v0.dev'
+  alternates: {
+    canonical: "https://cpabee.com",
+  },
 }
 
 export default function RootLayout({
@@ -60,6 +68,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Force the title to be CPABee with additional meta tags */}
+        <title>CPABee - Track What's Buzzing on the CPA Exam</title>
+        <meta name="application-name" content="CPABee" />
+        <meta property="og:site_name" content="CPABee" />
+        <link rel="canonical" href="https://cpabee.com" />
+
         {/* Google Analytics */}
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-ZEPSVLW53R" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">

@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# Force search engines to use this title
+# CPABee - Track What's Buzzing on the CPA Exam
+
 Sitemap: https://cpabee.com/sitemap.xml
