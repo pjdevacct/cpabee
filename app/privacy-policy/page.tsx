@@ -67,21 +67,46 @@ export default function PrivacyPolicyPage() {
             <li>To comply with legal obligations</li>
           </ul>
 
-          <h2>4. Data Security</h2>
+          <h2>4. Analytics and Tracking</h2>
+          <p>
+            We use Google Analytics to help us understand how visitors interact with our website. Google Analytics uses
+            cookies and similar technologies to collect information about your use of our website and may transmit this
+            information to Google servers in the United States or other countries.
+          </p>
+          <p>The information collected by Google Analytics includes:</p>
+          <ul>
+            <li>Pages visited and time spent on each page</li>
+            <li>Referring websites or sources</li>
+            <li>Technical information about your device, browser, and operating system</li>
+            <li>Geographic location (typically at the city level)</li>
+          </ul>
+          <p>
+            We use this information to improve our website and services. Google Analytics does not identify individual
+            users or associate your IP address with any other data held by Google.
+          </p>
+          <p>
+            You can opt out of Google Analytics by installing the{" "}
+            <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">
+              Google Analytics Opt-out Browser Add-on
+            </a>
+            .
+          </p>
+
+          <h2>5. Data Security</h2>
           <p>
             We implement appropriate security measures to protect your personal information from unauthorized access,
             alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic
             storage is 100% secure, and we cannot guarantee absolute security.
           </p>
 
-          <h2>5. Third-Party Services</h2>
+          <h2>6. Third-Party Services</h2>
           <p>
             We may use third-party services, such as payment processors and analytics providers, that collect, use, and
             process information on our behalf. These third parties have their own privacy policies addressing how they
             use such information.
           </p>
 
-          <h2>6. Your Rights</h2>
+          <h2>7. Your Rights</h2>
           <p>Depending on your location, you may have the following rights regarding your personal data:</p>
           <ul>
             <li>The right to access your personal data</li>
@@ -91,27 +116,27 @@ export default function PrivacyPolicyPage() {
             <li>The right to data portability</li>
           </ul>
 
-          <h2>7. Children's Privacy</h2>
+          <h2>8. Children's Privacy</h2>
           <p>
             Our services are not intended for individuals under the age of 18. We do not knowingly collect personal
             information from children. If you are a parent or guardian and believe your child has provided us with
             personal information, please contact us.
           </p>
 
-          <h2>8. Changes to This Privacy Policy</h2>
+          <h2>9. Changes to This Privacy Policy</h2>
           <p>
             We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new
             Privacy Policy on this page and updating the "Last Updated" date.
           </p>
 
-          <h2>9. Disclaimer Regarding CPA Exam Content</h2>
+          <h2>10. Disclaimer Regarding CPA Exam Content</h2>
           <p>
             CPABee analyzes what users are studying and discussing regarding the CPA exam. We do not have access to
             actual exam content or questions. Our reports are based on publicly available information and user
             discussions, and should not be considered a guarantee of what will appear on the exam.
           </p>
 
-          <h2>10. Contact Us</h2>
+          <h2>11. Contact Us</h2>
           <p>
             If you have any questions about this Privacy Policy, please contact us at{" "}
             <a href="mailto:info@cpabee.com">info@cpabee.com</a>.
