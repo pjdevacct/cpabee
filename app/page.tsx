@@ -703,6 +703,15 @@ export default function LandingPage() {
               <span className="text-sm font-medium">CPABee</span>
             </div>
 
+            <div className="flex gap-4 text-sm">
+              <Link href="/terms-of-service" className="text-gray-600 hover:text-yellow-600">
+                Terms of Service
+              </Link>
+              <Link href="/privacy-policy" className="text-gray-600 hover:text-yellow-600">
+                Privacy Policy
+              </Link>
+            </div>
+
             <div className="text-sm text-gray-500">
               <p>
                 Contact:{" "}
@@ -710,10 +719,6 @@ export default function LandingPage() {
                   info@cpabee.com
                 </a>
               </p>
-            </div>
-
-            <div className="text-sm text-gray-500">
-              <p>Built by CPA nerds with too much free time</p>
               <p>© {new Date().getFullYear()} CPABee. All rights reserved.</p>
             </div>
           </div>
