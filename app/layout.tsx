@@ -11,10 +11,44 @@ export const metadata: Metadata = {
   title: "CPABee - Track What's Buzzing on the CPA Exam",
   description:
     "Get real-time intel on the topics CPA candidates are talking about most. Focus your study time on what's actually being tested.",
-  icons: {
-    icon: "/images/cpabee-logo.png",
-    apple: "/images/cpabee-logo.png",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : "https://cpabee.com",
+  ),
+  openGraph: {
+    title: "CPABee - CPA Exam Trending Topics",
+    description: "Get real-time intel on the topics CPA candidates are talking about most.",
+    images: [
+      {
+        url: "/images/cpabee-logo.png",
+        width: 1200,
+        height: 630,
+        alt: "CPABee Logo",
+      },
+    ],
+    type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "CPABee - CPA Exam Trending Topics",
+    description: "Get real-time intel on the topics CPA candidates are talking about most.",
+    images: ["/images/cpabee-logo.png"],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/safari-pinned-tab.svg",
+        color: "#f59e0b",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
     generator: 'v0.dev'
 }
 
