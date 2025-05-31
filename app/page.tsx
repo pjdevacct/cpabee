@@ -16,6 +16,7 @@ import EmailSignupModal from "@/components/email-signup-modal"
 import ReportPurchaseModal from "@/components/report-purchase-modal"
 import AdminPanel from "@/components/admin-panel"
 import DebugEnv from "@/components/debug-env"
+import VersionInfo from "@/components/version-info"
 import { sendEmailNotification } from "./actions"
 
 export default function LandingPage() {
@@ -778,6 +779,9 @@ export default function LandingPage() {
 
       {/* Debug Environment Panel - Hidden by default, press Ctrl+Alt+D to show */}
       <DebugEnv />
+
+      {/* Version Info Panel - Hidden by default, press Ctrl+Alt+V to show */}
+      <VersionInfo />
     </div>
   )
 }
