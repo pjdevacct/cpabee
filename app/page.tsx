@@ -15,6 +15,7 @@ import ScrollToTop from "@/components/scroll-to-top"
 import EmailSignupModal from "@/components/email-signup-modal"
 import ReportPurchaseModal from "@/components/report-purchase-modal"
 import AdminPanel from "@/components/admin-panel"
+import DebugEnv from "@/components/debug-env"
 import { sendEmailNotification } from "./actions"
 
 export default function LandingPage() {
@@ -774,6 +775,9 @@ export default function LandingPage() {
 
       {/* Admin Panel - Hidden by default, press Ctrl+Alt+A to show */}
       <AdminPanel />
+
+      {/* Debug Environment Panel - Hidden by default, press Ctrl+Alt+D to show */}
+      <DebugEnv />
     </div>
   )
 }
