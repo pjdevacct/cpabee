@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers"
 import type { ReportType } from "@/components/report-selector"
+import { sendEmailFallback } from "./email-fallback"
 
 // Environment variables
 const MAILSEND_TOKEN = process.env.MAILSEND_TOKEN
@@ -67,15 +68,40 @@ export async function createPayment(data: PaymentData) {
           "Customer requested a free sample report. Please send manually.",
         )
         console.log("Admin notification sent successfully")
-      } catch (notificationError) {
+      } catch (notificationError: any) {
         console.error("Failed to send admin notification:", notificationError)
+
+        // Check if it's a quota limit error
+        if (notificationError.message?.includes("quota limit") || notificationError.message?.includes("MS42222")) {
+          console.log("MailerSend quota exceeded, using fallback notification method")
+
+          // Use fallback notification
+          try {
+            await sendEmailFallback(
+              ADMIN_EMAIL,
+              `CPABee Sample Request: ${data.email}`,
+              `
+                <h2>New sample request from CPABee website</h2>
+                <p><strong>Email:</strong> ${data.email}</p>
+                <p><strong>Report Type:</strong> Sample Report</p>
+                <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+                <p><strong>Note:</strong> MailerSend quota exceeded - this is a fallback notification</p>
+                <p>ACTION REQUIRED: Please manually send the sample report to the customer.</p>
+              `,
+              `New sample request: ${data.email} - Please send sample report manually. (MailerSend quota exceeded)`,
+            )
+            console.log("Fallback notification sent")
+          } catch (fallbackError) {
+            console.error("Fallback notification also failed:", fallbackError)
+          }
+        }
         // Continue even if notification fails
       }
 
       return {
         success: true,
         message:
-          "Thank you for your interest! We've received your sample report request and will send it to your email within 24 hours. If you have any questions, please contact us at info@cpabee.com.",
+          "Thank you for your interest! We've received your sample report request. Due to high demand, we'll send it to your email within 24 hours. If you have any questions, please contact us at info@cpabee.com.",
       }
     }
 
@@ -97,8 +123,30 @@ export async function createPayment(data: PaymentData) {
           false,
           `Manual payment request: ${itemName} for $${amount}. Please contact customer to arrange payment.`,
         )
-      } catch (notificationError) {
+      } catch (notificationError: any) {
         console.error("Failed to send admin notification for manual request:", notificationError)
+
+        // Use fallback for manual requests too
+        if (notificationError.message?.includes("quota limit") || notificationError.message?.includes("MS42222")) {
+          try {
+            await sendEmailFallback(
+              ADMIN_EMAIL,
+              `CPABee Manual Payment Request: ${data.email}`,
+              `
+                <h2>Manual payment request from CPABee website</h2>
+                <p><strong>Email:</strong> ${data.email}</p>
+                <p><strong>Item:</strong> ${itemName}</p>
+                <p><strong>Amount:</strong> $${amount}</p>
+                <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+                <p><strong>Note:</strong> MailerSend quota exceeded - this is a fallback notification</p>
+                <p>ACTION REQUIRED: Please contact customer to arrange payment.</p>
+              `,
+              `Manual payment request: ${data.email} - ${itemName} for $${amount}. (MailerSend quota exceeded)`,
+            )
+          } catch (fallbackError) {
+            console.error("Fallback notification failed for manual request:", fallbackError)
+          }
+        }
       }
 
       return {
@@ -157,8 +205,31 @@ export async function recordPayPalPayment(paymentRecord: PayPalPaymentRecord) {
         false,
         `PayPal payment received: $${paymentRecord.amount}. Order ID: ${paymentRecord.paypalOrderId}. Please deliver report(s) manually.`,
       )
-    } catch (notificationError) {
+    } catch (notificationError: any) {
       console.error("Failed to send admin notification about PayPal payment:", notificationError)
+
+      // Use fallback for PayPal notifications
+      if (notificationError.message?.includes("quota limit") || notificationError.message?.includes("MS42222")) {
+        try {
+          await sendEmailFallback(
+            ADMIN_EMAIL,
+            `CPABee PayPal Payment: ${paymentRecord.email}`,
+            `
+              <h2>PayPal payment received from CPABee website</h2>
+              <p><strong>Email:</strong> ${paymentRecord.email}</p>
+              <p><strong>Amount:</strong> $${paymentRecord.amount}</p>
+              <p><strong>Order ID:</strong> ${paymentRecord.paypalOrderId}</p>
+              <p><strong>Report Type:</strong> ${paymentRecord.reportType}</p>
+              <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+              <p><strong>Note:</strong> MailerSend quota exceeded - this is a fallback notification</p>
+              <p>ACTION REQUIRED: Please deliver report(s) manually.</p>
+            `,
+            `PayPal payment: ${paymentRecord.email} - $${paymentRecord.amount}. Order: ${paymentRecord.paypalOrderId}. (MailerSend quota exceeded)`,
+          )
+        } catch (fallbackError) {
+          console.error("Fallback notification failed for PayPal payment:", fallbackError)
+        }
+      }
     }
 
     return {
@@ -204,8 +275,31 @@ export async function handlePaymentSuccess(paymentId: string) {
         false,
         `Payment successful for ${paymentData.paymentType} report. Payment ID: ${paymentId}. Please deliver report(s) manually.`,
       )
-    } catch (notificationError) {
+    } catch (notificationError: any) {
       console.error("Failed to send admin notification:", notificationError)
+
+      // Use fallback for payment success notifications
+      if (notificationError.message?.includes("quota limit") || notificationError.message?.includes("MS42222")) {
+        try {
+          await sendEmailFallback(
+            ADMIN_EMAIL,
+            `CPABee Payment Success: ${paymentData.email}`,
+            `
+              <h2>Payment successful from CPABee website</h2>
+              <p><strong>Email:</strong> ${paymentData.email}</p>
+              <p><strong>Payment ID:</strong> ${paymentId}</p>
+              <p><strong>Report Type:</strong> ${paymentData.reportType}</p>
+              <p><strong>Payment Type:</strong> ${paymentData.paymentType}</p>
+              <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+              <p><strong>Note:</strong> MailerSend quota exceeded - this is a fallback notification</p>
+              <p>ACTION REQUIRED: Please deliver report(s) manually.</p>
+            `,
+            `Payment success: ${paymentData.email} - ${paymentData.paymentType} report. Payment ID: ${paymentId}. (MailerSend quota exceeded)`,
+          )
+        } catch (fallbackError) {
+          console.error("Fallback notification failed for payment success:", fallbackError)
+        }
+      }
     }
 
     // Clear the payment data cookie
@@ -243,7 +337,7 @@ async function sendAdminNotification(
   // Check if we have the required token for sending emails
   if (!MAILSEND_TOKEN) {
     console.error("MAILSEND_TOKEN is not configured for admin notification")
-    return // Don't throw, just return
+    throw new Error("Email service not configured")
   }
 
   const subject = `CPABee ${isSample ? "Sample Request" : "Purchase"}: ${email}`
@@ -398,16 +492,25 @@ ACTION REQUIRED: Please manually send the report to the customer.
       console.error("Admin notification API error:", responseData)
       console.error("Response status:", response.status, response.statusText)
 
+      // Throw error with specific message for quota limits
+      if (responseData.message?.includes("quota limit") || responseData.message?.includes("MS42222")) {
+        throw new Error(`MailerSend quota limit exceeded: ${responseData.message}`)
+      }
+
       // If domain verification fails, log the specific error
       if (responseData.message?.includes("domain must be verified")) {
         console.error("Domain verification required. Available domains need to be verified in MailerSend dashboard.")
+        throw new Error(`Domain verification required: ${responseData.message}`)
       }
+
+      throw new Error(`MailerSend API error: ${responseData.message || response.statusText}`)
     } else {
       console.log("Admin notification sent successfully to:", ADMIN_EMAIL)
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error sending admin notification:", error)
-    // Don't throw here, as this is just a notification
+    // Re-throw the error so it can be caught by the calling function
+    throw error
   }
 }
 
