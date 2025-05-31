@@ -570,6 +570,21 @@ async function deliverReport(email: string, reportType: ReportType | "ALL" | "SA
 
     const webhookUrl = `https://api.mailersend.com/v1/email`
 
+    // For trial accounts, we need to send to admin email but include customer info in the content
+    const isTrialAccount = true // Assume trial account for now
+    const actualRecipient = isTrialAccount ? ADMIN_EMAIL : email
+
+    // Update email content to include customer email when sending to admin
+    const customerNotice = isTrialAccount
+      ? `
+    
+    CUSTOMER EMAIL: ${email}
+    NOTE: This email was sent to admin due to MailerSend trial account limitations.
+    Please forward the report to the customer at: ${email}
+    
+  `
+      : ""
+
     const emailPayload = {
       from: {
         email: "noreply@trial-351ndgwqz7zg23wr.mlsender.net", // Use MailerSend trial domain
@@ -577,20 +592,31 @@ async function deliverReport(email: string, reportType: ReportType | "ALL" | "SA
       },
       to: [
         {
-          email: email,
-          name: "CPABee Customer",
+          email: actualRecipient,
+          name: isTrialAccount ? "CPABee Admin" : "CPABee Customer",
         },
       ],
-      subject: subject,
-      text: text,
-      html: html,
+      subject: isTrialAccount ? `[FORWARD TO ${email}] ${subject}` : subject,
+      text: customerNotice + text,
+      html: isTrialAccount
+        ? `
+      <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+        <h3 style="color: #856404; margin: 0 0 10px 0;">⚠️ Admin Notice - Please Forward</h3>
+        <p style="color: #856404; margin: 0;"><strong>Customer Email:</strong> ${email}</p>
+        <p style="color: #856404; margin: 5px 0 0 0;"><small>This email was sent to admin due to MailerSend trial account limitations. Please forward the report to the customer.</small></p>
+      </div>
+      ${html}
+    `
+        : html,
     }
 
     console.log("Email payload prepared:", {
-      to: email,
-      subject: subject,
+      to: actualRecipient,
+      subject: emailPayload.subject,
       from: emailPayload.from.email,
       hasToken: !!MAILSEND_TOKEN,
+      isTrialAccount,
+      originalRecipient: email,
     })
 
     const response = await fetch(webhookUrl, {
@@ -615,18 +641,20 @@ async function deliverReport(email: string, reportType: ReportType | "ALL" | "SA
         throw new Error("Email service authentication failed")
       }
 
+      // For trial account limitations, provide helpful message
+      if (responseData.message?.includes("Trial accounts can only send emails")) {
+        console.error("Trial account limitation detected")
+        throw new Error("Trial account limitation - email sent to admin for manual forwarding")
+      }
+
       throw new Error(`Email API error: ${responseData.message || response.statusText}`)
     }
 
     console.log("Email sent successfully:", responseData)
 
-    // Also send a notification to admin
-    try {
-      await sendAdminNotification(email, reportType, isSample, hasReport)
-      console.log("Admin notification sent")
-    } catch (notificationError) {
-      console.error("Failed to send admin notification:", notificationError)
-      // Continue even if admin notification fails
+    // If this was sent to admin due to trial limitations, show appropriate message
+    if (isTrialAccount && email !== ADMIN_EMAIL) {
+      console.log(`Email sent to admin (${ADMIN_EMAIL}) for forwarding to customer (${email})`)
     }
 
     return true

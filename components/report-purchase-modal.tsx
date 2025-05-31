@@ -63,8 +63,7 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
             // Show success message for free reports
             console.log("Free report request successful")
             setSuccessMessage(
-              result.message ||
-                "Thank you for your interest! We've received your request and will send your sample report within 24 hours. Please check your email (including spam folder) or contact us at info@cpabee.com if you don't receive it.",
+              "Thank you for your interest! Due to email service limitations, your sample report request has been sent to our admin team. We'll manually send your sample report to your email within 24 hours. Please check your email (including spam folder) or contact us at info@cpabee.com if you don't receive it.",
             )
             setShowSuccess(true)
           } else {
