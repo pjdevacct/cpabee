@@ -56,27 +56,26 @@ export async function createPayment(data: PaymentData) {
       freeSampleEmails.add(data.email)
       console.log("Added email to free sample list:", data.email)
 
-      // For trial accounts with domain verification issues, we'll skip email delivery
-      // and rely on local storage + manual process
+      // Send admin notification about the sample request
       try {
-        console.log("Attempting to deliver sample report")
-        await deliverReport(data.email, "SAMPLE", true)
-        console.log("Sample report delivered successfully")
+        console.log("Sending admin notification about sample request")
+        await sendAdminNotification(
+          data.email,
+          "SAMPLE",
+          true,
+          false,
+          "Customer requested a free sample report. Please send manually.",
+        )
+        console.log("Admin notification sent successfully")
+      } catch (notificationError) {
+        console.error("Failed to send admin notification:", notificationError)
+        // Continue even if notification fails
+      }
 
-        return {
-          success: true,
-          message:
-            "Thank you for your interest! We've received your sample report request. Due to email service limitations, our team will manually send your sample report within 24 hours. Please check your email or contact us at info@cpabee.com.",
-        }
-      } catch (deliveryError) {
-        console.error("Error delivering sample report:", deliveryError)
-
-        // If email fails completely, we'll still show success and rely on local storage
-        return {
-          success: true,
-          message:
-            "Thank you for your interest! We've received your sample report request and will send it to your email within 24 hours. If you have any questions, please contact us at info@cpabee.com.",
-        }
+      return {
+        success: true,
+        message:
+          "Thank you for your interest! We've received your sample report request and will send it to your email within 24 hours. If you have any questions, please contact us at info@cpabee.com.",
       }
     }
 
@@ -89,9 +88,18 @@ export async function createPayment(data: PaymentData) {
       const itemName =
         data.paymentType === "BUNDLE" ? "CPA Reports: Full Access Bundle" : `CPA Report: ${data.reportType}`
 
-      // For manual requests, we'll store the info locally and show success
-      // In a real app, you'd store this in a database
-      console.log("Manual request stored:", { email: data.email, reportType: data.reportType, amount })
+      // Send admin notification about manual payment request
+      try {
+        await sendAdminNotification(
+          data.email,
+          data.reportType,
+          false,
+          false,
+          `Manual payment request: ${itemName} for $${amount}. Please contact customer to arrange payment.`,
+        )
+      } catch (notificationError) {
+        console.error("Failed to send admin notification for manual request:", notificationError)
+      }
 
       return {
         success: true,
@@ -140,16 +148,22 @@ export async function recordPayPalPayment(paymentRecord: PayPalPaymentRecord) {
   })
 
   try {
-    // In a production app, you would store this payment record in your database
-    console.log("PayPal payment recorded successfully")
-
-    // For now, we'll skip email delivery and rely on manual process
-    // In a real app with proper email setup, you'd deliver the reports here
+    // Send admin notification about the PayPal payment
+    try {
+      await sendAdminNotification(
+        paymentRecord.email,
+        paymentRecord.reportType,
+        false,
+        false,
+        `PayPal payment received: $${paymentRecord.amount}. Order ID: ${paymentRecord.paypalOrderId}. Please deliver report(s) manually.`,
+      )
+    } catch (notificationError) {
+      console.error("Failed to send admin notification about PayPal payment:", notificationError)
+    }
 
     return {
       success: true,
-      message:
-        "Payment successful! Due to email service limitations, our team will manually send your report(s) to your email within 24 hours.",
+      message: "Payment successful! Our team will manually send your report(s) to your email within 24 hours.",
     }
   } catch (error: any) {
     console.error("Error recording PayPal payment:", error)
@@ -181,8 +195,18 @@ export async function handlePaymentSuccess(paymentId: string) {
       paymentType: paymentData.paymentType,
     })
 
-    // For now, we'll skip email delivery and rely on manual process
-    console.log("Payment processed successfully - manual delivery required")
+    // Send admin notification about the payment
+    try {
+      await sendAdminNotification(
+        paymentData.email,
+        paymentData.reportType,
+        false,
+        false,
+        `Payment successful for ${paymentData.paymentType} report. Payment ID: ${paymentId}. Please deliver report(s) manually.`,
+      )
+    } catch (notificationError) {
+      console.error("Failed to send admin notification:", notificationError)
+    }
 
     // Clear the payment data cookie
     try {
@@ -195,8 +219,7 @@ export async function handlePaymentSuccess(paymentId: string) {
 
     return {
       success: true,
-      message:
-        "Payment successful! Due to email service limitations, our team will manually send your report(s) to your email within 24 hours.",
+      message: "Payment successful! Our team will manually send your report(s) to your email within 24 hours.",
     }
   } catch (error) {
     console.error("Payment success handling error:", error)
@@ -207,37 +230,6 @@ export async function handlePaymentSuccess(paymentId: string) {
   }
 }
 
-// Helper function to deliver a single report
-async function deliverReport(email: string, reportType: ReportType | "ALL" | "SAMPLE", isSample = false) {
-  console.log(`Starting report delivery: ${reportType} to ${email}`)
-
-  // For now, we'll skip the actual email sending due to domain verification issues
-  // and rely on the local storage + admin panel for tracking requests
-
-  console.log("Email delivery skipped due to domain verification requirements")
-  console.log("Request logged for manual processing")
-
-  // Store the request in localStorage (this happens on the client side via the modal)
-  // The admin can view these requests using Ctrl+Alt+A
-
-  // Always return true for sample reports to show success to the user
-  if (isSample) {
-    return true
-  }
-
-  // For paid reports, we might want to throw an error to trigger manual processing
-  throw new Error("Email delivery requires domain verification - manual processing required")
-}
-
-// Helper function to deliver all reports
-async function deliverAllReports(email: string) {
-  console.log(`Starting delivery of all reports to ${email}`)
-
-  // For now, skip email delivery and rely on manual process
-  console.log("All reports delivery logged for manual processing")
-  throw new Error("Email delivery requires domain verification - manual processing required")
-}
-
 // Helper function to send admin notification
 async function sendAdminNotification(
   email: string,
@@ -246,12 +238,177 @@ async function sendAdminNotification(
   reportDelivered = true,
   additionalInfo = "",
 ) {
-  console.log(`Admin notification skipped due to domain verification issues`)
-  console.log(`Request details: ${email}, ${reportType}, ${isSample ? "sample" : "paid"}`)
+  console.log(`Sending admin notification for ${reportType} ${isSample ? "sample request" : "purchase"} from ${email}`)
 
-  // Skip email sending for now due to domain verification issues
-  // The admin can check the admin panel (Ctrl+Alt+A) for stored requests
-  return
+  // Check if we have the required token for sending emails
+  if (!MAILSEND_TOKEN) {
+    console.error("MAILSEND_TOKEN is not configured for admin notification")
+    return // Don't throw, just return
+  }
+
+  const subject = `CPABee ${isSample ? "Sample Request" : "Purchase"}: ${email}`
+  const text = `
+New ${isSample ? "sample request" : "purchase"} from CPABee website:
+
+Email: ${email}
+Report Type: ${reportType === "ALL" ? "Full Access Bundle" : reportType}
+Request Type: ${isSample ? "Free Sample" : "Paid Report"}
+Time: ${new Date().toISOString()}
+${
+  additionalInfo
+    ? `
+Additional Info: ${additionalInfo}`
+    : ""
+}
+
+ACTION REQUIRED: Please manually send the report to the customer.
+  `
+
+  const html = `
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+        .header {
+          background-color: #f7df1e;
+          padding: 20px;
+          text-align: center;
+          border-radius: 5px 5px 0 0;
+        }
+        .content {
+          padding: 20px;
+          background-color: #fff;
+          border: 1px solid #eee;
+        }
+        .alert {
+          background-color: #fff3cd;
+          border: 1px solid #ffeaa7;
+          color: #856404;
+          padding: 15px;
+          border-radius: 5px;
+          margin: 15px 0;
+        }
+        .details {
+          background-color: #f8f9fa;
+          padding: 15px;
+          border-radius: 5px;
+          margin: 15px 0;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>🐝 CPABee ${isSample ? "Sample Request" : "Purchase"}</h1>
+      </div>
+      <div class="content">
+        <div class="alert">
+          <h3>⚠️ ACTION REQUIRED</h3>
+          <p>Please manually send the report to the customer.</p>
+        </div>
+        
+        <div class="details">
+          <h3>Request Details:</h3>
+          <p><strong>Customer Email:</strong> ${email}</p>
+          <p><strong>Report Type:</strong> ${reportType === "ALL" ? "Full Access Bundle" : reportType}</p>
+          <p><strong>Request Type:</strong> ${isSample ? "Free Sample" : "Paid Report"}</p>
+          <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+          ${additionalInfo ? `<p><strong>Additional Info:</strong> ${additionalInfo}</p>` : ""}
+        </div>
+        
+        <p>Please send the appropriate report(s) to <strong>${email}</strong> as soon as possible.</p>
+      </div>
+    </body>
+    </html>
+  `
+
+  try {
+    const webhookUrl = `https://api.mailersend.com/v1/email`
+
+    // First, let's check what domains are available
+    console.log("Checking available domains before sending...")
+
+    const domainsResponse = await fetch("https://api.mailersend.com/v1/domains", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${MAILSEND_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    })
+
+    let fromEmail = "noreply@trial-351ndgwqz7zg23wr.mlsender.net" // Default trial domain
+
+    if (domainsResponse.ok) {
+      const domainsData = await domainsResponse.json()
+      const domains = domainsData.data || []
+      const verifiedDomains = domains.filter((domain: any) => domain.domain_settings?.send_paused === false)
+
+      console.log(
+        "Available domains:",
+        domains.map((d: any) => ({ name: d.name, verified: !d.domain_settings?.send_paused })),
+      )
+
+      if (verifiedDomains.length > 0) {
+        // Use the first verified domain
+        fromEmail = `noreply@${verifiedDomains[0].name}`
+        console.log("Using verified domain:", fromEmail)
+      } else {
+        console.log("No verified domains found, using trial domain")
+      }
+    } else {
+      console.log("Could not check domains, using trial domain")
+    }
+
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${MAILSEND_TOKEN}`,
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      body: JSON.stringify({
+        from: {
+          email: fromEmail,
+          name: "CPABee Notifications",
+        },
+        to: [
+          {
+            email: ADMIN_EMAIL,
+            name: "CPABee Admin",
+          },
+        ],
+        subject: subject,
+        text: text,
+        html: html,
+        reply_to: {
+          email: ADMIN_EMAIL,
+          name: "CPABee Admin",
+        },
+      }),
+    })
+
+    const responseData = await response.json().catch(() => ({}))
+
+    if (!response.ok) {
+      console.error("Admin notification API error:", responseData)
+      console.error("Response status:", response.status, response.statusText)
+
+      // If domain verification fails, log the specific error
+      if (responseData.message?.includes("domain must be verified")) {
+        console.error("Domain verification required. Available domains need to be verified in MailerSend dashboard.")
+      }
+    } else {
+      console.log("Admin notification sent successfully to:", ADMIN_EMAIL)
+    }
+  } catch (error) {
+    console.error("Error sending admin notification:", error)
+    // Don't throw here, as this is just a notification
+  }
 }
 
 // Helper function to get report name

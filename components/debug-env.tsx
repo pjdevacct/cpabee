@@ -3,12 +3,16 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 
 export default function DebugEnv() {
   const [isVisible, setIsVisible] = useState(false)
   const [envStatus, setEnvStatus] = useState<any>(null)
   const [domainCheck, setDomainCheck] = useState<any>(null)
   const [isCheckingDomains, setIsCheckingDomains] = useState(false)
+  const [testEmailAddress, setTestEmailAddress] = useState("")
+  const [isTestingNotification, setIsTestingNotification] = useState(false)
+  const [notificationTestResult, setNotificationTestResult] = useState<any>(null)
 
   useEffect(() => {
     // Secret key combination to show debug panel: Ctrl+Alt+D
@@ -47,6 +51,42 @@ export default function DebugEnv() {
       setDomainCheck({ error: "Failed to check MailerSend domains" })
     } finally {
       setIsCheckingDomains(false)
+    }
+  }
+
+  const testAdminNotification = async () => {
+    if (!testEmailAddress || !/^\S+@\S+\.\S+$/.test(testEmailAddress)) {
+      setNotificationTestResult({
+        success: false,
+        error: "Please enter a valid email address",
+      })
+      return
+    }
+
+    setIsTestingNotification(true)
+    setNotificationTestResult(null)
+
+    try {
+      const response = await fetch("/api/debug/test-admin-notification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          testEmail: testEmailAddress,
+        }),
+      })
+
+      const data = await response.json()
+      setNotificationTestResult(data)
+    } catch (error) {
+      console.error("Failed to test admin notification:", error)
+      setNotificationTestResult({
+        success: false,
+        error: "Failed to test admin notification",
+      })
+    } finally {
+      setIsTestingNotification(false)
     }
   }
 
@@ -144,6 +184,53 @@ export default function DebugEnv() {
                 )}
               </div>
 
+              <div className="border rounded p-3 bg-green-50">
+                <h3 className="font-semibold mb-3">Test Admin Notification</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Test if admin notifications are working by simulating a sample request.
+                </p>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <Input
+                      type="email"
+                      placeholder="Enter test customer email"
+                      value={testEmailAddress}
+                      onChange={(e) => setTestEmailAddress(e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={testAdminNotification}
+                      disabled={isTestingNotification}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      {isTestingNotification ? "Testing..." : "Test Notification"}
+                    </Button>
+                  </div>
+
+                  {notificationTestResult && (
+                    <div
+                      className={`p-4 rounded text-sm ${
+                        notificationTestResult.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      <p className="font-medium text-base mb-2">
+                        {notificationTestResult.success ? "✅ Success!" : "❌ Failed"}
+                      </p>
+                      <p className="mb-2">{notificationTestResult.message || notificationTestResult.error}</p>
+
+                      {notificationTestResult.debug && (
+                        <details className="mt-3">
+                          <summary className="cursor-pointer font-medium">Debug Information</summary>
+                          <pre className="mt-2 p-2 bg-white/50 rounded text-xs overflow-auto max-h-40">
+                            {JSON.stringify(notificationTestResult.debug, null, 2)}
+                          </pre>
+                        </details>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="border rounded p-3 bg-blue-50">
                 <h3 className="font-semibold mb-2">Current Status & Next Steps</h3>
                 <div className="text-sm space-y-2">
@@ -151,12 +238,11 @@ export default function DebugEnv() {
                     <strong>Issue:</strong> MailerSend requires domain verification even for trial accounts.
                   </p>
                   <p>
-                    <strong>Current Solution:</strong> Email delivery is disabled. All requests are stored locally and
-                    require manual processing.
+                    <strong>Current Solution:</strong> Admin notifications should work, customer emails are disabled.
                   </p>
 
                   <div className="mt-3 p-3 bg-white rounded border">
-                    <p className="font-medium mb-2">To Fix Email Delivery:</p>
+                    <p className="font-medium mb-2">To Fix Customer Email Delivery:</p>
                     <ol className="list-decimal list-inside space-y-1">
                       <li>Go to your MailerSend dashboard</li>
                       <li>Add and verify a domain (like cpabee.com)</li>
@@ -168,8 +254,8 @@ export default function DebugEnv() {
                   <div className="mt-3 p-3 bg-green-50 rounded border border-green-200">
                     <p className="font-medium text-green-800 mb-1">For Now:</p>
                     <p className="text-green-700">
-                      The system works without email delivery. Check the Admin Panel (Ctrl+Alt+A) to see sample requests
-                      that need manual processing.
+                      Admin notifications should work. Test them above, then try requesting a sample report to see if
+                      you get notified.
                     </p>
                   </div>
                 </div>
