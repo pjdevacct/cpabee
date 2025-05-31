@@ -3,18 +3,12 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 
 export default function DebugEnv() {
   const [isVisible, setIsVisible] = useState(false)
   const [envStatus, setEnvStatus] = useState<any>(null)
-  const [emailTest, setEmailTest] = useState<any>(null)
-  const [isTestingEmail, setIsTestingEmail] = useState(false)
-  const [testEmailAddress, setTestEmailAddress] = useState("")
-  const [isSendingTestEmail, setIsSendingTestEmail] = useState(false)
-  const [testEmailResult, setTestEmailResult] = useState<any>(null)
-  const [isDetailedTest, setIsDetailedTest] = useState(false)
-  const [detailedTestResult, setDetailedTestResult] = useState<any>(null)
+  const [domainCheck, setDomainCheck] = useState<any>(null)
+  const [isCheckingDomains, setIsCheckingDomains] = useState(false)
 
   useEffect(() => {
     // Secret key combination to show debug panel: Ctrl+Alt+D
@@ -42,90 +36,17 @@ export default function DebugEnv() {
     }
   }
 
-  const testEmailAPI = async () => {
-    setIsTestingEmail(true)
+  const checkMailerSendDomains = async () => {
+    setIsCheckingDomains(true)
     try {
-      const response = await fetch("/api/debug/test-email")
+      const response = await fetch("/api/debug/check-mailersend-domains")
       const data = await response.json()
-      setEmailTest(data)
+      setDomainCheck(data)
     } catch (error) {
-      console.error("Failed to test email API:", error)
-      setEmailTest({ error: "Failed to test email API" })
+      console.error("Failed to check MailerSend domains:", error)
+      setDomainCheck({ error: "Failed to check MailerSend domains" })
     } finally {
-      setIsTestingEmail(false)
-    }
-  }
-
-  const sendTestEmail = async () => {
-    if (!testEmailAddress || !/^\S+@\S+\.\S+$/.test(testEmailAddress)) {
-      setTestEmailResult({
-        success: false,
-        error: "Please enter a valid email address",
-      })
-      return
-    }
-
-    setIsSendingTestEmail(true)
-    setTestEmailResult(null)
-
-    try {
-      const response = await fetch("/api/debug/send-test-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          testEmail: testEmailAddress,
-        }),
-      })
-
-      const data = await response.json()
-      setTestEmailResult(data)
-    } catch (error) {
-      console.error("Failed to send test email:", error)
-      setTestEmailResult({
-        success: false,
-        error: "Failed to send test email",
-      })
-    } finally {
-      setIsSendingTestEmail(false)
-    }
-  }
-
-  const runDetailedTest = async () => {
-    if (!testEmailAddress || !/^\S+@\S+\.\S+$/.test(testEmailAddress)) {
-      setDetailedTestResult({
-        success: false,
-        error: "Please enter a valid email address",
-      })
-      return
-    }
-
-    setIsDetailedTest(true)
-    setDetailedTestResult(null)
-
-    try {
-      const response = await fetch("/api/debug/detailed-email-test", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          testEmail: testEmailAddress,
-        }),
-      })
-
-      const data = await response.json()
-      setDetailedTestResult(data)
-    } catch (error) {
-      console.error("Failed to run detailed test:", error)
-      setDetailedTestResult({
-        success: false,
-        error: "Failed to run detailed test",
-        step: "network_error",
-      })
-    } finally {
-      setIsDetailedTest(false)
+      setIsCheckingDomains(false)
     }
   }
 
@@ -165,97 +86,92 @@ export default function DebugEnv() {
                 </div>
               </div>
 
-              <div className="border rounded p-3">
+              <div className="border rounded p-3 bg-yellow-50">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-semibold">Quick API Test</h3>
-                  <Button onClick={testEmailAPI} disabled={isTestingEmail} size="sm">
-                    {isTestingEmail ? "Testing..." : "Test API Connection"}
+                  <h3 className="font-semibold">MailerSend Domain Check</h3>
+                  <Button onClick={checkMailerSendDomains} disabled={isCheckingDomains} size="sm">
+                    {isCheckingDomains ? "Checking..." : "Check Domains"}
                   </Button>
                 </div>
-                {emailTest && (
+
+                {domainCheck && (
                   <div className="space-y-2 text-sm">
-                    <p>
-                      <strong>Status:</strong>{" "}
-                      <span className={emailTest.success ? "text-green-600" : "text-red-600"}>
-                        {emailTest.success ? "✓ Working" : "✗ Failed"}
-                      </span>
-                    </p>
-                    {emailTest.error && (
-                      <p>
-                        <strong>Error:</strong> <span className="text-red-600">{emailTest.error}</span>
-                      </p>
+                    {domainCheck.success ? (
+                      <div>
+                        <p>
+                          <strong>Status:</strong> <span className="text-green-600">✓ Connected to MailerSend</span>
+                        </p>
+                        <p>
+                          <strong>Total Domains:</strong> {domainCheck.totalDomains}
+                        </p>
+                        <p>
+                          <strong>Verified Domains:</strong> {domainCheck.verifiedDomains}
+                        </p>
+
+                        {domainCheck.domains && domainCheck.domains.length > 0 && (
+                          <div className="mt-3">
+                            <p className="font-medium">Your Domains:</p>
+                            <ul className="mt-1 space-y-1">
+                              {domainCheck.domains.map((domain: any, index: number) => (
+                                <li key={index} className="flex items-center gap-2">
+                                  <span className={domain.verified ? "text-green-600" : "text-red-600"}>
+                                    {domain.verified ? "✓" : "✗"}
+                                  </span>
+                                  <span>{domain.name}</span>
+                                  <span className="text-gray-500">({domain.status})</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        <div className="mt-3 p-3 bg-blue-50 rounded">
+                          <p className="font-medium text-blue-800">Recommendation:</p>
+                          <p className="text-blue-700">{domainCheck.recommendation}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <p>
+                          <strong>Status:</strong> <span className="text-red-600">✗ Failed</span>
+                        </p>
+                        <p>
+                          <strong>Error:</strong> <span className="text-red-600">{domainCheck.error}</span>
+                        </p>
+                      </div>
                     )}
                   </div>
                 )}
               </div>
 
               <div className="border rounded p-3 bg-blue-50">
-                <h3 className="font-semibold mb-3">Detailed Email Test</h3>
-                <div className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input
-                      type="email"
-                      placeholder="Enter your email address"
-                      value={testEmailAddress}
-                      onChange={(e) => setTestEmailAddress(e.target.value)}
-                      className="flex-1"
-                    />
-                    <Button
-                      onClick={runDetailedTest}
-                      disabled={isDetailedTest}
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      {isDetailedTest ? "Running..." : "Detailed Test"}
-                    </Button>
-                  </div>
-
-                  {detailedTestResult && (
-                    <div
-                      className={`p-4 rounded text-sm ${
-                        detailedTestResult.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      <p className="font-medium text-base mb-2">
-                        {detailedTestResult.success ? "✅ Success!" : "❌ Failed"}
-                      </p>
-                      <p className="mb-2">{detailedTestResult.message || detailedTestResult.error}</p>
-
-                      {detailedTestResult.step && (
-                        <p className="mb-2">
-                          <strong>Failed at step:</strong> {detailedTestResult.step}
-                        </p>
-                      )}
-
-                      {detailedTestResult.debug && (
-                        <details className="mt-3">
-                          <summary className="cursor-pointer font-medium">Debug Information</summary>
-                          <pre className="mt-2 p-2 bg-white/50 rounded text-xs overflow-auto max-h-40">
-                            {JSON.stringify(detailedTestResult.debug, null, 2)}
-                          </pre>
-                        </details>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="border rounded p-3 bg-yellow-50">
-                <h3 className="font-semibold mb-2">Troubleshooting Guide</h3>
+                <h3 className="font-semibold mb-2">Current Status & Next Steps</h3>
                 <div className="text-sm space-y-2">
                   <p>
-                    <strong>1. Check Deployment:</strong> Make sure you redeployed after updating the MAILSEND_TOKEN.
+                    <strong>Issue:</strong> MailerSend requires domain verification even for trial accounts.
                   </p>
                   <p>
-                    <strong>2. Verify Token:</strong> Ensure your new MailerSend token is active and has "Email sending"
-                    permission.
+                    <strong>Current Solution:</strong> Email delivery is disabled. All requests are stored locally and
+                    require manual processing.
                   </p>
-                  <p>
-                    <strong>3. Check Logs:</strong> The detailed test will show exactly where the process fails.
-                  </p>
-                  <p>
-                    <strong>4. Domain Issues:</strong> We're using MailerSend's trial domain - this should work without
-                    verification.
-                  </p>
+
+                  <div className="mt-3 p-3 bg-white rounded border">
+                    <p className="font-medium mb-2">To Fix Email Delivery:</p>
+                    <ol className="list-decimal list-inside space-y-1">
+                      <li>Go to your MailerSend dashboard</li>
+                      <li>Add and verify a domain (like cpabee.com)</li>
+                      <li>Update the code to use your verified domain</li>
+                      <li>Or upgrade to a paid plan for more flexibility</li>
+                    </ol>
+                  </div>
+
+                  <div className="mt-3 p-3 bg-green-50 rounded border border-green-200">
+                    <p className="font-medium text-green-800 mb-1">For Now:</p>
+                    <p className="text-green-700">
+                      The system works without email delivery. Check the Admin Panel (Ctrl+Alt+A) to see sample requests
+                      that need manual processing.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
