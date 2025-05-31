@@ -13,6 +13,8 @@ export default function DebugEnv() {
   const [testEmailAddress, setTestEmailAddress] = useState("")
   const [isSendingTestEmail, setIsSendingTestEmail] = useState(false)
   const [testEmailResult, setTestEmailResult] = useState<any>(null)
+  const [isDetailedTest, setIsDetailedTest] = useState(false)
+  const [detailedTestResult, setDetailedTestResult] = useState<any>(null)
 
   useEffect(() => {
     // Secret key combination to show debug panel: Ctrl+Alt+D
@@ -90,13 +92,50 @@ export default function DebugEnv() {
     }
   }
 
+  const runDetailedTest = async () => {
+    if (!testEmailAddress || !/^\S+@\S+\.\S+$/.test(testEmailAddress)) {
+      setDetailedTestResult({
+        success: false,
+        error: "Please enter a valid email address",
+      })
+      return
+    }
+
+    setIsDetailedTest(true)
+    setDetailedTestResult(null)
+
+    try {
+      const response = await fetch("/api/debug/detailed-email-test", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          testEmail: testEmailAddress,
+        }),
+      })
+
+      const data = await response.json()
+      setDetailedTestResult(data)
+    } catch (error) {
+      console.error("Failed to run detailed test:", error)
+      setDetailedTestResult({
+        success: false,
+        error: "Failed to run detailed test",
+        step: "network_error",
+      })
+    } finally {
+      setIsDetailedTest(false)
+    }
+  }
+
   if (!isVisible) return null
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl p-6 max-h-[80vh] overflow-auto">
+      <Card className="w-full max-w-5xl p-6 max-h-[90vh] overflow-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Environment Variables Debug</h2>
+          <h2 className="text-xl font-bold">Email System Debug Panel</h2>
           <Button variant="outline" onClick={() => setIsVisible(false)}>
             Close
           </Button>
@@ -128,9 +167,9 @@ export default function DebugEnv() {
 
               <div className="border rounded p-3">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-semibold">Email API Test</h3>
+                  <h3 className="font-semibold">Quick API Test</h3>
                   <Button onClick={testEmailAPI} disabled={isTestingEmail} size="sm">
-                    {isTestingEmail ? "Testing..." : "Test Email API"}
+                    {isTestingEmail ? "Testing..." : "Test API Connection"}
                   </Button>
                 </div>
                 {emailTest && (
@@ -146,20 +185,12 @@ export default function DebugEnv() {
                         <strong>Error:</strong> <span className="text-red-600">{emailTest.error}</span>
                       </p>
                     )}
-                    {emailTest.debug && (
-                      <details className="mt-2">
-                        <summary className="cursor-pointer font-medium">Debug Details</summary>
-                        <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
-                          {JSON.stringify(emailTest.debug, null, 2)}
-                        </pre>
-                      </details>
-                    )}
                   </div>
                 )}
               </div>
 
               <div className="border rounded p-3 bg-blue-50">
-                <h3 className="font-semibold mb-3">Send Test Email</h3>
+                <h3 className="font-semibold mb-3">Detailed Email Test</h3>
                 <div className="space-y-3">
                   <div className="flex gap-2">
                     <Input
@@ -170,27 +201,36 @@ export default function DebugEnv() {
                       className="flex-1"
                     />
                     <Button
-                      onClick={sendTestEmail}
-                      disabled={isSendingTestEmail}
+                      onClick={runDetailedTest}
+                      disabled={isDetailedTest}
                       className="bg-blue-600 hover:bg-blue-700 text-white"
                     >
-                      {isSendingTestEmail ? "Sending..." : "Send Test"}
+                      {isDetailedTest ? "Running..." : "Detailed Test"}
                     </Button>
                   </div>
 
-                  {testEmailResult && (
+                  {detailedTestResult && (
                     <div
-                      className={`p-3 rounded text-sm ${
-                        testEmailResult.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                      className={`p-4 rounded text-sm ${
+                        detailedTestResult.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                       }`}
                     >
-                      <p className="font-medium">{testEmailResult.success ? "✅ Success!" : "❌ Failed"}</p>
-                      <p>{testEmailResult.message || testEmailResult.error}</p>
-                      {testEmailResult.debug && (
-                        <details className="mt-2">
-                          <summary className="cursor-pointer">Debug Info</summary>
-                          <pre className="mt-1 text-xs overflow-auto">
-                            {JSON.stringify(testEmailResult.debug, null, 2)}
+                      <p className="font-medium text-base mb-2">
+                        {detailedTestResult.success ? "✅ Success!" : "❌ Failed"}
+                      </p>
+                      <p className="mb-2">{detailedTestResult.message || detailedTestResult.error}</p>
+
+                      {detailedTestResult.step && (
+                        <p className="mb-2">
+                          <strong>Failed at step:</strong> {detailedTestResult.step}
+                        </p>
+                      )}
+
+                      {detailedTestResult.debug && (
+                        <details className="mt-3">
+                          <summary className="cursor-pointer font-medium">Debug Information</summary>
+                          <pre className="mt-2 p-2 bg-white/50 rounded text-xs overflow-auto max-h-40">
+                            {JSON.stringify(detailedTestResult.debug, null, 2)}
                           </pre>
                         </details>
                       )}
@@ -199,48 +239,24 @@ export default function DebugEnv() {
                 </div>
               </div>
 
-              <div className="border rounded p-3">
-                <h3 className="font-semibold mb-2">Other Configuration</h3>
-                <div className="space-y-1 text-sm">
+              <div className="border rounded p-3 bg-yellow-50">
+                <h3 className="font-semibold mb-2">Troubleshooting Guide</h3>
+                <div className="text-sm space-y-2">
                   <p>
-                    <strong>BLOB_READ_WRITE_TOKEN:</strong>{" "}
-                    <span className={envStatus.blobToken ? "text-green-600" : "text-red-600"}>
-                      {envStatus.blobToken ? "✓ Set" : "✗ Missing"}
-                    </span>
+                    <strong>1. Check Deployment:</strong> Make sure you redeployed after updating the MAILSEND_TOKEN.
                   </p>
                   <p>
-                    <strong>ADMIN_SECRET:</strong>{" "}
-                    <span className={envStatus.adminSecret ? "text-green-600" : "text-red-600"}>
-                      {envStatus.adminSecret ? "✓ Set" : "✗ Missing"}
-                    </span>
+                    <strong>2. Verify Token:</strong> Ensure your new MailerSend token is active and has "Email sending"
+                    permission.
                   </p>
                   <p>
-                    <strong>NODE_ENV:</strong> {envStatus.nodeEnv || "Not set"}
+                    <strong>3. Check Logs:</strong> The detailed test will show exactly where the process fails.
                   </p>
                   <p>
-                    <strong>VERCEL_URL:</strong> {envStatus.vercelUrl || "Not set"}
+                    <strong>4. Domain Issues:</strong> We're using MailerSend's trial domain - this should work without
+                    verification.
                   </p>
                 </div>
-              </div>
-            </div>
-
-            <div className="mt-6 p-4 bg-yellow-50 rounded">
-              <h3 className="font-semibold mb-2">Next Steps</h3>
-              <div className="text-sm space-y-2">
-                <p>
-                  <strong>1. Redeploy:</strong> If you just updated your MAILSEND_TOKEN, make sure to redeploy your
-                  Vercel application.
-                </p>
-                <p>
-                  <strong>2. Test API:</strong> Click "Test Email API" to verify your token works.
-                </p>
-                <p>
-                  <strong>3. Send Test Email:</strong> Enter your email above and click "Send Test" to receive an actual
-                  test email.
-                </p>
-                <p>
-                  <strong>4. Check Results:</strong> If the test email works, your sample report system should work too!
-                </p>
               </div>
             </div>
           </div>
