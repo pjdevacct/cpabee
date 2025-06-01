@@ -18,6 +18,7 @@ import AdminPanel from "@/components/admin-panel"
 import DebugEnv from "@/components/debug-env"
 import VersionInfo from "@/components/version-info"
 import { sendEmailNotification } from "./actions"
+import DeliveryBanner from "@/components/delivery-banner"
 
 export default function LandingPage() {
   // State for modals
@@ -97,8 +98,11 @@ export default function LandingPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      {/* Delivery Notice Banner */}
+      <DeliveryBanner />
+
       {/* Header with Sign Up button that opens modal */}
-      <header className="sticky top-0 z-40 border-b bg-white">
+      <header className="sticky top-0 z-40 border-b bg-white mt-16">
         <div className="container flex h-16 items-center justify-between py-4">
           <div
             className="flex items-center gap-2 cursor-pointer"
