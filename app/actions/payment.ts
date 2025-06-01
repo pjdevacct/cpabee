@@ -2,7 +2,6 @@
 
 import { cookies } from "next/headers"
 import type { ReportType } from "@/components/report-selector"
-import { getSignedReportUrl } from "@/lib/report-storage"
 
 // Environment variables
 const MAILSEND_TOKEN = process.env.MAILSEND_TOKEN
@@ -48,7 +47,8 @@ export async function createPayment(data: PaymentData) {
         console.log("Email already received a free sample:", data.email)
         return {
           success: false,
-          message: "This email has already received a free sample report.",
+          message:
+            "This email has already received a free sample report. Please contact us at info@cpabee.com if you need assistance.",
         }
       }
 
@@ -56,22 +56,26 @@ export async function createPayment(data: PaymentData) {
       freeSampleEmails.add(data.email)
       console.log("Added email to free sample list:", data.email)
 
+      // Send admin notification about the sample request
       try {
-        // Always use SAMPLE report type for free samples
-        console.log("Attempting to deliver sample report")
-        await deliverReport(data.email, "SAMPLE", true)
-        console.log("Sample report delivered successfully")
+        console.log("Sending admin notification about sample request")
+        await sendAdminNotification(
+          data.email,
+          "SAMPLE",
+          true,
+          false,
+          "Customer requested a free sample report. Please send manually.",
+        )
+        console.log("Admin notification sent successfully")
+      } catch (notificationError) {
+        console.error("Failed to send admin notification:", notificationError)
+        // Continue even if notification fails
+      }
 
-        return {
-          success: true,
-          message: "Your free sample report has been sent to your email.",
-        }
-      } catch (deliveryError) {
-        console.error("Error delivering sample report:", deliveryError)
-        return {
-          success: false,
-          message: "We encountered an issue sending your sample report. Please try again or contact support.",
-        }
+      return {
+        success: true,
+        message:
+          "Thank you for your interest! We've received your sample report request and will send it to your email within 24 hours. If you have any questions, please contact us at info@cpabee.com.",
       }
     }
 
@@ -84,19 +88,19 @@ export async function createPayment(data: PaymentData) {
       const itemName =
         data.paymentType === "BUNDLE" ? "CPA Reports: Full Access Bundle" : `CPA Report: ${data.reportType}`
 
-      // Send admin notification about manual request
+      // Send admin notification about manual payment request
       try {
-        const additionalInfo = `
-          MANUAL PAYMENT REQUEST: Customer requested ${data.paymentType} report (${itemName}) for $${amount}.
-          Please contact the customer to arrange payment and delivery.
-        `
-        await sendAdminNotification(data.email, data.reportType, false, false, additionalInfo)
-        console.log("Admin notification sent for manual request")
-      } catch (notifyError) {
-        console.error("Failed to send admin notification about manual request:", notifyError)
+        await sendAdminNotification(
+          data.email,
+          data.reportType,
+          false,
+          false,
+          `Manual payment request: ${itemName} for $${amount}. Please contact customer to arrange payment.`,
+        )
+      } catch (notificationError) {
+        console.error("Failed to send admin notification for manual request:", notificationError)
       }
 
-      // Return success with manual request message
       return {
         success: true,
         manualRequest: true,
@@ -128,7 +132,7 @@ export async function createPayment(data: PaymentData) {
     console.error("Payment creation error:", error)
     return {
       success: false,
-      message: `Failed to process payment: ${error.message || "Unknown error"}. Please try again later.`,
+      message: `We encountered an issue processing your request. Please try again or contact us directly at info@cpabee.com for assistance.`,
     }
   }
 }
@@ -144,42 +148,22 @@ export async function recordPayPalPayment(paymentRecord: PayPalPaymentRecord) {
   })
 
   try {
-    // In a production app, you would store this payment record in your database
-
-    // Send admin notification about the payment
+    // Send admin notification about the PayPal payment
     try {
-      const additionalInfo = `
-        PayPal Payment Received
-        Order ID: ${paymentRecord.paypalOrderId}
-        Payer ID: ${paymentRecord.paypalPayerId}
-        Amount: $${paymentRecord.amount}
-      `
-      await sendAdminNotification(paymentRecord.email, paymentRecord.reportType, false, false, additionalInfo)
-    } catch (notifyError) {
-      console.error("Failed to send admin notification about PayPal payment:", notifyError)
-    }
-
-    // Deliver the report(s) based on the payment type
-    try {
-      if (paymentRecord.paymentType === "SINGLE") {
-        console.log("Delivering single report:", paymentRecord.reportType)
-        await deliverReport(paymentRecord.email, paymentRecord.reportType)
-      } else if (paymentRecord.paymentType === "BUNDLE") {
-        console.log("Delivering all reports bundle")
-        await deliverAllReports(paymentRecord.email)
-      }
-    } catch (deliveryError) {
-      console.error("Error delivering report(s):", deliveryError)
-      return {
-        success: false,
-        message:
-          "Payment was successful, but we encountered an issue delivering your report(s). Our team has been notified and will send your report(s) manually.",
-      }
+      await sendAdminNotification(
+        paymentRecord.email,
+        paymentRecord.reportType,
+        false,
+        false,
+        `PayPal payment received: $${paymentRecord.amount}. Order ID: ${paymentRecord.paypalOrderId}. Please deliver report(s) manually.`,
+      )
+    } catch (notificationError) {
+      console.error("Failed to send admin notification about PayPal payment:", notificationError)
     }
 
     return {
       success: true,
-      message: "Payment successful! Your report(s) have been sent to your email.",
+      message: "Payment successful! Our team will manually send your report(s) to your email within 24 hours.",
     }
   } catch (error: any) {
     console.error("Error recording PayPal payment:", error)
@@ -211,23 +195,17 @@ export async function handlePaymentSuccess(paymentId: string) {
       paymentType: paymentData.paymentType,
     })
 
-    // Deliver the report(s) based on the payment type
+    // Send admin notification about the payment
     try {
-      if (paymentData.paymentType === "SINGLE") {
-        console.log("Delivering single report:", paymentData.reportType)
-        await deliverReport(paymentData.email, paymentData.reportType)
-      } else if (paymentData.paymentType === "BUNDLE") {
-        console.log("Delivering all reports bundle")
-        // Deliver all reports
-        await deliverAllReports(paymentData.email)
-      }
-    } catch (deliveryError) {
-      console.error("Error delivering report(s):", deliveryError)
-      return {
-        success: false,
-        message:
-          "Payment was successful, but we encountered an issue delivering your report(s). Our team has been notified and will send your report(s) manually.",
-      }
+      await sendAdminNotification(
+        paymentData.email,
+        paymentData.reportType,
+        false,
+        false,
+        `Payment successful for ${paymentData.paymentType} report. Payment ID: ${paymentId}. Please deliver report(s) manually.`,
+      )
+    } catch (notificationError) {
+      console.error("Failed to send admin notification:", notificationError)
     }
 
     // Clear the payment data cookie
@@ -241,7 +219,7 @@ export async function handlePaymentSuccess(paymentId: string) {
 
     return {
       success: true,
-      message: "Payment successful! Your report(s) have been sent to your email.",
+      message: "Payment successful! Our team will manually send your report(s) to your email within 24 hours.",
     }
   } catch (error) {
     console.error("Payment success handling error:", error)
@@ -249,252 +227,6 @@ export async function handlePaymentSuccess(paymentId: string) {
       success: false,
       message: "Failed to process your payment. Please contact support.",
     }
-  }
-}
-
-// Helper function to deliver a single report
-async function deliverReport(email: string, reportType: ReportType | "ALL" | "SAMPLE", isSample = false) {
-  console.log(`Starting report delivery: ${reportType} to ${email}`)
-
-  // Get the actual report URL
-  let reportUrl: string | null = null
-
-  try {
-    // Try to get the URL
-    console.log(`Getting signed URL for report type: ${reportType}`)
-    reportUrl = await getSignedReportUrl(reportType)
-    console.log(`Report URL obtained: ${reportUrl ? "Success" : "Not found"}`)
-  } catch (error) {
-    console.error(`Error getting report URL: ${error}`)
-  }
-
-  // If we couldn't get a URL, use a fallback message
-  const hasReport = !!reportUrl
-
-  const reportName = reportType === "ALL" ? "All CPA Exam Sections" : getReportName(reportType as ReportType | "SAMPLE")
-
-  // Prepare email content
-  const subject = `Your CPABee Report: ${reportName}`
-  console.log(`Preparing email with subject: ${subject}`)
-
-  // Different email content based on whether we have a report URL
-  const text = hasReport
-    ? `
-      Thank you for your ${isSample ? "interest in" : "purchase from"} CPABee!
-      
-      Your ${reportName} report is ready for download at: ${reportUrl}
-      
-      If you have any questions, please contact us at ${ADMIN_EMAIL}.
-      
-      The CPABee Team
-    `
-    : `
-      Thank you for your ${isSample ? "interest in" : "purchase from"} CPABee!
-      
-      We're preparing your ${reportName} report and will send it to you shortly.
-      
-      If you have any questions, please contact us at ${ADMIN_EMAIL}.
-      
-      The CPABee Team
-    `
-
-  const html = hasReport
-    ? `
-      <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-          }
-          .header {
-            background-color: #f7df1e;
-            padding: 20px;
-            text-align: center;
-            border-radius: 5px 5px 0 0;
-          }
-          .content {
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #eee;
-          }
-          .footer {
-            font-size: 12px;
-            color: #666;
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 1px solid #eee;
-          }
-          .button {
-            display: inline-block;
-            background-color: #f7df1e;
-            color: #000;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin: 20px 0;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>CPABee Report Delivery</h1>
-        </div>
-        <div class="content">
-          <h2>Thank you for your ${isSample ? "interest in" : "purchase from"} CPABee!</h2>
-          <p>Your <strong>${reportName}</strong> report is ready for download.</p>
-          <p style="text-align: center;">
-            <a href="${reportUrl}" class="button">Download Your Report</a>
-          </p>
-          <p>If the button above doesn't work, you can copy and paste this link into your browser:</p>
-          <p style="word-break: break-all;">${reportUrl}</p>
-          <p>If you have any questions, please contact us at <a href="mailto:${ADMIN_EMAIL}">${ADMIN_EMAIL}</a>.</p>
-        </div>
-        <div class="footer">
-          <p>© ${new Date().getFullYear()} CPABee. All rights reserved.</p>
-          <p>This email was sent to ${email}</p>
-        </div>
-      </body>
-      </html>
-    `
-    : `
-      <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-          }
-          .header {
-            background-color: #f7df1e;
-            padding: 20px;
-            text-align: center;
-            border-radius: 5px 5px 0 0;
-          }
-          .content {
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #eee;
-          }
-          .footer {
-            font-size: 12px;
-            color: #666;
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 1px solid #eee;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>CPABee Report Delivery</h1>
-        </div>
-        <div class="content">
-          <h2>Thank you for your ${isSample ? "interest in" : "purchase from"} CPABee!</h2>
-          <p>We're preparing your <strong>${reportName}</strong> report and will send it to you shortly.</p>
-          <p>If you have any questions, please contact us at <a href="mailto:${ADMIN_EMAIL}">${ADMIN_EMAIL}</a>.</p>
-        </div>
-        <div class="footer">
-          <p>© ${new Date().getFullYear()} CPABee. All rights reserved.</p>
-          <p>This email was sent to ${email}</p>
-        </div>
-      </body>
-      </html>
-    `
-
-  // Check if we have the required token for sending emails
-  if (!MAILSEND_TOKEN) {
-    console.error("MAILSEND_TOKEN is not configured")
-    throw new Error("Email service is not properly configured")
-  }
-
-  // Send email using MailSend API
-  try {
-    console.log("Sending email via MailSend API")
-    const webhookUrl = `https://api.mailersend.com/v1/email`
-
-    const emailPayload = {
-      from: {
-        email: "reports@cpabee.com",
-        name: "CPABee Reports",
-      },
-      to: [
-        {
-          email: email,
-          name: "CPABee Customer",
-        },
-      ],
-      subject: subject,
-      text: text,
-      html: html,
-      reply_to: {
-        email: ADMIN_EMAIL,
-        name: "CPABee Support",
-      },
-    }
-
-    console.log("Email payload prepared:", {
-      to: email,
-      subject: subject,
-      hasHtml: !!html,
-      hasText: !!text,
-    })
-
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${MAILSEND_TOKEN}`,
-        "X-Requested-With": "XMLHttpRequest",
-      },
-      body: JSON.stringify(emailPayload),
-    })
-
-    if (!response.ok) {
-      const responseData = await response.json().catch(() => ({}))
-      console.error("Email API error:", responseData)
-      console.error("Response status:", response.status, response.statusText)
-      throw new Error(`Failed to send report: ${responseData.message || response.statusText}`)
-    }
-
-    console.log("Email sent successfully")
-
-    // Also send a notification to admin
-    try {
-      await sendAdminNotification(email, reportType, isSample, hasReport)
-      console.log("Admin notification sent")
-    } catch (notificationError) {
-      console.error("Failed to send admin notification:", notificationError)
-      // Continue even if admin notification fails
-    }
-
-    return true
-  } catch (error) {
-    console.error("Error sending report email:", error)
-    throw error
-  }
-}
-
-// Helper function to deliver all reports
-async function deliverAllReports(email: string) {
-  console.log(`Starting delivery of all reports to ${email}`)
-
-  // Option 1: Send a single email with all reports bundled
-  try {
-    await deliverReport(email, "ALL")
-    console.log("All reports bundle delivered successfully")
-  } catch (error) {
-    console.error("Error delivering all reports bundle:", error)
-    throw error
   }
 }
 
@@ -506,27 +238,7 @@ async function sendAdminNotification(
   reportDelivered = true,
   additionalInfo = "",
 ) {
-  console.log(`Sending admin notification for ${reportType} report to ${email}`)
-
-  const subject = `New CPABee Report ${isSample ? "Sample Request" : "Purchase"}: ${email}`
-  const text = `
-    New report ${isSample ? "sample request" : "purchase"} from CPABee website:
-    
-    Email: ${email}
-    Report Type: ${reportType === "ALL" ? "Full Access Bundle" : reportType}
-    Report Delivered: ${reportDelivered ? "Yes" : "No - Report not found"}
-    Time: ${new Date().toISOString()}
-    ${additionalInfo ? `\nAdditional Info: ${additionalInfo}` : ""}
-  `
-
-  const html = `
-    <h2>New report ${isSample ? "sample request" : "purchase"} from CPABee website</h2>
-    <p><strong>Email:</strong> ${email}</p>
-    <p><strong>Report Type:</strong> ${reportType === "ALL" ? "Full Access Bundle" : reportType}</p>
-    <p><strong>Report Delivered:</strong> ${reportDelivered ? "Yes" : "No - Report not found"}</p>
-    <p><strong>Time:</strong> ${new Date().toISOString()}</p>
-    ${additionalInfo ? `<p><strong>Additional Info:</strong> ${additionalInfo}</p>` : ""}
-  `
+  console.log(`Sending admin notification for ${reportType} ${isSample ? "sample request" : "purchase"} from ${email}`)
 
   // Check if we have the required token for sending emails
   if (!MAILSEND_TOKEN) {
@@ -534,8 +246,123 @@ async function sendAdminNotification(
     return // Don't throw, just return
   }
 
+  const subject = `CPABee ${isSample ? "Sample Request" : "Purchase"}: ${email}`
+  const text = `
+New ${isSample ? "sample request" : "purchase"} from CPABee website:
+
+Email: ${email}
+Report Type: ${reportType === "ALL" ? "Full Access Bundle" : reportType}
+Request Type: ${isSample ? "Free Sample" : "Paid Report"}
+Time: ${new Date().toISOString()}
+${
+  additionalInfo
+    ? `
+Additional Info: ${additionalInfo}`
+    : ""
+}
+
+ACTION REQUIRED: Please manually send the report to the customer.
+  `
+
+  const html = `
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+        .header {
+          background-color: #f7df1e;
+          padding: 20px;
+          text-align: center;
+          border-radius: 5px 5px 0 0;
+        }
+        .content {
+          padding: 20px;
+          background-color: #fff;
+          border: 1px solid #eee;
+        }
+        .alert {
+          background-color: #fff3cd;
+          border: 1px solid #ffeaa7;
+          color: #856404;
+          padding: 15px;
+          border-radius: 5px;
+          margin: 15px 0;
+        }
+        .details {
+          background-color: #f8f9fa;
+          padding: 15px;
+          border-radius: 5px;
+          margin: 15px 0;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>🐝 CPABee ${isSample ? "Sample Request" : "Purchase"}</h1>
+      </div>
+      <div class="content">
+        <div class="alert">
+          <h3>⚠️ ACTION REQUIRED</h3>
+          <p>Please manually send the report to the customer.</p>
+        </div>
+        
+        <div class="details">
+          <h3>Request Details:</h3>
+          <p><strong>Customer Email:</strong> ${email}</p>
+          <p><strong>Report Type:</strong> ${reportType === "ALL" ? "Full Access Bundle" : reportType}</p>
+          <p><strong>Request Type:</strong> ${isSample ? "Free Sample" : "Paid Report"}</p>
+          <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+          ${additionalInfo ? `<p><strong>Additional Info:</strong> ${additionalInfo}</p>` : ""}
+        </div>
+        
+        <p>Please send the appropriate report(s) to <strong>${email}</strong> as soon as possible.</p>
+      </div>
+    </body>
+    </html>
+  `
+
   try {
     const webhookUrl = `https://api.mailersend.com/v1/email`
+
+    // First, let's check what domains are available
+    console.log("Checking available domains before sending...")
+
+    const domainsResponse = await fetch("https://api.mailersend.com/v1/domains", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${MAILSEND_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    })
+
+    let fromEmail = "noreply@trial-351ndgwqz7zg23wr.mlsender.net" // Default trial domain
+
+    if (domainsResponse.ok) {
+      const domainsData = await domainsResponse.json()
+      const domains = domainsData.data || []
+      const verifiedDomains = domains.filter((domain: any) => domain.domain_settings?.send_paused === false)
+
+      console.log(
+        "Available domains:",
+        domains.map((d: any) => ({ name: d.name, verified: !d.domain_settings?.send_paused })),
+      )
+
+      if (verifiedDomains.length > 0) {
+        // Use the first verified domain
+        fromEmail = `noreply@${verifiedDomains[0].name}`
+        console.log("Using verified domain:", fromEmail)
+      } else {
+        console.log("No verified domains found, using trial domain")
+      }
+    } else {
+      console.log("Could not check domains, using trial domain")
+    }
 
     const response = await fetch(webhookUrl, {
       method: "POST",
@@ -546,7 +373,7 @@ async function sendAdminNotification(
       },
       body: JSON.stringify({
         from: {
-          email: "notifications@cpabee.com",
+          email: fromEmail,
           name: "CPABee Notifications",
         },
         to: [
@@ -565,12 +392,18 @@ async function sendAdminNotification(
       }),
     })
 
+    const responseData = await response.json().catch(() => ({}))
+
     if (!response.ok) {
-      const responseData = await response.json().catch(() => ({}))
       console.error("Admin notification API error:", responseData)
       console.error("Response status:", response.status, response.statusText)
+
+      // If domain verification fails, log the specific error
+      if (responseData.message?.includes("domain must be verified")) {
+        console.error("Domain verification required. Available domains need to be verified in MailerSend dashboard.")
+      }
     } else {
-      console.log("Admin notification sent successfully")
+      console.log("Admin notification sent successfully to:", ADMIN_EMAIL)
     }
   } catch (error) {
     console.error("Error sending admin notification:", error)

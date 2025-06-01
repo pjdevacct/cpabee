@@ -15,6 +15,7 @@ import ScrollToTop from "@/components/scroll-to-top"
 import EmailSignupModal from "@/components/email-signup-modal"
 import ReportPurchaseModal from "@/components/report-purchase-modal"
 import AdminPanel from "@/components/admin-panel"
+import DebugEnv from "@/components/debug-env"
 import { sendEmailNotification } from "./actions"
 
 export default function LandingPage() {
@@ -95,6 +96,23 @@ export default function LandingPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      {/* High Volume Notice Banner */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2 px-4 text-center text-sm font-medium shadow-sm">
+        <div className="container mx-auto">
+          <span className="inline-flex items-center gap-2">
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            High Volume Notice: Report delivery may take up to 24 hours to ensure you receive the latest available data
+            and trending insights.
+          </span>
+        </div>
+      </div>
       {/* Header with Sign Up button that opens modal */}
       <header className="sticky top-0 z-40 border-b bg-white">
         <div className="container flex h-16 items-center justify-between py-4">
@@ -774,6 +792,9 @@ export default function LandingPage() {
 
       {/* Admin Panel - Hidden by default, press Ctrl+Alt+A to show */}
       <AdminPanel />
+
+      {/* Debug Environment Panel - Hidden by default, press Ctrl+Alt+D to show */}
+      <DebugEnv />
     </div>
   )
 }

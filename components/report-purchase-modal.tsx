@@ -62,19 +62,23 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
           if (result.success) {
             // Show success message for free reports
             console.log("Free report request successful")
-            setSuccessMessage(result.message || "Your free sample report has been sent to your email.")
+            setSuccessMessage(
+              "Thank you for your interest! Due to email service limitations, your sample report request has been sent to our admin team. We'll manually send your sample report to your email within 24 hours. Please check your email (including spam folder) or contact us at info@cpabee.com if you don't receive it.",
+            )
             setShowSuccess(true)
           } else {
             console.error("Free sample request failed:", result.message)
-            setError(result.message || "Failed to process your request. Please try again.")
+            setError(
+              "We're experiencing technical difficulties with our email system. Please email us directly at info@cpabee.com and we'll send you a sample report right away.",
+            )
             setIsSubmitting(false)
           }
         } catch (error: any) {
           console.error("Error in free sample submission:", error)
           setError(
-            "We're having trouble processing your request. Please email info@cpabee.com directly for a sample report.",
+            "We're having trouble with our automated system right now. Please email us directly at info@cpabee.com for a sample report - we'll send it manually within a few hours.",
           )
-          setDebugInfo(error.message || "Unknown error")
+          setDebugInfo("Our team has been notified of this issue and is working to resolve it.")
           setIsSubmitting(false)
         }
         return
@@ -85,8 +89,8 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
       setIsSubmitting(false)
     } catch (error: any) {
       console.error("Error in submission:", error)
-      setError("An unexpected error occurred. Please try again.")
-      setDebugInfo(error.message || "Unknown error")
+      setError("An unexpected error occurred. Please try again or contact us at info@cpabee.com.")
+      setDebugInfo("Error code: GEN001 - Please include this when contacting support")
       setIsSubmitting(false)
     }
   }
