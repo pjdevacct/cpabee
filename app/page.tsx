@@ -732,7 +732,7 @@ export default function LandingPage() {
       <EmailSignupModal
         isOpen={isSignUpModalOpen}
         onClose={() => setIsSignUpModalOpen(false)}
-        title="Get Your Free Sample Reports"
+        title="Get Your Free Sample Report"
         description="Enter your email to receive a free sample of our CPA exam trend reports."
         buttonText="Send Me the Sample"
         source="Sample Report Request"
@@ -752,7 +752,7 @@ export default function LandingPage() {
         isOpen={isFreeSampleModalOpen}
         onClose={() => setIsFreeSampleModalOpen(false)}
         type="FREE"
-        title="Get Your Free Sample Report"
+        title="Get Your Free Sample Reports"
         description="Select a report section and enter your email to receive a free sample report."
       />
 
