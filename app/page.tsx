@@ -165,6 +165,9 @@ export default function LandingPage() {
             <Link href="/study-plan" className="text-sm font-medium hover:text-yellow-600 transition-colors">
               Study Plan
             </Link>
+            <Link href="/practice-sims" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+              Practice SIMs
+            </Link>
           </nav>
           <div>
             <Button
@@ -763,6 +766,9 @@ export default function LandingPage() {
               </Link>
               <Link href="/study-plan" className="text-gray-600 hover:text-yellow-600">
                 Study Plan
+              </Link>
+              <Link href="/practice-sims" className="text-gray-600 hover:text-yellow-600">
+                Practice SIMs
               </Link>
             </div>
 
