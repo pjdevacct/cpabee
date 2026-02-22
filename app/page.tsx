@@ -162,6 +162,9 @@ export default function LandingPage() {
             <Link href="#pricing" className="text-sm font-medium hover:text-yellow-600 transition-colors">
               Pricing
             </Link>
+            <Link href="/study-plan" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+              Study Plan
+            </Link>
           </nav>
           <div>
             <Button
@@ -427,7 +430,7 @@ export default function LandingPage() {
               <div className="text-center space-y-4">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Pricing</h2>
                 <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                  Candidates sit for 4 sections. The bundle pays for itself before your second exam.
+                  Every CPA candidate must pass all 4 sections. The bundle covers your entire exam for less than the cost of two individual reports.
                 </p>
               </div>
             </AnimatedSection>
@@ -488,7 +491,7 @@ export default function LandingPage() {
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
-                        <span className="text-sm">Most candidates sit 3–4 sections — this covers your full journey</span>
+                        <span className="text-sm">You need all 4 sections to become a CPA — this covers every one of them</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
@@ -556,11 +559,11 @@ export default function LandingPage() {
             <AnimatedSection delay={0.5}>
               <div className="max-w-2xl mx-auto bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
                 <p className="text-amber-900 font-semibold text-lg mb-1">
-                  💡 Candidates sit for 4 sections total.
+                  💡 Every CPA candidate must pass all 4 sections.
                 </p>
                 <p className="text-amber-800 text-sm">
-                  Buying sections one at a time costs $76. The Full Bundle is $49 — and covers every section.
-                  It's the move most serious candidates make.
+                  Buying sections one at a time costs $76. The Full Bundle is $49 — covers all 4 required sections
+                  plus all 3 discipline options, including any retakes. Simple math.
                 </p>
                 <Button
                   variant="outline"
@@ -757,6 +760,9 @@ export default function LandingPage() {
               </Link>
               <Link href="/privacy-policy" className="text-gray-600 hover:text-yellow-600">
                 Privacy Policy
+              </Link>
+              <Link href="/study-plan" className="text-gray-600 hover:text-yellow-600">
+                Study Plan
               </Link>
             </div>
 
