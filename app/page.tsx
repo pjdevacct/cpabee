@@ -167,6 +167,9 @@ export default function LandingPage() {
             <Link href="/study-plan" className="text-sm font-medium hover:text-yellow-600 transition-colors">
               Study Plan
             </Link>
+            <Link href="/practice-mcq" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+              Practice MCQs
+            </Link>
             <Link href="/practice-sims" className="text-sm font-medium hover:text-yellow-600 transition-colors">
               Practice SIMs
             </Link>
@@ -768,6 +771,9 @@ export default function LandingPage() {
               </Link>
               <Link href="/study-plan" className="text-gray-600 hover:text-yellow-600">
                 Study Plan
+              </Link>
+              <Link href="/practice-sims" className="text-gray-600 hover:text-yellow-600">
+                 Practice MCQs
               </Link>
               <Link href="/practice-sims" className="text-gray-600 hover:text-yellow-600">
                 Practice SIMs
