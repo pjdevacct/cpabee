@@ -1,14 +1,13 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
-import { TrendingUp, Brain, Zap, CheckCircle2, Clock, Target, Mail, FileText } from "lucide-react"
+import { TrendingUp, Brain, Zap, CheckCircle2, Clock, Target, Mail, FileText, ArrowRight } from "lucide-react"
 import ChartSection from "@/components/chart-section"
 import AnimatedSection from "@/components/animated-section"
 import ScrollToTop from "@/components/scroll-to-top"
@@ -18,20 +17,17 @@ import AdminPanel from "@/components/admin-panel"
 import { sendEmailNotification } from "./actions"
 
 export default function LandingPage() {
-  // State for modals
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false)
   const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false)
   const [isFreeSampleModalOpen, setIsFreeSampleModalOpen] = useState(false)
   const [isSingleReportModalOpen, setIsSingleReportModalOpen] = useState(false)
   const [isBundleModalOpen, setIsBundleModalOpen] = useState(false)
 
-  // State for footer subscribe form
   const [email, setEmail] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [subscribeSuccess, setSubscribeSuccess] = useState(false)
   const [subscribeError, setSubscribeError] = useState("")
 
-  // Mock data for trending topics
   const trendingTopics = [
     { topic: "Basis (Individual, Partnership, S-Corp)", mentions: 7 },
     { topic: "Business Law (BLAW)", mentions: 5 },
@@ -39,7 +35,6 @@ export default function LandingPage() {
     { topic: "Taxable Income Calculations", mentions: 2 },
   ]
 
-  // Mock data for pie chart
   const chartData = [
     { name: "Basis", value: 28 },
     { name: "Business Law", value: 21 },
@@ -49,15 +44,12 @@ export default function LandingPage() {
     { name: "Other Topics", value: 9 },
   ]
 
-  // Update the handleFooterSubscribe function to include local storage backup
-
   const handleFooterSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubscribeError("")
 
     try {
-      // Store signup locally as backup
       try {
         const signups = JSON.parse(localStorage.getItem("cpabee_signups") || "[]")
         signups.push({
@@ -70,22 +62,18 @@ export default function LandingPage() {
         console.error("Failed to store signup locally:", error)
       }
 
-      // Try to send email notification
       const result = await sendEmailNotification(email, "Footer Subscribe Form")
 
       if (result.success) {
-        console.log("Email notification sent successfully from footer form")
         setSubscribeSuccess(true)
         setEmail("")
       } else {
-        // If API fails but we stored locally, still show success to user
         console.error("API error but continuing:", result.message)
         setSubscribeSuccess(true)
         setEmail("")
       }
     } catch (err) {
       console.error("Error in submission:", err)
-      // Even if there's an error, we'll show success since we stored locally
       setSubscribeSuccess(true)
       setEmail("")
     } finally {
@@ -95,8 +83,56 @@ export default function LandingPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Header with Sign Up button that opens modal */}
-      <header className="sticky top-0 z-40 border-b bg-white">
+
+      {/* ── Animated banner keyframes injected inline ── */}
+      <style>{`
+        @keyframes hiveShift {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes hexFloat {
+          0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.07; }
+          33%       { transform: translateY(-8px) rotate(2deg); opacity: 0.11; }
+          66%       { transform: translateY(4px) rotate(-1deg); opacity: 0.08; }
+        }
+        .hero-banner {
+          background: linear-gradient(
+            135deg,
+            #92400e 0%,
+            #b45309 15%,
+            #d97706 30%,
+            #f59e0b 45%,
+            #fbbf24 55%,
+            #f59e0b 65%,
+            #d97706 80%,
+            #b45309 90%,
+            #92400e 100%
+          );
+          background-size: 300% 300%;
+          animation: hiveShift 10s ease infinite;
+        }
+        .hex {
+          position: absolute;
+          width: 120px;
+          height: 120px;
+          background: white;
+          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+          animation: hexFloat 8s ease-in-out infinite;
+        }
+        .hex:nth-child(1)  { top: -20px; left:  5%; animation-delay: 0s;   width: 90px;  height: 90px;  }
+        .hex:nth-child(2)  { top:  10px; left: 20%; animation-delay: 1.5s; width: 60px;  height: 60px;  }
+        .hex:nth-child(3)  { top: -10px; left: 40%; animation-delay: 3s;   width: 110px; height: 110px; }
+        .hex:nth-child(4)  { top:  20px; left: 60%; animation-delay: 0.8s; width: 75px;  height: 75px;  }
+        .hex:nth-child(5)  { top: -15px; left: 78%; animation-delay: 2.2s; width: 95px;  height: 95px;  }
+        .hex:nth-child(6)  { top:  30px; left: 90%; animation-delay: 4s;   width: 55px;  height: 55px;  }
+        .hex:nth-child(7)  { bottom: -10px; left: 12%; animation-delay: 1s;   width: 80px; height: 80px; }
+        .hex:nth-child(8)  { bottom:  5px;  left: 50%; animation-delay: 2.8s; width: 65px; height: 65px; }
+        .hex:nth-child(9)  { bottom: -5px;  left: 70%; animation-delay: 0.3s; width: 100px; height: 100px; }
+      `}</style>
+
+      {/* ── Header ── */}
+      <header className="sticky top-0 z-40 border-b bg-white shadow-sm">
         <div className="container flex h-16 items-center justify-between py-4">
           <div
             className="flex items-center gap-2 cursor-pointer"
@@ -111,11 +147,11 @@ export default function LandingPage() {
                 className="object-contain"
               />
             </div>
-            <span className="text-xl font-bold">CPABee</span>
+            <span className="text-xl font-bold tracking-tight">CPABee</span>
           </div>
           <nav className="hidden md:flex gap-6">
             <Link href="#features" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-              Features
+              Reports
             </Link>
             <Link href="#trending" className="text-sm font-medium hover:text-yellow-600 transition-colors">
               Trending Topics
@@ -129,70 +165,89 @@ export default function LandingPage() {
           </nav>
           <div>
             <Button
-              className="bg-yellow-500 hover:bg-yellow-600 text-black"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
               onClick={() => setIsFreeSampleModalOpen(true)}
             >
-              Get Sample Report
+              Get Free Sample
             </Button>
           </div>
         </div>
       </header>
 
       <main className="flex-1">
-        {/* Hero Section with Get Started button that opens modal - WITH BANNER */}
-        <section className="relative">
-          {/* Banner background */}
-          <div
-            className="absolute inset-0 h-64 bg-cover bg-center"
-            style={{ backgroundImage: 'url("/images/bee-pattern-banner.png")' }}
-          ></div>
 
-          {/* Content overlay */}
+        {/* ── Hero Section with animated banner ── */}
+        <section className="relative overflow-hidden">
+
+          {/* Animated gradient banner */}
+          <div className="hero-banner absolute inset-0" style={{ minHeight: "320px" }}>
+            {/* Floating hexagons */}
+            <div className="hex" />
+            <div className="hex" />
+            <div className="hex" />
+            <div className="hex" />
+            <div className="hex" />
+            <div className="hex" />
+            <div className="hex" />
+            <div className="hex" />
+            <div className="hex" />
+          </div>
+
+          {/* Hero card */}
           <div className="relative pt-16 pb-24">
             <div className="container">
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-8 md:p-12 max-w-3xl mx-auto">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-center mb-6">
+              <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-xl p-8 md:p-12 max-w-3xl mx-auto border border-yellow-100">
+
+                {/* Eyebrow badge */}
+                <div className="flex justify-center mb-4">
+                  <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
+                    CPA Exam Intelligence
+                  </span>
+                </div>
+
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-center mb-6 text-gray-900">
                   What's Buzzing on the CPA Exam?
                 </h1>
                 <p className="text-xl text-gray-700 md:text-2xl text-center mb-4">
-                  We scan discussion boards so you don't have to. Get real-time intel on the topics CPA candidates are
-                  talking about most.
+                  We analyze candidate discussion boards so you don't have to — and turn that data into focused study intel.
                 </p>
                 <p className="text-lg text-gray-600 text-center mb-8">
-                  <span className="font-semibold text-yellow-600">Why it matters:</span> The topics candidates discuss
-                  most frequently often indicate areas causing concern or confusion. Optimize your limited study time by
-                  focusing on these high-discussion areas.
+                  <span className="font-semibold text-yellow-600">Why it matters:</span>{" "}
+                  The topics candidates discuss most are often the ones causing the most confusion — and showing up most on the exam.
+                  Stop guessing what to study. Focus on what's actually being tested.
                 </p>
+
                 <div className="flex flex-col sm:flex-row gap-3 pt-4 justify-center">
                   <Button
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6"
                     onClick={() => setIsFreeSampleModalOpen(true)}
                   >
-                    Get Sample Report
+                    Get Free Sample Report
                   </Button>
                   <Button
                     variant="outline"
-                    className="border-yellow-500 text-yellow-600 hover:bg-yellow-50"
+                    className="border-yellow-500 text-yellow-700 hover:bg-yellow-50 font-medium"
                     onClick={() => {
                       document.getElementById("trending")?.scrollIntoView({ behavior: "smooth" })
                     }}
                   >
-                    Learn More
+                    See What's Trending
                   </Button>
                 </div>
+
               </div>
             </div>
           </div>
         </section>
 
-        {/* Trending Topics Section */}
+        {/* ── Trending Topics Section ── */}
         <section id="trending" className="bg-gray-50 py-12 md:py-24">
           <div className="container space-y-12">
             <AnimatedSection>
               <div className="text-center space-y-4">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Track the Buzz</h2>
                 <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                  See what topics are generating the most discussion right now among CPA candidates
+                  See which topics are generating the most discussion right now among CPA candidates
                 </p>
               </div>
             </AnimatedSection>
@@ -219,6 +274,9 @@ export default function LandingPage() {
                       </li>
                     ))}
                   </ul>
+                  <p className="text-xs text-gray-400 mt-4">
+                    Sample data shown — full reports include all sections with ranked topic lists.
+                  </p>
                 </Card>
               </AnimatedSection>
 
@@ -229,105 +287,93 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features Section - UPDATED with more content */}
+        {/* ── Reports / Features Section ── */}
         <section id="features" className="py-12 md:py-24">
           <div className="container space-y-12">
             <AnimatedSection>
               <div className="text-center space-y-4">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">CPA Exam Reports</h2>
                 <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                  Everything you need to stay on top of the CPA exam
+                  Focused intel on the topics that matter most — broken down by exam section
                 </p>
                 <div className="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">
-                  Get a free sample report - Email us at info@cpabee.com
+                  Not sure yet? Get a free sample — email us at info@cpabee.com
                 </div>
               </div>
             </AnimatedSection>
 
             <div className="grid md:grid-cols-2 gap-8">
               <AnimatedSection delay={0.2}>
-                <Card className="p-6 shadow-md">
+                <Card className="p-6 shadow-md h-full flex flex-col">
                   <h3 className="text-xl font-bold mb-4">What's In Each Report</h3>
                   <p className="text-gray-500 mb-4">
-                    Our comprehensive reports cover all sections of the new CPA exam format:
+                    Each report covers one section of the CPA exam and tells you exactly which topics are generating
+                    the most candidate discussion — so you can prioritize intelligently.
                   </p>
 
                   <div className="mb-6 space-y-4">
                     <div className="bg-yellow-50 p-4 rounded-lg">
-                      <h4 className="font-bold text-lg mb-2">New CPA Exam Format</h4>
+                      <h4 className="font-bold text-lg mb-2">CPA Exam Structure</h4>
                       <p className="text-sm text-gray-600 mb-3">
-                        The Uniform CPA Examination has been restructured with three Core sections and one Discipline
-                        section:
+                        The CPA exam has three required Core sections and one Discipline section you choose:
                       </p>
 
-                      <h5 className="font-semibold text-sm mb-1">Core Sections (Required):</h5>
+                      <h5 className="font-semibold text-sm mb-1">Core Sections (Required for all candidates):</h5>
                       <ul className="space-y-2 mb-3">
-                        <li className="flex items-center gap-2">
-                          <div className="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
-                            AUD
-                          </div>
-                          <span>Auditing and Attestation</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
-                            FAR
-                          </div>
-                          <span>Financial Accounting and Reporting</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
-                            REG
-                          </div>
-                          <span>Taxation and Regulation</span>
-                        </li>
+                        {[
+                          { code: "AUD", name: "Auditing and Attestation" },
+                          { code: "FAR", name: "Financial Accounting and Reporting" },
+                          { code: "REG", name: "Taxation and Regulation" },
+                        ].map(({ code, name }) => (
+                          <li key={code} className="flex items-center gap-2">
+                            <div className="h-6 w-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-700 text-xs font-bold">
+                              {code}
+                            </div>
+                            <span className="text-sm">{name}</span>
+                          </li>
+                        ))}
                       </ul>
 
-                      <h5 className="font-semibold text-sm mb-1">Discipline Sections (Choose One):</h5>
+                      <h5 className="font-semibold text-sm mb-1">Discipline Sections (Choose one):</h5>
                       <ul className="space-y-2">
-                        <li className="flex items-center gap-2">
-                          <div className="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
-                            BAR
-                          </div>
-                          <span>Business Analysis and Reporting</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
-                            ISC
-                          </div>
-                          <span>Information Systems and Control</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
-                            TCP
-                          </div>
-                          <span>Tax Compliance and Planning</span>
-                        </li>
+                        {[
+                          { code: "BAR", name: "Business Analysis and Reporting" },
+                          { code: "ISC", name: "Information Systems and Control" },
+                          { code: "TCP", name: "Tax Compliance and Planning" },
+                        ].map(({ code, name }) => (
+                          <li key={code} className="flex items-center gap-2">
+                            <div className="h-6 w-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-700 text-xs font-bold">
+                              {code}
+                            </div>
+                            <span className="text-sm">{name}</span>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   </div>
 
                   <Button
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black w-full"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-black w-full mt-auto font-semibold"
                     onClick={() => setIsFreeSampleModalOpen(true)}
                   >
-                    Get Your Sample Report
+                    Get Your Free Sample Report
                   </Button>
                 </Card>
               </AnimatedSection>
 
               <AnimatedSection delay={0.4}>
-                <Card className="p-6 shadow-md">
+                <Card className="p-6 shadow-md h-full">
                   <h3 className="text-xl font-bold mb-4">What You'll Get</h3>
-                  <ul className="space-y-4">
+                  <ul className="space-y-5">
                     <li className="flex gap-3">
                       <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 shrink-0">
                         <TrendingUp className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="font-medium">Current Trending Topics</p>
-                        <p className="text-gray-500">
-                          See what topics are being discussed most frequently by exam takers right now on public forums.
-                          Focus your study time on areas generating the most conversation.
+                        <p className="font-semibold">Highly Tested Topic Rankings</p>
+                        <p className="text-gray-500 text-sm">
+                          A ranked list of the topics generating the most candidate discussion — built from hundreds of
+                          real posts. These are the areas you should be prioritizing.
                         </p>
                       </div>
                     </li>
@@ -336,10 +382,10 @@ export default function LandingPage() {
                         <FileText className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="font-medium">Real Candidate Insights</p>
-                        <p className="text-gray-500">
-                          Our reports analyze hundreds of posts from CPA candidates to identify trending discussion
-                          topics. We monitor multiple forums so you don't have to spend hours scrolling through posts.
+                        <p className="font-semibold">Real Candidate Insights</p>
+                        <p className="text-gray-500 text-sm">
+                          We monitor public candidate forums so you don't have to scroll through endless posts. The
+                          signal is extracted and handed to you cleanly.
                         </p>
                       </div>
                     </li>
@@ -348,10 +394,10 @@ export default function LandingPage() {
                         <Target className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="font-medium">Study Recommendations</p>
-                        <p className="text-gray-500">
-                          Get targeted suggestions on what to focus on based on community discussions. Stop wasting time
-                          on rarely tested topics and concentrate on what matters.
+                        <p className="font-semibold">Study Focus Recommendations</p>
+                        <p className="text-gray-500 text-sm">
+                          Know exactly where to direct your energy. Each report tells you not just what's trending, but
+                          how to think about allocating your limited study time.
                         </p>
                       </div>
                     </li>
@@ -360,10 +406,10 @@ export default function LandingPage() {
                         <Clock className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="font-medium">Time-Saving Insights</p>
-                        <p className="text-gray-500">
-                          With limited study time, knowing where to focus is crucial. Our reports help you maximize your
-                          study efficiency by highlighting what matters most right now.
+                        <p className="font-semibold">Built for Busy Candidates</p>
+                        <p className="text-gray-500 text-sm">
+                          Most CPA candidates are working full-time. We respect your time — these reports give you the
+                          clarity to study smarter, not just longer.
                         </p>
                       </div>
                     </li>
@@ -374,120 +420,128 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Pricing Section - NEW */}
+        {/* ── Pricing Section ── */}
         <section id="pricing" className="py-12 md:py-24 bg-gray-50">
           <div className="container space-y-12">
             <AnimatedSection>
               <div className="text-center space-y-4">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Pricing</h2>
                 <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                  Invest in your CPA exam success with our detailed reports
+                  Most candidates sit for 3–4 sections. The bundle pays for itself before your second exam.
                 </p>
               </div>
             </AnimatedSection>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+
+              {/* Single Report */}
               <AnimatedSection delay={0.2} className="lg:col-span-1">
                 <Card className="p-6 shadow-md h-full flex flex-col">
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold mb-2">Single Report</h3>
+                    <h3 className="text-xl font-bold mb-1">Single Report</h3>
+                    <p className="text-sm text-gray-500 mb-3">Best if you're laser-focused on one section right now</p>
                     <div className="text-3xl font-bold mb-4">$19</div>
-                    <p className="text-gray-500 mb-6">Access to 1 section report</p>
                     <ul className="space-y-2 mb-6">
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
-                        <span>Choose one: AUD, FAR, REG, TCP, ISC, or BAR</span>
+                        <span className="text-sm">Choose one: AUD, FAR, REG, TCP, ISC, or BAR</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
-                        <span>Built from 100s of real candidate comments</span>
+                        <span className="text-sm">Ranked list of highly tested topics for that section</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
-                        <span>Most talked about topics and high-yield insights</span>
+                        <span className="text-sm">Built from hundreds of real candidate discussions</span>
                       </li>
                     </ul>
                   </div>
                   <Button
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black w-full mt-auto"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-black w-full mt-auto font-semibold"
                     onClick={() => setIsSingleReportModalOpen(true)}
                   >
-                    Buy Single Report
+                    Buy Single Report — $19
                   </Button>
                 </Card>
               </AnimatedSection>
 
+              {/* Bundle — Best Value */}
               <AnimatedSection delay={0.3} className="lg:col-span-1">
                 <Card className="p-6 shadow-md border-2 border-yellow-500 h-full flex flex-col relative">
                   <div className="absolute -top-4 left-0 right-0 flex justify-center">
-                    <span className="bg-yellow-500 text-black px-4 py-1 rounded-full text-sm font-medium">
+                    <span className="bg-yellow-500 text-black px-4 py-1 rounded-full text-sm font-bold">
                       Best Value
                     </span>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold mb-2">Full Access Bundle</h3>
-                    <div className="text-3xl font-bold mb-4">$49</div>
-                    <p className="text-gray-500 mb-6">All 6 section reports</p>
+                  <div className="flex-1 pt-2">
+                    <h3 className="text-xl font-bold mb-1">Full Access Bundle</h3>
+                    <p className="text-sm text-gray-500 mb-3">Best for candidates who still have multiple sections ahead</p>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-3xl font-bold">$49</span>
+                      <span className="text-gray-400 line-through text-sm">$114</span>
+                    </div>
+                    <p className="text-sm text-green-600 font-medium mb-4">You save $65 — all 6 sections included</p>
                     <ul className="space-y-2 mb-6">
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
-                        <span>Covers every possible CPA exam path</span>
+                        <span className="text-sm">All 6 section reports (AUD, FAR, REG, BAR, ISC, TCP)</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
-                        <span>Best for planning or comparing exam options</span>
+                        <span className="text-sm">Most candidates sit 3–4 sections — this covers your full journey</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
-                        <span>Perfect if you might switch sections later</span>
+                        <span className="text-sm">Compare discipline sections before committing to one</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
-                        <span>Save $65 compared to buying individually</span>
+                        <span className="text-sm">If you retake a section, you already have the report</span>
                       </li>
                     </ul>
                   </div>
                   <Button
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black w-full mt-auto"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-black w-full mt-auto font-bold"
                     onClick={() => setIsBundleModalOpen(true)}
                   >
-                    Get Full Access
+                    Get Full Bundle — $49
                   </Button>
                 </Card>
               </AnimatedSection>
 
+              {/* Free Sample */}
               <AnimatedSection delay={0.4} className="md:col-span-2 lg:col-span-1">
-                <Card className="p-6 shadow-md h-full flex flex-col bg-teal-50">
+                <Card className="p-6 shadow-md h-full flex flex-col bg-teal-50 border-teal-100">
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold mb-2">Free Sample</h3>
-                    <div className="text-3xl font-bold mb-4">$0</div>
-                    <p className="text-gray-500 mb-6">Try before you buy with our sample report</p>
+                    <h3 className="text-xl font-bold mb-1">Free Sample</h3>
+                    <p className="text-sm text-gray-500 mb-3">See exactly what you're getting before you spend a dollar</p>
+                    <div className="text-3xl font-bold mb-4 text-teal-700">$0</div>
                     <ul className="space-y-2 mb-6">
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-teal-600 mt-0.5 shrink-0" />
-                        <span>Sample report from a previous testing window</span>
+                        <span className="text-sm">Full sample report from a real testing window</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-teal-600 mt-0.5 shrink-0" />
-                        <span>See our analysis methodology</span>
+                        <span className="text-sm">Shows our methodology and topic ranking format</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-teal-600 mt-0.5 shrink-0" />
-                        <span>Experience the CPABee difference</span>
+                        <span className="text-sm">No credit card. No commitment.</span>
                       </li>
                     </ul>
                   </div>
                   <div className="flex flex-col gap-3">
                     <Button
-                      className="bg-teal-600 hover:bg-teal-700 text-white w-full"
+                      className="bg-teal-600 hover:bg-teal-700 text-white w-full font-semibold"
                       onClick={() => setIsFreeSampleModalOpen(true)}
                     >
-                      Get Sample Report
+                      Get Free Sample Report
                     </Button>
                     <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                       <Mail className="h-4 w-4" />
                       <span>
-                        Or email us at{" "}
+                        Or email{" "}
                         <a href="mailto:info@cpabee.com" className="text-teal-700 hover:text-teal-600 underline">
                           info@cpabee.com
                         </a>
@@ -497,17 +551,37 @@ export default function LandingPage() {
                 </Card>
               </AnimatedSection>
             </div>
+
+            {/* Bundle nudge callout */}
+            <AnimatedSection delay={0.5}>
+              <div className="max-w-2xl mx-auto bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
+                <p className="text-amber-900 font-semibold text-lg mb-1">
+                  💡 Most candidates sit for 3 or 4 sections total.
+                </p>
+                <p className="text-amber-800 text-sm">
+                  Buying sections one at a time costs $57–$76. The Full Bundle is $49 — and covers every section,
+                  including retakes. It's the move most serious candidates make.
+                </p>
+                <Button
+                  variant="outline"
+                  className="mt-4 border-amber-500 text-amber-800 hover:bg-amber-100 font-semibold"
+                  onClick={() => setIsBundleModalOpen(true)}
+                >
+                  Get the Bundle <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </AnimatedSection>
           </div>
         </section>
 
-        {/* Why CPABee Section - UPDATED with more content */}
+        {/* ── Why CPABee Section ── */}
         <section id="why" className="py-12 md:py-24">
           <div className="container space-y-12">
             <AnimatedSection>
               <div className="text-center space-y-4">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Why CPABee?</h2>
                 <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                  Study smarter, not harder with insights from real CPA candidates
+                  Study smarter with intel from the broader CPA candidate community
                 </p>
               </div>
             </AnimatedSection>
@@ -518,11 +592,10 @@ export default function LandingPage() {
                   <div className="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center">
                     <Brain className="h-6 w-6 text-yellow-600" />
                   </div>
-                  <h3 className="text-xl font-bold">Community-powered insights</h3>
-                  <p className="text-gray-500">
-                    We analyze hundreds of posts from exam taker platforms to identify what topics are causing the most
-                    discussion among real candidates. This collective intelligence provides valuable signals about areas
-                    worth focusing on.
+                  <h3 className="text-xl font-bold">Community-powered intel</h3>
+                  <p className="text-gray-500 text-sm">
+                    We analyze hundreds of posts from active CPA candidates to surface the topics generating the most
+                    discussion. That collective signal tells you where the difficulty — and the testing — is concentrated.
                   </p>
                 </Card>
               </AnimatedSection>
@@ -532,11 +605,10 @@ export default function LandingPage() {
                   <div className="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center">
                     <TrendingUp className="h-6 w-6 text-yellow-600" />
                   </div>
-                  <h3 className="text-xl font-bold">Real exam trends</h3>
-                  <p className="text-gray-500">
-                    Focus your study time on topics that are generating significant discussion, based on candidate
-                    conversations. When multiple candidates mention the same topics, it's a strong signal of areas that
-                    may deserve extra attention.
+                  <h3 className="text-xl font-bold">Focus on what's tested</h3>
+                  <p className="text-gray-500 text-sm">
+                    Not all topics are created equal. Our reports help you spend your time on high-yield areas rather
+                    than spreading thin across content that rarely shows up on exam day.
                   </p>
                 </Card>
               </AnimatedSection>
@@ -546,76 +618,53 @@ export default function LandingPage() {
                   <div className="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center">
                     <Zap className="h-6 w-6 text-yellow-600" />
                   </div>
-                  <h3 className="text-xl font-bold">Delivered with a buzz</h3>
-                  <p className="text-gray-500">
-                    Our reports are delivered instantly to your inbox, helping you stay on top of changing exam
-                    patterns. Our service helps you adapt your study plan based on real-time feedback from the CPA
-                    candidate community.
+                  <h3 className="text-xl font-bold">Delivered instantly</h3>
+                  <p className="text-gray-500 text-sm">
+                    Reports land in your inbox right away. No waiting, no account to create. Just clear, actionable
+                    study intelligence you can act on today.
                   </p>
                 </Card>
               </AnimatedSection>
             </div>
 
             <AnimatedSection delay={0.5}>
-              <Card className="p-6 mt-8">
+              <Card className="p-6 mt-4">
                 <div className="max-w-3xl mx-auto">
-                  <h3 className="text-xl font-bold mb-4 text-center">Why Tracking Exam Trends Matters</h3>
-
-                  <div className="space-y-4">
-                    <div className="flex gap-3 items-start">
-                      <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-1 shrink-0" />
-                      <div>
-                        <p className="font-medium">Optimize Your Limited Study Time</p>
-                        <p className="text-gray-600">
-                          Most CPA candidates are working full-time while studying. With only a few hours available each
-                          day, focusing on high-yield topics is essential for exam success.
-                        </p>
+                  <h3 className="text-xl font-bold mb-6 text-center">Why Knowing What's Highly Tested Changes Everything</h3>
+                  <div className="space-y-5">
+                    {[
+                      {
+                        title: "Optimize Your Limited Study Time",
+                        body: "Most CPA candidates are working full-time. With only a few hours a day, you can't study everything equally. Knowing which topics carry the most weight lets you make every study session count.",
+                      },
+                      {
+                        title: "Stop Studying in the Dark",
+                        body: "Review materials cover everything — but the exam tests some things heavily and others barely at all. CPABee gives you the signal that helps you calibrate your effort correctly.",
+                      },
+                      {
+                        title: "Leverage What Others Are Learning",
+                        body: "The CPA candidate community is constantly sharing what's showing up on their exams. We aggregate that signal and hand it to you in a clean, ranked format.",
+                      },
+                      {
+                        title: "Walk In With Confidence",
+                        body: "Knowing you've prioritized the right content reduces exam anxiety. You've studied what matters. That confidence is real — and it shows up in your score.",
+                      },
+                    ].map(({ title, body }) => (
+                      <div key={title} className="flex gap-3 items-start">
+                        <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-1 shrink-0" />
+                        <div>
+                          <p className="font-semibold">{title}</p>
+                          <p className="text-gray-600 text-sm">{body}</p>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="flex gap-3 items-start">
-                      <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-1 shrink-0" />
-                      <div>
-                        <p className="font-medium">Adapt to Changing Discussion Trends</p>
-                        <p className="text-gray-600">
-                          The CPA candidate community's focus evolves constantly, with different topics generating
-                          discussion over time. Our real-time analysis helps you stay current with what's being actively
-                          discussed.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-3 items-start">
-                      <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-1 shrink-0" />
-                      <div>
-                        <p className="font-medium">Leverage Collective Intelligence</p>
-                        <p className="text-gray-600">
-                          Why study in isolation when you can benefit from the insights of hundreds of other candidates?
-                          Our community-driven approach helps you learn from the collective wisdom of the CPA candidate
-                          community.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-3 items-start">
-                      <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-1 shrink-0" />
-                      <div>
-                        <p className="font-medium">Reduce Anxiety and Build Confidence</p>
-                        <p className="text-gray-600">
-                          Knowing you're focusing on topics that many candidates are discussing reduces exam anxiety and
-                          builds confidence. Walk into the testing center with a study strategy informed by the broader
-                          CPA candidate community.
-                        </p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-
-                  <div className="mt-6 text-center">
+                  <div className="mt-8 text-center">
                     <Button
-                      className="bg-yellow-500 hover:bg-yellow-600 text-black"
+                      className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
                       onClick={() => setIsFreeSampleModalOpen(true)}
                     >
-                      Get Your Sample Report
+                      Get Your Free Sample Report
                     </Button>
                   </div>
                 </div>
@@ -624,17 +673,19 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* CTA Section with subscribe form */}
+        {/* ── CTA / Subscribe Section ── */}
         <section className="bg-yellow-50 py-12 md:py-24">
           <div className="container">
             <AnimatedSection>
-              <div className="max-w-2xl mx-auto text-center space-y-8">
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Get the Latest CPA Exam Insights</h2>
-                <p className="text-xl text-gray-500">
-                  Stay ahead of the curve with our detailed reports on trending CPA exam topics
+              <div className="max-w-2xl mx-auto text-center space-y-6">
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">
+                  See What CPA Candidates Are Focused On Right Now
+                </h2>
+                <p className="text-xl text-gray-600">
+                  Get a free sample report and see exactly how CPABee can sharpen your study strategy.
                 </p>
-                <div className="inline-block bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">
-                  Try a free sample report today
+                <div className="inline-block bg-yellow-200 text-yellow-900 px-4 py-2 rounded-full text-sm font-semibold">
+                  No credit card required
                 </div>
 
                 <div className="max-w-md mx-auto">
@@ -651,16 +702,16 @@ export default function LandingPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <h3 className="text-lg font-medium text-gray-900">Thank you for your interest!</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">You're all set!</h3>
                       <p className="mt-2 text-sm text-gray-500">
-                        We'll send your free sample report to your inbox shortly.
+                        Check your inbox — your free sample report is on the way.
                       </p>
                     </div>
                   ) : (
                     <form onSubmit={handleFooterSubscribe} className="flex flex-col sm:flex-row gap-3">
                       <Input
                         type="email"
-                        placeholder="Enter your email for a free sample"
+                        placeholder="Enter your email"
                         className="flex-1"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -668,17 +719,14 @@ export default function LandingPage() {
                       />
                       <Button
                         type="submit"
-                        className="bg-yellow-500 hover:bg-yellow-600 text-black whitespace-nowrap"
+                        className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold whitespace-nowrap"
                         disabled={isSubmitting}
                       >
-                        {isSubmitting ? "Submitting..." : "Get Sample"}
+                        {isSubmitting ? "Sending..." : "Get Free Sample"}
                       </Button>
                     </form>
                   )}
                   {subscribeError && <p className="text-sm text-red-500 mt-2">{subscribeError}</p>}
-                  {!subscribeSuccess && (
-                    <p className="text-sm text-gray-500 mt-2">No credit card required for the sample report.</p>
-                  )}
                 </div>
               </div>
             </AnimatedSection>
@@ -686,7 +734,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* Footer */}
+      {/* ── Footer ── */}
       <footer className="border-t py-8 bg-white">
         <div className="container">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -700,7 +748,7 @@ export default function LandingPage() {
                   className="object-contain"
                 />
               </div>
-              <span className="text-sm font-medium">CPABee</span>
+              <span className="text-sm font-semibold">CPABee</span>
             </div>
 
             <div className="flex gap-4 text-sm">
@@ -712,7 +760,7 @@ export default function LandingPage() {
               </Link>
             </div>
 
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 text-center md:text-right">
               <p>
                 Contact:{" "}
                 <a href="mailto:info@cpabee.com" className="text-teal-700 hover:text-teal-600 underline">
@@ -725,15 +773,15 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {/* Scroll to top button */}
+      {/* ── Scroll to top ── */}
       <ScrollToTop />
 
-      {/* Email Signup Modal - For backward compatibility */}
+      {/* ── Modals ── */}
       <EmailSignupModal
         isOpen={isSignUpModalOpen}
         onClose={() => setIsSignUpModalOpen(false)}
         title="Get Your Free Sample Report"
-        description="Enter your email to receive a free sample of our CPA exam trend reports."
+        description="Enter your email to receive a free sample of our CPA exam reports."
         buttonText="Send Me the Sample"
         source="Sample Report Request"
       />
@@ -742,37 +790,36 @@ export default function LandingPage() {
         isOpen={isGetStartedModalOpen}
         onClose={() => setIsGetStartedModalOpen(false)}
         title="Get Started with CPABee"
-        description="Enter your email to receive a free sample of our reports on trending CPA exam topics."
+        description="Enter your email to receive a free sample of our CPA exam reports."
         buttonText="Get Sample Report"
         source="Hero Get Started Button"
       />
 
-      {/* Report Purchase Modals */}
       <ReportPurchaseModal
         isOpen={isFreeSampleModalOpen}
         onClose={() => setIsFreeSampleModalOpen(false)}
         type="FREE"
         title="Get Your Free Sample Report"
-        description="Select a report section and enter your email to receive a free sample report."
+        description="Enter your email and we'll send over a full sample report — no strings attached."
       />
 
       <ReportPurchaseModal
         isOpen={isSingleReportModalOpen}
         onClose={() => setIsSingleReportModalOpen(false)}
         type="SINGLE"
-        title="Purchase a Single Report"
-        description="Select one report section to purchase for $19."
+        title="Purchase a Single Report — $19"
+        description="Choose one section. Get a ranked breakdown of the most highly tested topics."
       />
 
       <ReportPurchaseModal
         isOpen={isBundleModalOpen}
         onClose={() => setIsBundleModalOpen(false)}
         type="BUNDLE"
-        title="Purchase Full Access Bundle"
-        description="Get access to all 6 report sections for just $49 - save $67 compared to buying individually!"
+        title="Full Access Bundle — $49"
+        description="All 6 section reports. Covers your entire CPA exam journey — including retakes. Save $65 vs. buying individually."
       />
 
-      {/* Admin Panel - Hidden by default, press Ctrl+Alt+A to show */}
+      {/* Admin Panel — press Ctrl+Alt+A to open */}
       <AdminPanel />
     </div>
   )
