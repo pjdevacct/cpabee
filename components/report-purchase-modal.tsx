@@ -336,9 +336,9 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
 
                     {/* Bundle value nudge */}
                     <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-800">
-                      <strong>Why most candidates choose the bundle:</strong> CPA candidates sit for
-                      4 sections. Buying individually costs $76. The bundle covers your full journey —
-                      — for just $49.
+                      <strong>Why most candidates choose the bundle:</strong> Every CPA candidate must pass
+                      all 4 sections. Buying individually costs $76. The bundle covers all 6 reports —
+                      all 4 required sections plus all 3 discipline options, including any retakes — for $49.
                     </div>
                   </div>
                 )}
