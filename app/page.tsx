@@ -29,10 +29,10 @@ export default function LandingPage() {
   const [subscribeError, setSubscribeError] = useState("")
 
   const trendingTopics = [
-    { topic: "Basis (Individual, Partnership, S-Corp)", mentions: 1,742 },
-    { topic: "Business Law (BLAW)", mentions: 1,554 },
-    { topic: "Book-to-Tax Adjustments", mentions: 1,383 },
-    { topic: "Taxable Income Calculations", mentions: 1,296 },
+    { topic: "Basis (Individual, Partnership, S-Corp)", mentions: 1742 },
+    { topic: "Business Law (BLAW)", mentions: 1554 },
+    { topic: "Book-to-Tax Adjustments", mentions: 1383 },
+    { topic: "Taxable Income Calculations", mentions: 1296 },
   ]
 
   const chartData = [
