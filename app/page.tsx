@@ -427,7 +427,7 @@ export default function LandingPage() {
               <div className="text-center space-y-4">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Pricing</h2>
                 <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                  Most candidates sit for 3–4 sections. The bundle pays for itself before your second exam.
+                  Candidates sit for 4 sections. The bundle pays for itself before your second exam.
                 </p>
               </div>
             </AnimatedSection>
@@ -556,11 +556,11 @@ export default function LandingPage() {
             <AnimatedSection delay={0.5}>
               <div className="max-w-2xl mx-auto bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
                 <p className="text-amber-900 font-semibold text-lg mb-1">
-                  💡 Most candidates sit for 3 or 4 sections total.
+                  💡 Candidates sit for 4 sections total.
                 </p>
                 <p className="text-amber-800 text-sm">
-                  Buying sections one at a time costs $57–$76. The Full Bundle is $49 — and covers every section,
-                  including retakes. It's the move most serious candidates make.
+                  Buying sections one at a time costs $76. The Full Bundle is $49 — and covers every section.
+                  It's the move most serious candidates make.
                 </p>
                 <Button
                   variant="outline"
