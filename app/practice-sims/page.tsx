@@ -60,26 +60,40 @@ interface NumInputProps {
 
 function NumInput({ task, field, graded, inputs, onChange }: NumInputProps) {
   const g = graded[task]?.[field]
+
   const border =
     g === true  ? "border-green-400 bg-green-50" :
     g === false ? "border-red-400 bg-red-50" :
                   "border-gray-300 bg-white"
+
+  // ⭐ NEW: local state to prevent re-renders from kicking you out
+  const [localValue, setLocalValue] = React.useState(inputs[task]?.[field] ?? "")
+
+  // ⭐ Sync parent → local when parent changes (e.g., reset, grading)
+  React.useEffect(() => {
+    setLocalValue(inputs[task]?.[field] ?? "")
+  }, [inputs, task, field])
+
   return (
     <div className="relative flex items-center">
       <span className="absolute left-3 text-gray-400 text-sm pointer-events-none">$</span>
+
       <input
         type="text"
         inputMode="decimal"
-        value={inputs[task]?.[field] ?? ""}
-        onChange={e => onChange(task, field, e.target.value)}
-        placeholder="0.00"
-        className={`w-full border rounded-md py-2 text-sm font-mono text-right pr-3 pl-7 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-colors ${border}`}
+        className={`pl-6 pr-3 py-2 border rounded-md w-full ${border}`}
+        
+        // ⭐ Local typing — no parent re-render
+        value={localValue}
+        onChange={e => setLocalValue(e.target.value)}
+
+        // ⭐ Save to parent ONLY when user leaves the field
+        onBlur={() => onChange(task, field, localValue)}
       />
-      {g === true  && <CheckCircle2 className="absolute -right-5 h-4 w-4 text-green-500 shrink-0" />}
-      {g === false && <XCircle      className="absolute -right-5 h-4 w-4 text-red-500 shrink-0"   />}
     </div>
   )
 }
+
 
 interface GradeBtnProps {
   taskId: string
