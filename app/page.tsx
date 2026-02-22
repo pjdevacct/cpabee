@@ -752,7 +752,7 @@ export default function LandingPage() {
         isOpen={isFreeSampleModalOpen}
         onClose={() => setIsFreeSampleModalOpen(false)}
         type="FREE"
-        title="Get Your Free Sample Reports"
+        title="Get Your Free Sample Report"
         description="Select a report section and enter your email to receive a free sample report."
       />
 
