@@ -895,7 +895,7 @@ export default function PracticeSimsPage() {
 
       {/* Header */}
       <header className="sticky top-0 z-40 border-b bg-white shadow-sm">
-        <div className="container flex h-16 items-center justify-between py-4 px-4 md:px-6">
+        <div className="container flex flex-wrap gap-y-2 min-h-16 items-center justify-between py-3 px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2">
             <div className="relative h-8 w-8 overflow-hidden shrink-0">
               <Image src="/images/cpabee-logo.png" alt="CPABee Logo" width={32} height={32} className="object-contain" />
@@ -970,7 +970,7 @@ export default function PracticeSimsPage() {
                       : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
                   }`}>
                   <span className="font-bold block">{label}</span>
-                  <span className="text-xs font-normal opacity-80 hidden sm:block">{topic}</span>
+                  <span className="text-xs font-normal opacity-80">{topic}</span>
                 </button>
               ))}
             </div>
