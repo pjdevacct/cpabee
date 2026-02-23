@@ -133,11 +133,11 @@ export default function LandingPage() {
         .hex:nth-child(9)  { bottom: -5px;  left: 70%; animation-delay: 0.3s; width: 100px; height: 100px; }
       `}</style>
 
-      {/* ── Header ── */}
+{/* ── Header ── */}
       <header className="sticky top-0 z-40 border-b bg-white shadow-sm">
-        <div className="container flex h-16 items-center justify-between py-4">
+        <div className="container flex h-16 items-center justify-between py-4 px-4 md:px-6">
           <div
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-2 cursor-pointer shrink-0"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <div className="relative h-8 w-8 overflow-hidden">
@@ -151,35 +151,21 @@ export default function LandingPage() {
             </div>
             <span className="text-xl font-bold tracking-tight">CPABee</span>
           </div>
-  <nav className="flex flex-wrap gap-x-4 gap-y-2 justify-center">
-  <Link href="#features" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-    Reports
-  </Link>
-  <Link href="#trending" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-    Trending Topics
-  </Link>
-  <Link href="#why" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-    Why CPABee
-  </Link>
-  <Link href="#pricing" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-    Pricing
-  </Link>
-  <Link href="/study-plan" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-    Study Plan
-  </Link>
-  <Link href="/practice-mcq" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-    Practice MCQs
-  </Link>
-  <Link href="/practice-sims" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-    Practice SIMs
-  </Link>
-</nav>
-          <div>
+          <nav className="hidden md:flex gap-x-4 justify-center flex-wrap">
+            <Link href="#features" className="text-sm font-medium hover:text-yellow-600 transition-colors">Reports</Link>
+            <Link href="#trending" className="text-sm font-medium hover:text-yellow-600 transition-colors">Trending Topics</Link>
+            <Link href="#why" className="text-sm font-medium hover:text-yellow-600 transition-colors">Why CPABee</Link>
+            <Link href="#pricing" className="text-sm font-medium hover:text-yellow-600 transition-colors">Pricing</Link>
+            <Link href="/study-plan" className="text-sm font-medium hover:text-yellow-600 transition-colors">Study Plan</Link>
+            <Link href="/practice-mcq" className="text-sm font-medium hover:text-yellow-600 transition-colors">Practice MCQs</Link>
+            <Link href="/practice-sims" className="text-sm font-medium hover:text-yellow-600 transition-colors">Practice SIMs</Link>
+          </nav>
+          <div className="shrink-0">
             <Button
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold text-xs md:text-sm px-3 md:px-4"
               onClick={() => setIsFreeSampleModalOpen(true)}
             >
-              Get Free Sample
+              Free Sample
             </Button>
           </div>
         </div>
