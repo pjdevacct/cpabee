@@ -570,7 +570,7 @@ export default function LandingPage() {
                   💡 Every CPA candidate must pass all 4 sections.
                 </p>
                 <p className="text-amber-800 text-sm">
-                  Buying sections one at a time costs $76. The Full Bundle is $49 — covers all 4 required sections
+                  Buying sections one at a time costs $76. The Full Bundle is $49 — covers all 3 required sections
                   plus all 3 discipline options, including any retakes. Simple math.
                 </p>
                 <Button
