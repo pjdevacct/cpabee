@@ -442,7 +442,7 @@ export default function StudyPlanPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <Link href="/#pricing">
                 <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
-                  Get a Report — Starting at $19
+                  Get a Report — Starting at $199
                 </Button>
               </Link>
               <Link href="/#pricing">
