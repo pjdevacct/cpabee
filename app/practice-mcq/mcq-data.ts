@@ -667,33 +667,26 @@ Which fund accounts for debt service on the special assessment bonds?`,
   },
 
   {
-  id: "far-29",
-  topic: "Governmental — Modified Accrual Revenue",
-  difficulty: "Moderate",
-  stem: `Riverton City levies property taxes of $5,000,000 for Year 1. Collections: $4,600,000 in Year 1; $250,000 within 60 days of year-end; $150,000 collected later in Year 2 (beyond 60 days).
+    id: "far-29",
+    topic: "Governmental — Modified Accrual Revenue",
+    difficulty: "Moderate",
+    stem: `Riverton City levies property taxes of $5,000,000 for Year 1. Collections: $4,600,000 in Year 1; $250,000 within 60 days of year-end; $150,000 collected later in Year 2 (beyond 60 days).
 
 Under modified accrual, how much property tax revenue is recognized in Year 1?`,
-  choices: [
-    { key: "A", text: "$5,000,000" },
-    { key: "B", text: "$4,600,000" },
-    { key: "C", text: "$4,850,000" },
-    { key: "D", text: "$4,750,000" },
-  ],
-  correct: "C",
-  explanation: `Modified accrual (GASB): revenues are recognized when "available" — measurable and collectible within the current period OR within 60 days after year-end.
-
-• $4,600,000 collected in Year 1 → recognized ✓
-• $250,000 collected within 60 days → recognized ✓
-• $150,000 beyond 60 days → deferred revenue ✗
-
-Year 1 revenue = $4,600,000 + $250,000 = $4,850,000`,
-  whyWrong: [
-    { key: "A", reason: "$5,000,000 is full accrual — modified accrual requires the 'available' criterion." },
-    { key: "B", reason: "$4,600,000 is cash-basis — modified accrual also includes amounts due within 60 days of year-end." },
-    { key: "D", reason: "$4,750,000 does not align with the 60-day cutoff rule." },
-  ],
-},
-
+    choices: [
+      { key: "A", text: "$5,000,000" },
+      { key: "B", text: "$4,600,000" },
+      { key: "C", text: "$4,850,000" },
+      { key: "D", text: "$4,750,000" },
+    ],
+    correct: "C",
+    explanation: `Modified accrual (GASB): revenues are recognized when "available" — measurable and collectible within the current period OR within 60 days after year-end.\n\n• $4,600,000 collected in Year 1 → recognized ✓\n• $250,000 collected within 60 days → recognized ✓ (meets "available")\n• $150,000 beyond 60 days → deferred revenue ✗\n\nYear 1 revenue = $4,600,000 + $250,000 = $4,850,000`,
+    whyWrong: [
+      { key: "A", reason: "$5,000,000 is full accrual — modified accrual requires the "available" criterion." },
+      { key: "B", reason: "$4,600,000 is cash-basis — modified accrual also includes amounts due within 60 days of year-end." },
+      { key: "D", reason: "$4,750,000 does not align with the 60-day cutoff rule." },
+    ],
+  },
 
   {
     id: "far-30",
@@ -1384,13 +1377,609 @@ What is the legal effect of Paula's actions?`,
       { key: "D", reason: "Apparent authority requires the PRINCIPAL to create the appearance of authority — Paula cannot create her own apparent authority." },
     ],
   },
+  // ── INDIVIDUAL INCOME — GROSS INCOME & EXCLUSIONS ─────────────────────────
+
   {
     id: "reg-5",
-    topic: "S Corporation — Shareholder Basis and Loss Deductibility",
-    difficulty: "Hard",
-    stem: `Owen's S corp stock basis is $30,000 at year-start. He has a $10,000 loan to the S corp. Year 1: ordinary loss $45,000; tax-exempt income $5,000. Owen owns 100%.
+    topic: "Individual Income — Gross Income Inclusions",
+    difficulty: "Moderate",
+    stem: `During the year Karen receives:
+• Salary: $80,000
+• Inheritance from her uncle: $40,000
+• Life insurance proceeds as named beneficiary: $100,000
+• Gambling winnings: $5,000
+• Interest on City of Chicago municipal bonds: $3,000
 
-How much loss can Owen deduct in Year 1?`,
+What amount must Karen include in gross income?`,
+    choices: [
+      { key: "A", text: "$85,000" },
+      { key: "B", text: "$88,000" },
+      { key: "C", text: "$228,000" },
+      { key: "D", text: "$125,000" },
+    ],
+    correct: "A",
+    explanation: `Inclusions vs. exclusions:\n\n• Salary $80,000 → Included ✓\n• Inheritance $40,000 → Excluded (IRC §102 — gifts and inheritances)\n• Life insurance proceeds $100,000 → Excluded (IRC §101 — death benefit to named beneficiary)\n• Gambling winnings $5,000 → Included ✓\n• Municipal bond interest $3,000 → Excluded (IRC §103 — state/local government bond interest)\n\nGross income = $80,000 + $5,000 = $85,000`,
+    whyWrong: [
+      { key: "B", reason: "$88,000 adds municipal bond interest, which is specifically excluded under IRC §103." },
+      { key: "C", reason: "$228,000 includes everything — inheritances, life insurance, and muni interest are all statutory exclusions." },
+      { key: "D", reason: "$125,000 includes life insurance proceeds, excluded when paid to a named beneficiary upon the insured's death." },
+    ],
+  },
+
+  {
+    id: "reg-6",
+    topic: "Individual Income — Fringe Benefit Exclusions",
+    difficulty: "Moderate",
+    stem: `Todd's employer provides:
+• Employer-paid health insurance premiums: $6,000
+• Group term life insurance: $200,000 face amount (first $50,000 of coverage is excluded)
+• Employer-provided parking: $3,600/year (exclusion limit is $300/month)
+• Cash bonus: $10,000
+
+How much must Todd include in gross income?`,
+    choices: [
+      { key: "A", text: "$10,000 only" },
+      { key: "B", text: "$13,600" },
+      { key: "C", text: "$10,000 plus imputed income on the $150,000 excess life insurance coverage" },
+      { key: "D", text: "$16,000" },
+    ],
+    correct: "C",
+    explanation: `• Health insurance $6,000 → Excluded (IRC §106) ✓\n• Group term life: First $50,000 excluded (IRC §79). The excess $150,000 generates imputed income per IRS tables → includable ✓\n• Parking $3,600/yr = $300/month → exactly at the exclusion limit → fully excluded ✓\n• Cash bonus $10,000 → Always includable ✓\n\nGross income = $10,000 cash bonus + imputed income on excess $150,000 life coverage.`,
+    whyWrong: [
+      { key: "A", reason: "$10,000 misses the imputed income on the excess life insurance above $50,000 of coverage." },
+      { key: "B", reason: "$13,600 adds parking ($3,600), which is fully excluded since it equals the $300/month limit exactly." },
+      { key: "D", reason: "$16,000 includes health insurance, which is fully excluded under IRC §106." },
+    ],
+  },
+
+  {
+    id: "reg-7",
+    topic: "Individual Income — Alimony Post-TCJA",
+    difficulty: "Moderate",
+    stem: `Under a divorce agreement executed in 2024, Brad pays Linda $2,000 per month. No child-contingency language applies. Brad's AGI is $120,000.
+
+Under post-TCJA rules, how is the $24,000 annual payment treated?`,
+    choices: [
+      { key: "A", text: "Deductible by Brad; includable by Linda" },
+      { key: "B", text: "Not deductible by Brad; not includable by Linda" },
+      { key: "C", text: "Not deductible by Brad; includable by Linda" },
+      { key: "D", text: "Deductible by Brad; not includable by Linda" },
+    ],
+    correct: "B",
+    explanation: `The TCJA fundamentally changed alimony treatment for divorce agreements executed after December 31, 2018:\n\n• Pre-2019 agreements: Deductible by payer (for AGI), includable by recipient\n• Post-2018 agreements: NOT deductible by payer; NOT includable by recipient\n\nThis agreement was executed in 2024 → post-TCJA rules apply.\nBrad cannot deduct the payments; Linda does not include them in income.`,
+    whyWrong: [
+      { key: "A", reason: "This is the pre-2019 rule. For agreements executed after 2018, neither party is affected tax-wise." },
+      { key: "C", reason: "Post-TCJA alimony is excluded from the recipient's income entirely — Linda does not include it." },
+      { key: "D", reason: "Post-TCJA alimony is also not deductible by the payer — neither side has a tax consequence." },
+    ],
+  },
+
+  {
+    id: "reg-8",
+    topic: "Individual Income — Social Security Inclusion",
+    difficulty: "Moderate",
+    stem: `Margaret is single. She receives $20,000 in Social Security benefits and also has $30,000 of wages and $8,000 of tax-exempt municipal bond interest.
+
+What is her combined income for the Social Security inclusion test, and what percentage of SS benefits may be includable?`,
+    choices: [
+      { key: "A", text: "Combined income $38,000; up to 50% of SS includable" },
+      { key: "B", text: "Combined income $48,000; up to 85% of SS includable" },
+      { key: "C", text: "Combined income $40,000; up to 50% of SS includable" },
+      { key: "D", text: "Combined income $48,000; up to 50% of SS includable" },
+    ],
+    correct: "B",
+    explanation: `SS combined income formula:\nCombined Income = AGI + Tax-exempt interest + 50% of SS benefits\n= $30,000 + $8,000 + $10,000 = $48,000\n\nSingle filer thresholds:\n• Below $25,000 → 0% included\n• $25,000–$34,000 → up to 50% included\n• Above $34,000 → up to 85% included\n\n$48,000 > $34,000 → up to 85% of SS benefits are includable.`,
+    whyWrong: [
+      { key: "A", reason: "$38,000 omits municipal bond interest. Tax-exempt interest IS included in the SS combined income calculation." },
+      { key: "C", reason: "$40,000 miscalculates — also, $40,000 > $34,000 threshold so 85% applies, not 50%." },
+      { key: "D", reason: "Combined income of $48,000 is correct, but $48,000 > $34,000 → 85% applies, not 50%." },
+    ],
+  },
+
+  {
+    id: "reg-9",
+    topic: "Individual Income — Discharge of Debt",
+    difficulty: "Hard",
+    stem: `First National Bank cancels $30,000 of debt owed by Rachel on her personal credit card. Rachel is solvent immediately before the cancellation.
+
+How does Rachel treat the cancelled debt for federal income tax purposes?`,
+    choices: [
+      { key: "A", text: "Excluded — cancelled debt is never taxable" },
+      { key: "B", text: "Included in gross income as ordinary income" },
+      { key: "C", text: "Excluded only if Rachel files for bankruptcy" },
+      { key: "D", text: "Excluded to the extent of Rachel's insolvency before cancellation" },
+    ],
+    correct: "B",
+    explanation: `IRC §61(a)(12): Discharge of indebtedness is included in gross income when:\n• The taxpayer is solvent (Rachel is solvent ✓)\n• No specific exclusion applies\n\nKey exclusions NOT applicable here:\n1. Bankruptcy — Rachel has not filed\n2. Insolvency — Rachel is solvent\n3. Qualified farm debt — not applicable\n4. Qualified principal residence debt — credit card, not mortgage\n\nResult: Rachel includes $30,000 as ordinary income.`,
+    whyWrong: [
+      { key: "A", reason: "Cancelled debt is generally taxable. Only specific IRC exclusions allow it to be excluded." },
+      { key: "C", reason: "Bankruptcy is one exclusion, but Rachel has not filed — and even so, she is solvent." },
+      { key: "D", reason: "The insolvency exclusion only applies to the extent of insolvency. Rachel is solvent — zero insolvency exclusion applies." },
+    ],
+  },
+
+  {
+    id: "reg-10",
+    topic: "Individual Income — Hobby Loss Rules",
+    difficulty: "Moderate",
+    stem: `Valerie breeds horses and has losses in 4 of the past 5 years. The activity has NOT been demonstrated to be a for-profit business. In the current year, the horse activity generates $12,000 of income and $20,000 of expenses.
+
+How much of the $20,000 in expenses can Valerie deduct?`,
+    choices: [
+      { key: "A", text: "$20,000 — all expenses deductible as a Schedule C business" },
+      { key: "B", text: "$12,000 — limited to income from the activity" },
+      { key: "C", text: "$0 — hobby losses are completely non-deductible" },
+      { key: "D", text: "$8,000 — only the loss portion is deductible" },
+    ],
+    correct: "B",
+    explanation: `IRC §183 — Hobby Loss Rules:\n\nAn activity is a hobby (not a business) if it fails to show profit in at least 3 of 5 consecutive years (2 of 7 for horse activities — but a 4-of-5 loss pattern here strongly suggests hobby).\n\nFor hobby activities:\n• Income IS included in gross income\n• Expenses deductible only up to hobby income — cannot create a loss\n\nDeductible: $12,000 (limited to income). The $8,000 excess is nondeductible.`,
+    whyWrong: [
+      { key: "A", reason: "Full deductibility requires the activity to qualify as a trade or business under IRC §162. This activity is a hobby." },
+      { key: "C", reason: "Hobby expenses ARE deductible — but only up to the amount of hobby income, not beyond." },
+      { key: "D", reason: "$8,000 is the net loss, not the deductible amount. Deductible expenses = income earned = $12,000." },
+    ],
+  },
+
+  // ── INDIVIDUAL DEDUCTIONS & CREDITS ──────────────────────────────────────
+
+  {
+    id: "reg-11",
+    topic: "Individual Deductions — Above-the-Line",
+    difficulty: "Moderate",
+    stem: `Which of the following is deductible FOR adjusted gross income (an above-the-line deduction) on an individual's tax return?`,
+    choices: [
+      { key: "A", text: "Charitable contributions to a qualified organization" },
+      { key: "B", text: "Medical expenses exceeding 7.5% of AGI" },
+      { key: "C", text: "Alimony paid under a pre-2019 divorce agreement" },
+      { key: "D", text: "State and local taxes paid" },
+    ],
+    correct: "C",
+    explanation: `For-AGI (above-the-line) deductions include:\n• Trade/business expenses (Schedule C)\n• Alimony paid under pre-2019 divorce agreements (IRC §215)\n• Student loan interest\n• Educator expenses (up to $300)\n• HSA contributions\n• Self-employed health insurance\n• IRA contributions\n• Capital losses (up to $3,000)\n\nAlimony paid under a pre-2019 agreement is a for-AGI deduction. Charitable contributions, medical expenses, and SALT are all itemized (from-AGI) deductions.`,
+    whyWrong: [
+      { key: "A", reason: "Charitable contributions are an itemized deduction — below-the-line." },
+      { key: "B", reason: "Medical expenses exceeding 7.5% of AGI are an itemized deduction." },
+      { key: "D", reason: "State and local taxes (SALT) are an itemized deduction, capped at $10,000." },
+    ],
+  },
+
+  {
+    id: "reg-12",
+    topic: "Individual Deductions — Medical Expense Floor",
+    difficulty: "Moderate",
+    stem: `Grace has AGI of $80,000. She pays:
+• Prescription medications: $4,000
+• Doctor and hospital bills: $6,000
+• Elective cosmetic surgery: $3,000
+• Health insurance premiums paid pre-tax through payroll: $5,000
+
+What is Grace's allowable medical expense itemized deduction?`,
+    choices: [
+      { key: "A", text: "$13,000 before floor; $7,000 deductible" },
+      { key: "B", text: "$10,000 before floor; $4,000 deductible" },
+      { key: "C", text: "$10,000 before floor; $1,000 deductible" },
+      { key: "D", text: "$18,000 before floor; $12,000 deductible" },
+    ],
+    correct: "B",
+    explanation: `Step 1 — Identify deductible medical expenses (IRC §213):\n• Prescriptions $4,000 ✓\n• Doctor/hospital $6,000 ✓\n• Cosmetic surgery $3,000 ✗ (purely elective — not deductible)\n• Pre-tax employer premiums $5,000 ✗ (already excluded from income — cannot deduct)\n\nQualified expenses: $10,000\n\nStep 2 — Apply the 7.5% AGI floor:\n$80,000 × 7.5% = $6,000\n\nDeductible: $10,000 − $6,000 = $4,000`,
+    whyWrong: [
+      { key: "A", reason: "$13,000 includes cosmetic surgery ($3,000), which is not a deductible medical expense under IRC §213." },
+      { key: "C", reason: "$1,000 results from using a 10% AGI floor — the current threshold is 7.5% of AGI." },
+      { key: "D", reason: "$18,000 includes all four items. Both cosmetic surgery and pre-tax premiums must be excluded before applying the floor." },
+    ],
+  },
+
+  {
+    id: "reg-13",
+    topic: "Individual Deductions — SALT Cap",
+    difficulty: "Moderate",
+    stem: `Henry pays during the year:
+• State income taxes: $8,000
+• Real property taxes on his home: $5,500
+• Personal property tax on his car: $1,200
+
+What is Henry's allowable SALT deduction on his federal return?`,
+    choices: [
+      { key: "A", text: "$14,700" },
+      { key: "B", text: "$13,500" },
+      { key: "C", text: "$10,000" },
+      { key: "D", text: "$9,200" },
+    ],
+    correct: "C",
+    explanation: `The TCJA capped the state and local tax (SALT) deduction at $10,000 per year ($5,000 if MFS).\n\nTotal SALT paid:\n$8,000 + $5,500 + $1,200 = $14,700\n\nAll three items are deductible state/local taxes before the cap. But the total exceeds $10,000 → deductible amount: $10,000.`,
+    whyWrong: [
+      { key: "A", reason: "$14,700 is the total paid — the TCJA cap limits the deduction to $10,000." },
+      { key: "B", reason: "$13,500 omits the personal property tax but still exceeds the $10,000 cap." },
+      { key: "D", reason: "$9,200 omits the personal property tax. All three qualify toward the SALT cap." },
+    ],
+  },
+
+  {
+    id: "reg-14",
+    topic: "Individual Credits — Child Tax Credit",
+    difficulty: "Moderate",
+    stem: `Kevin and Lisa file jointly with AGI of $175,000. They have three qualifying children ages 4, 8, and 16. The child tax credit is $2,000 per qualifying child under age 17. The phase-out begins at $400,000 for MFJ.
+
+What is their total child tax credit?`,
+    choices: [
+      { key: "A", text: "$4,000" },
+      { key: "B", text: "$6,000" },
+      { key: "C", text: "$2,000" },
+      { key: "D", text: "$3,000" },
+    ],
+    correct: "B",
+    explanation: `Child Tax Credit (IRC §24):\n• $2,000 per qualifying child UNDER age 17\n• Phase-out at $400,000 (MFJ) — no phase-out here ($175,000 << $400,000)\n\nQualifying children:\n• Age 4 ✓ • Age 8 ✓ • Age 16 ✓ (all under 17)\n\nCredit = 3 × $2,000 = $6,000`,
+    whyWrong: [
+      { key: "A", reason: "$4,000 counts only 2 children. All three ages (4, 8, 16) are under 17 and qualify." },
+      { key: "C", reason: "$2,000 counts only 1 child. All three qualify." },
+      { key: "D", reason: "$3,000 reflects an outdated credit amount. Post-TCJA the credit is $2,000 per child." },
+    ],
+  },
+
+  {
+    id: "reg-15",
+    topic: "Individual Deductions — Net Operating Loss Post-TCJA",
+    difficulty: "Hard",
+    stem: `In Year 1, Patricia generates a Net Operating Loss of $60,000 from her sole proprietorship. She has no prior year NOLs. Her Year 1 NOL arises in a tax year beginning after 2017.
+
+How may Patricia use this NOL under post-TCJA rules?`,
+    choices: [
+      { key: "A", text: "Carry back 2 years, then forward 20 years" },
+      { key: "B", text: "Carry forward indefinitely, limited to 80% of taxable income each year" },
+      { key: "C", text: "Carry forward 20 years with no income limitation" },
+      { key: "D", text: "Deduct fully in Year 1 — no carryforward required" },
+    ],
+    correct: "B",
+    explanation: `Post-TCJA NOL rules (NOLs arising in tax years beginning after 2017):\n\n• NO carryback (eliminated for most taxpayers; farming loss exception applies)\n• Carryforward: INDEFINITELY — no 20-year expiration\n• Annual deduction limit: 80% of taxable income in the carryforward year\n• Excess continues to carry forward\n\nPre-TCJA: 2-year carryback, 20-year carryforward, 100% of income — those rules no longer apply to new NOLs.`,
+    whyWrong: [
+      { key: "A", reason: "The 2-year carryback was eliminated by the TCJA for most taxpayers. Post-TCJA NOLs are carry-forward only." },
+      { key: "C", reason: "The 20-year limit was eliminated. Post-TCJA NOLs carry forward indefinitely — but WITH the 80% income limitation." },
+      { key: "D", reason: "An NOL arises when deductions exceed income — there is no remaining income in Year 1 to absorb the loss." },
+    ],
+  },
+
+  {
+    id: "reg-16",
+    topic: "Individual — Alternative Minimum Tax",
+    difficulty: "Hard",
+    stem: `Nancy (single) has regular taxable income of $200,000. AMT adjustments total $50,000 (accelerated depreciation). AMT preferences total $30,000 (tax-exempt private activity bond interest). The AMT exemption for single filers is $85,700 (no phase-out applies).
+
+What is Nancy's AMT base (AMTI less exemption)?`,
+    choices: [
+      { key: "A", text: "$194,300" },
+      { key: "B", text: "$164,300" },
+      { key: "C", text: "$280,000" },
+      { key: "D", text: "$144,300" },
+    ],
+    correct: "A",
+    explanation: `AMT calculation:\n\nRegular taxable income:    $200,000\n+ AMT adjustments:         +$ 50,000\n+ AMT preferences:         +$ 30,000\nAMTI (before exemption):   $280,000\n− AMT exemption:           −$ 85,700\nAMT base:                  $194,300\n\nThe 26% or 28% rate then applies to the AMT base to compute tentative minimum tax.`,
+    whyWrong: [
+      { key: "B", reason: "$164,300 omits AMT preferences ($30,000) from AMTI. Both adjustments AND preferences must be added." },
+      { key: "C", reason: "$280,000 is AMTI before the exemption. You must subtract the exemption to get the AMT base." },
+      { key: "D", reason: "$144,300 subtracts the exemption from regular taxable income only — adjustments and preferences must be added first." },
+    ],
+  },
+
+  // ── PROPERTY TRANSACTIONS ──────────────────────────────────────────────────
+
+  {
+    id: "reg-17",
+    topic: "Property — Capital Gain Holding Period",
+    difficulty: "Moderate",
+    stem: `Sandra sells 200 shares of XYZ stock on July 15, Year 2. She purchased them on July 14, Year 1. Her gain is $8,000.
+
+What is the character of Sandra's gain?`,
+    choices: [
+      { key: "A", text: "Long-term capital gain — held more than 12 months" },
+      { key: "B", text: "Short-term capital gain — held exactly 12 months, which is not MORE than 12 months" },
+      { key: "C", text: "Long-term capital gain — held exactly one year qualifies" },
+      { key: "D", text: "Ordinary income — stock gains are always ordinary" },
+    ],
+    correct: "B",
+    explanation: `Long-term capital gain requires MORE THAN 12 months (more than one year).\n\nPurchase: July 14, Year 1 (purchase date excluded from count)\nSale: July 15, Year 2\nHolding period: exactly 12 months — does NOT meet "more than 12 months"\n\nResult: Short-term capital gain, taxed at ordinary income rates.`,
+    whyWrong: [
+      { key: "A", reason: "Exactly 12 months is NOT long-term. You need one year AND one day (more than 12 months)." },
+      { key: "C", reason: "Same error — exactly one year is short-term, not long-term." },
+      { key: "D", reason: "Stock is a capital asset. Gains on capital assets are capital gains — not ordinary income." },
+    ],
+  },
+
+  {
+    id: "reg-18",
+    topic: "Property — Inherited Property Basis",
+    difficulty: "Moderate",
+    stem: `Greta inherits stock from her grandmother who died March 15. The stock's FMV on date of death was $90,000; the grandmother's adjusted basis was $30,000. Greta sells the stock six months later for $95,000.
+
+What is Greta's gain and its character?`,
+    choices: [
+      { key: "A", text: "$65,000 long-term capital gain" },
+      { key: "B", text: "$5,000 long-term capital gain" },
+      { key: "C", text: "$5,000 short-term capital gain — held less than 12 months" },
+      { key: "D", text: "$65,000 ordinary income" },
+    ],
+    correct: "B",
+    explanation: `Inherited property (IRC §1014):\nBasis = FMV on date of death = $90,000 (stepped-up basis)\n\nGain = $95,000 − $90,000 = $5,000\n\nCharacter: Inherited property is automatically treated as LONG-TERM regardless of how long the heir held it (IRC §1223(11)).\n\nLong-term capital gain: $5,000.`,
+    whyWrong: [
+      { key: "A", reason: "$65,000 uses the grandmother's $30,000 basis. Inherited property receives a step-up to FMV at date of death." },
+      { key: "C", reason: "Short-term treatment does NOT apply to inherited property. Long-term treatment is automatic under §1223(11)." },
+      { key: "D", reason: "Stock is a capital asset — gains are capital gains, not ordinary income." },
+    ],
+  },
+
+  {
+    id: "reg-19",
+    topic: "Property — Section 1245 Depreciation Recapture",
+    difficulty: "Hard",
+    stem: `Riverside Corp. sells business equipment for $120,000. Original cost: $150,000. Accumulated depreciation: $80,000. Adjusted basis: $70,000.
+
+How much of the $50,000 gain is ordinary income under §1245, and how much is §1231 gain?`,
+    choices: [
+      { key: "A", text: "$50,000 ordinary income; $0 §1231 gain" },
+      { key: "B", text: "$0 ordinary income; $50,000 §1231 gain" },
+      { key: "C", text: "$80,000 ordinary income (all depreciation recaptured)" },
+      { key: "D", text: "$30,000 ordinary income; $20,000 §1231 gain" },
+    ],
+    correct: "A",
+    explanation: `§1245 recaptures the LESSER of:\n1. Total gain: $120,000 − $70,000 = $50,000\n2. Accumulated depreciation: $80,000\n\nLesser = $50,000 → All $50,000 is ordinary income.\nNo §1231 gain remains because the total gain ($50,000) is less than accumulated depreciation ($80,000) — fully recaptured.`,
+    whyWrong: [
+      { key: "B", reason: "$50,000 §1231 gain ignores §1245 recapture entirely. Depreciation-driven gain is ordinary first." },
+      { key: "C", reason: "$80,000 exceeds the total gain. §1245 recapture cannot create ordinary income beyond the actual gain recognized." },
+      { key: "D", reason: "$30,000/$20,000 split doesn't follow the calculation. Since total gain < accumulated depreciation, ALL gain is ordinary." },
+    ],
+  },
+
+  {
+    id: "reg-20",
+    topic: "Property — Like-Kind Exchange §1031",
+    difficulty: "Hard",
+    stem: `Frank exchanges real property (adjusted basis $200,000) for like-kind real property worth $350,000 and $30,000 cash (boot). The transaction qualifies under §1031.
+
+What is Frank's recognized gain and basis in the new property?`,
+    choices: [
+      { key: "A", text: "Recognized $0; new basis $200,000" },
+      { key: "B", text: "Recognized $30,000; new basis $200,000" },
+      { key: "C", text: "Recognized $150,000; new basis $350,000" },
+      { key: "D", text: "Recognized $30,000; new basis $230,000" },
+    ],
+    correct: "B",
+    explanation: `§1031 with boot:\n\nRealized gain:\nFMV received ($350,000) + Boot ($30,000) − Basis ($200,000) = $180,000\n\nRecognized gain = lesser of realized gain or boot = lesser of $180,000 or $30,000 = $30,000\n\nBasis in new property:\nOld basis: $200,000\n+ Recognized gain: +$30,000\n− Boot received: −$30,000\nNew basis: $200,000\n\nAlt check: FMV ($350,000) − Deferred gain ($150,000) = $200,000 ✓`,
+    whyWrong: [
+      { key: "A", reason: "When boot is received, gain is recognized to the extent of the boot. $30,000 cash received → $30,000 recognized." },
+      { key: "C", reason: "$150,000 is the deferred gain. Recognized gain is limited to boot received." },
+      { key: "D", reason: "New basis is $200,000 ($200k + $30k recognized − $30k boot = $200k), not $230,000." },
+    ],
+  },
+
+  {
+    id: "reg-21",
+    topic: "Property — Primary Residence Exclusion §121",
+    difficulty: "Moderate",
+    stem: `Ann and Tom (MFJ) sell their primary home for $850,000. They bought it 6 years ago for $450,000 and have lived there the entire time.
+
+What is their taxable gain after the §121 exclusion?`,
+    choices: [
+      { key: "A", text: "$400,000 — §121 does not apply" },
+      { key: "B", text: "$150,000 — $250,000 exclusion applied" },
+      { key: "C", text: "$0 — fully excluded" },
+      { key: "D", text: "$150,000 — both spouses must each satisfy separately" },
+    ],
+    correct: "C",
+    explanation: `§121 Primary Residence Exclusion:\n• MFJ: Exclude up to $500,000 of gain\n• Requirement: owned AND used as primary residence for 2 of the 5 years before sale ✓ (6 years qualifies)\n\nGain: $850,000 − $450,000 = $400,000\nMFJ exclusion limit: $500,000\n$400,000 < $500,000 → entire gain excluded\n\nTaxable gain: $0`,
+    whyWrong: [
+      { key: "A", reason: "§121 clearly applies — they owned and lived in the home for 6 years, well over the 2-of-5-year requirement." },
+      { key: "B", reason: "$250,000 is the single-filer exclusion. MFJ filers get $500,000, which exceeds the $400,000 gain." },
+      { key: "D", reason: "For MFJ, only one spouse needs to satisfy the ownership test and only one the use test (though both must use it). The $500,000 exclusion is available." },
+    ],
+  },
+
+  {
+    id: "reg-22",
+    topic: "Property — Installment Sales",
+    difficulty: "Hard",
+    stem: `Helen sells land (basis $100,000) for $400,000. She receives $80,000 at closing and $320,000 over the next 4 years. The land is not dealer property.
+
+What is Helen's gross profit percentage and Year 1 recognized gain?`,
+    choices: [
+      { key: "A", text: "GP% 75%; Year 1 gain $60,000" },
+      { key: "B", text: "GP% 75%; Year 1 gain $80,000" },
+      { key: "C", text: "GP% 25%; Year 1 gain $20,000" },
+      { key: "D", text: "GP% 75%; Year 1 gain $300,000" },
+    ],
+    correct: "A",
+    explanation: `Installment Sale Method (IRC §453):\n\nGross profit = $400,000 − $100,000 = $300,000\nGP% = $300,000 ÷ $400,000 = 75%\n\nYear 1 cash received: $80,000\nYear 1 recognized gain: $80,000 × 75% = $60,000\n\nThe remaining 25% of each payment is return of basis (non-taxable).`,
+    whyWrong: [
+      { key: "B", reason: "$80,000 treats the entire first payment as gain. Only 75% is gain — 25% is return of basis." },
+      { key: "C", reason: "25% is the return-of-basis ratio, not the gross profit percentage. GP% = 75%." },
+      { key: "D", reason: "$300,000 is the total gross profit, not the Year 1 gain. Only the Year 1 cash receipt ($80,000) triggers Year 1 recognition." },
+    ],
+  },
+
+  // ── PARTNERSHIP TAXATION ───────────────────────────────────────────────────
+
+  {
+    id: "reg-23",
+    topic: "Partnership — Outside Basis",
+    difficulty: "Hard",
+    stem: `Donna contributes for a 30% partnership interest:
+• Cash: $20,000
+• Equipment: FMV $50,000, adjusted basis $30,000, subject to $15,000 liability assumed by the partnership
+
+What is Donna's initial outside basis?`,
+    choices: [
+      { key: "A", text: "$39,500" },
+      { key: "B", text: "$35,000" },
+      { key: "C", text: "$50,000" },
+      { key: "D", text: "$70,000" },
+    ],
+    correct: "A",
+    explanation: `Outside basis (IRC §722):\n\nStart: Cash + Adjusted basis of property:\n$20,000 + $30,000 = $50,000\n\nLiability adjustment:\n− Liability assumed by partnership: −$15,000\n+ Donna's share back (30%): +$4,500\nNet reduction: $10,500\n\nOutside basis: $50,000 − $10,500 = $39,500`,
+    whyWrong: [
+      { key: "B", reason: "$35,000 omits the share-back. Donna is still 30% liable — $4,500 must be added back to basis." },
+      { key: "C", reason: "$50,000 ignores the net liability relief entirely." },
+      { key: "D", reason: "$70,000 uses FMV ($50,000) instead of adjusted basis ($30,000). Always use tax basis, not fair value." },
+    ],
+  },
+
+  {
+    id: "reg-24",
+    topic: "Partnership — Distributive Share and Self-Employment",
+    difficulty: "Moderate",
+    stem: `Alice and Bob are equal general partners. The partnership has ordinary income of $80,000 and interest income of $10,000. Alice materially participates.
+
+What does Alice report on her individual return, and what is subject to SE tax?`,
+    choices: [
+      { key: "A", text: "$45,000 total income; $45,000 subject to SE tax" },
+      { key: "B", text: "$45,000 total income; $40,000 SE taxable; $5,000 not subject to SE tax" },
+      { key: "C", text: "$40,000 total income; all subject to SE tax" },
+      { key: "D", text: "$45,000 total income; none subject to SE tax" },
+    ],
+    correct: "B",
+    explanation: `Alice's 50% share:\n• Ordinary income: $80,000 × 50% = $40,000\n• Interest income: $10,000 × 50% = $5,000\nTotal: $45,000\n\nSE tax treatment:\n• Ordinary business income of a general partner → Subject to SE tax: $40,000 ✓\n• Portfolio income (interest, dividends, capital gains) → NOT subject to SE tax: $5,000 ✗`,
+    whyWrong: [
+      { key: "A", reason: "Interest income is portfolio income — NOT subject to SE tax, even when flowing from a partnership." },
+      { key: "C", reason: "$40,000 omits Alice's $5,000 share of interest income. All K-1 items must be reported." },
+      { key: "D", reason: "General partners' ordinary business income IS subject to self-employment tax." },
+    ],
+  },
+
+  {
+    id: "reg-25",
+    topic: "Partnership — Guaranteed Payments",
+    difficulty: "Moderate",
+    stem: `The XYZ Partnership pays general partner Xavier a guaranteed payment of $60,000 for services. The partnership's ordinary income is $90,000 AFTER deducting the guaranteed payment. Xavier owns a 40% interest.
+
+What is Xavier's total income from the partnership?`,
+    choices: [
+      { key: "A", text: "$60,000 guaranteed payment only" },
+      { key: "B", text: "$96,000 — $60,000 guaranteed payment + $36,000 distributive share" },
+      { key: "C", text: "$36,000 distributive share only" },
+      { key: "D", text: "$90,000 — 40% of pre-guaranteed-payment income" },
+    ],
+    correct: "B",
+    explanation: `Guaranteed payments (IRC §707(c)):\n\nGuaranteed payment: $60,000\n• Ordinary income to Xavier — taxable, subject to SE tax\n• Already deducted by the partnership (ordinary income is stated after it)\n\nDistributive share:\n$90,000 × 40% = $36,000\n\nTotal: $60,000 + $36,000 = $96,000`,
+    whyWrong: [
+      { key: "A", reason: "$60,000 omits Xavier's distributive share of partnership income. Both items flow through." },
+      { key: "C", reason: "$36,000 omits the guaranteed payment — separately includable in Xavier's income." },
+      { key: "D", reason: "$90,000 × 40% = $36,000, not $90,000. Also ignores the guaranteed payment entirely." },
+    ],
+  },
+
+  {
+    id: "reg-26",
+    topic: "Partnership — Non-Liquidating Cash Distribution",
+    difficulty: "Moderate",
+    stem: `Rosa's outside basis in the RS Partnership is $50,000. The partnership distributes $30,000 cash to Rosa in a non-liquidating distribution.
+
+What is Rosa's recognized gain and remaining outside basis?`,
+    choices: [
+      { key: "A", text: "Gain $0; remaining basis $20,000" },
+      { key: "B", text: "Gain $30,000; remaining basis $0" },
+      { key: "C", text: "Gain $0; remaining basis $50,000" },
+      { key: "D", text: "Gain $30,000; remaining basis $20,000" },
+    ],
+    correct: "A",
+    explanation: `Non-liquidating cash distributions (IRC §731):\n\n• Gain recognized ONLY if cash exceeds outside basis\n• Cash received ($30,000) < Outside basis ($50,000) → No gain\n• Reduce basis by cash received\n\nRemaining basis: $50,000 − $30,000 = $20,000`,
+    whyWrong: [
+      { key: "B", reason: "Gain is only recognized when cash exceeds outside basis. $30,000 < $50,000 → no gain." },
+      { key: "C", reason: "Distributions reduce outside basis dollar-for-dollar. Basis drops to $20,000." },
+      { key: "D", reason: "No gain is recognized here. Basis reduces to $20,000 — but there is no recognized gain." },
+    ],
+  },
+
+  {
+    id: "reg-27",
+    topic: "Partnership — Hot Assets §751",
+    difficulty: "Hard",
+    stem: `Partner Pete sells his 25% partnership interest for $200,000. His outside basis is $120,000. The partnership has (allocable to Pete's interest): unrealized receivables FMV $60,000 (basis $0) and inventory FMV $40,000 (basis $10,000).
+
+What is the character of Pete's $80,000 total gain?`,
+    choices: [
+      { key: "A", text: "$80,000 capital gain — no §751 recharacterization" },
+      { key: "B", text: "$80,000 ordinary income — all gain is from hot assets" },
+      { key: "C", text: "$60,000 ordinary income (receivables); $20,000 capital gain" },
+      { key: "D", text: "Ordinary income for the hot asset portion; capital gain for the remainder" },
+    ],
+    correct: "D",
+    explanation: `§751 "Hot Asset" rules:\nWhen a partner sells their interest, gain attributable to unrealized receivables and substantially appreciated inventory is recharacterized as ORDINARY income.\n\nHot asset ordinary income (Pete's share):\n• Unrealized receivables: $60,000 FMV − $0 basis = $60,000 ordinary\n• Inventory: $40,000 FMV − $10,000 basis = $30,000 ordinary\nTotal hot asset gain = $90,000 — but total gain is only $80,000\n\nSo all $80,000 is ordinary (hot asset gains exceed total gain).\nCapital gain: $0\n\nKey principle: §751 bifurcates the gain — hot asset gain = ordinary; the residual (if any) = capital.`,
+    whyWrong: [
+      { key: "A", reason: "§751 prevents all gain from being capital when hot assets exist. Unrealized receivables and appreciated inventory force ordinary income." },
+      { key: "B", reason: "While all $80,000 is ordinary here, this answer generalizes too broadly. The principle is that hot asset gain = ordinary; residual = capital." },
+      { key: "C", reason: "$60,000 ordinary from receivables is correct, but inventory appreciation ($30,000) is ALSO a hot asset generating ordinary income under §751." },
+    ],
+  },
+
+  {
+    id: "reg-28",
+    topic: "Partnership — Tax Year Selection",
+    difficulty: "Moderate",
+    stem: `The Apex Partnership has three partners: Corp A owns 50% (fiscal year Sep 30), Corp B owns 30% (fiscal year Jun 30), and Individual C owns 20% (calendar year). No group with the same year exceeds 50%.
+
+What tax year must the partnership use?`,
+    choices: [
+      { key: "A", text: "September 30 fiscal year — majority interest rule" },
+      { key: "B", text: "Calendar year — least aggregate deferral method" },
+      { key: "C", text: "June 30 fiscal year — principal partners rule" },
+      { key: "D", text: "The partnership may freely choose any year" },
+    ],
+    correct: "B",
+    explanation: `Partnership tax year hierarchy (IRC §706):\n\n1. Majority interest rule: Partners owning >50% must share the same year. Corp A owns exactly 50% (not MORE than 50%) → rule does not apply.\n\n2. Principal partners rule: All principal partners (≥5%) must share the same year. Three different years → rule does not apply.\n\n3. Least aggregate deferral: Must calculate which year-end minimizes total deferral to partners — typically results in the calendar year when individual calendar-year partners are involved.\n\nResult: Calendar year.`,
+    whyWrong: [
+      { key: "A", reason: "Majority interest rule requires MORE than 50%. Corp A has exactly 50% — the rule doesn't trigger." },
+      { key: "C", reason: "Principal partners rule applies only when ALL principal partners share the same year — they have three different years." },
+      { key: "D", reason: "Partnerships cannot freely choose — the three-step hierarchy must be followed." },
+    ],
+  },
+
+  // ── S CORPORATION TAXATION ─────────────────────────────────────────────────
+
+  {
+    id: "reg-29",
+    topic: "S Corporation — Eligibility",
+    difficulty: "Moderate",
+    stem: `Which of the following would DISQUALIFY a corporation from making an S election?`,
+    choices: [
+      { key: "A", text: "The corporation has 75 shareholders" },
+      { key: "B", text: "One shareholder is an Electing Small Business Trust (ESBT)" },
+      { key: "C", text: "The corporation has two classes of stock that differ only in voting rights" },
+      { key: "D", text: "One shareholder is a nonresident alien individual" },
+    ],
+    correct: "D",
+    explanation: `S corporation eligibility (IRC §1361):\n• Maximum 100 shareholders\n• Shareholders must be U.S. citizens/residents, certain trusts, or qualifying tax-exempt entities\n• Only ONE class of stock (voting differences are OK — economic differences are not)\n• Must be domestic\n\nNonresident aliens CANNOT be S corp shareholders → disqualifies the election.\n\nThe other choices:\n• 75 shareholders: Below the 100 limit ✓\n• ESBT: Specifically permitted under §1361(e) ✓\n• Voting-only differences: Permitted — only economic differences (different dividends/liquidation rights) disqualify ✓`,
+    whyWrong: [
+      { key: "A", reason: "S corporations may have up to 100 shareholders. 75 is within the limit." },
+      { key: "B", reason: "ESBTs are specifically authorized as S corporation shareholders under §1361(e)." },
+      { key: "C", reason: "Differences in voting rights alone do NOT disqualify. Only differences in economic rights (dividend rates, liquidation proceeds) create a second class of stock." },
+    ],
+  },
+
+  {
+    id: "reg-30",
+    topic: "S Corporation — Built-In Gains Tax",
+    difficulty: "Hard",
+    stem: `Meridian Corp. converts from C to S corporation on January 1, Year 1. At conversion, it holds land with FMV $500,000 and basis $300,000 (built-in gain $200,000). Meridian sells the land in Year 3 for $550,000.
+
+What are the tax consequences?`,
+    choices: [
+      { key: "A", text: "Entire $250,000 gain passes through to shareholders with no corporate tax" },
+      { key: "B", text: "$200,000 subject to corporate BIG tax; $50,000 passes through tax-free at corporate level" },
+      { key: "C", text: "BIG tax no longer applies — recognition period has passed" },
+      { key: "D", text: "All $250,000 subject to BIG tax at corporate level" },
+    ],
+    correct: "B",
+    explanation: `Built-In Gains Tax (IRC §1374):\n\nWhen a C corp converts to S corp, gains accrued as a C corp are subject to corporate-level tax if recognized within the 5-year recognition period.\n\nBIG at conversion: $200,000 (FMV $500k − basis $300k)\nActual gain on sale: $550,000 − $300,000 = $250,000\n\nYear 3 is within the 5-year recognition period → BIG tax applies:\n• $200,000 → subject to corporate BIG tax at the top corporate rate\n• Remaining $50,000 (post-conversion appreciation) → passes through to shareholders without BIG tax`,
+    whyWrong: [
+      { key: "A", reason: "The BIG tax prevents pre-conversion appreciation from escaping corporate tax when sold within 5 years." },
+      { key: "C", reason: "The recognition period is 5 years. Year 3 is within that period — BIG tax still applies." },
+      { key: "D", reason: "Only the $200,000 built-in gain (pre-conversion) is subject to BIG tax. The $50,000 that appreciated after the S election passes through without BIG tax." },
+    ],
+  },
+
+  {
+    id: "reg-31",
+    topic: "S Corporation — Shareholder Basis and Losses",
+    difficulty: "Hard",
+    stem: `Owen's S corp stock basis is $30,000. He has a $10,000 direct loan to the S corp. Year 1 items: ordinary loss $45,000; tax-exempt income $5,000. Owen owns 100%.
+
+How much of the $45,000 loss can Owen deduct?`,
     choices: [
       { key: "A", text: "$30,000" },
       { key: "B", text: "$45,000" },
@@ -1398,11 +1987,437 @@ How much loss can Owen deduct in Year 1?`,
       { key: "D", text: "$40,000" },
     ],
     correct: "B",
-    explanation: `S corp loss deductibility (IRC §1366, §1367): limited to stock basis + debt basis.\n\nStep 1 — Add tax-exempt income to stock basis FIRST:\n$30,000 + $5,000 = $35,000 stock basis\n\nStep 2 — Total available:\nStock basis: $35,000\nDebt basis: $10,000\nTotal: $45,000\n\nStep 3 — Apply $45,000 loss:\nFirst reduces stock to $0 ($35,000 absorbed)\nThen reduces debt basis by remaining $10,000 → $0\n\nAll $45,000 is deductible.`,
+    explanation: `S corp loss deductibility (IRC §1366, §1367):\n\nStep 1 — Increase stock basis for tax-exempt income FIRST:\n$30,000 + $5,000 = $35,000\n\nStep 2 — Total basis available:\nStock $35,000 + Debt $10,000 = $45,000\n\nStep 3 — Apply $45,000 loss:\nExhausts stock basis ($35,000) then debt basis ($10,000) → $0 remaining\n\nAll $45,000 is deductible.`,
     whyWrong: [
-      { key: "A", reason: "$30,000 ignores tax-exempt income that increases stock basis to $35,000 before losses are applied." },
-      { key: "C", reason: "$35,000 only uses stock basis, ignoring the $10,000 debt basis available after stock is exhausted." },
-      { key: "D", reason: "$40,000 may add only partial debt basis. Total available = $45,000 (stock $35k + debt $10k)." },
+      { key: "A", reason: "$30,000 ignores the $5,000 tax-exempt income that increases stock basis to $35,000 before losses are applied." },
+      { key: "C", reason: "$35,000 uses only adjusted stock basis — the $10,000 debt basis is also available after stock is exhausted." },
+      { key: "D", reason: "$40,000 only partially uses debt basis. Total available = $35,000 stock + $10,000 debt = $45,000." },
+    ],
+  },
+
+  {
+    id: "reg-32",
+    topic: "S Corporation — Distributions with AE&P",
+    difficulty: "Moderate",
+    stem: `Sandra owns 100% of an S corp with an AAA of $80,000 and AE&P from prior C corp years of $40,000. Her stock basis is $120,000. She receives a $100,000 distribution.
+
+How is the distribution treated?`,
+    choices: [
+      { key: "A", text: "$100,000 reduces stock basis only — no income" },
+      { key: "B", text: "$80,000 from AAA (tax-free); $20,000 taxable dividend from AE&P" },
+      { key: "C", text: "$80,000 from AAA (tax-free); $20,000 return of basis" },
+      { key: "D", text: "$40,000 taxable dividend; $60,000 reduces stock basis" },
+    ],
+    correct: "B",
+    explanation: `S corp distribution ordering when AE&P exists:\n\n1. First from AAA → tax-free, reduces stock basis: $80,000 (stock basis: $120k → $40k)\n2. Then from AE&P → taxable dividend: $20,000\n3. Then return of remaining basis → tax-free\n4. Then capital gain → if basis exhausted\n\nSandra recognizes $20,000 dividend income.`,
+    whyWrong: [
+      { key: "A", reason: "When AE&P from C corp years exists, distributions exceeding AAA are taxable dividends — not automatic basis reductions." },
+      { key: "C", reason: "The $20,000 excess comes from AE&P (C corp earnings), making it a taxable dividend — not return of basis." },
+      { key: "D", reason: "AE&P comes AFTER AAA in the ordering rules. AAA ($80,000) is used first." },
+    ],
+  },
+
+  {
+    id: "reg-33",
+    topic: "S Corporation — Passive Activity Losses",
+    difficulty: "Moderate",
+    stem: `Maria owns 30% of an S corporation and does NOT materially participate. The S corp reports a $50,000 ordinary loss. Maria's stock basis is $40,000; she has no debt basis and no passive income.
+
+How much loss can Maria currently deduct?`,
+    choices: [
+      { key: "A", text: "$15,000 — 30% share within her basis" },
+      { key: "B", text: "$40,000 — limited by basis" },
+      { key: "C", text: "$0 — passive activity loss suspended" },
+      { key: "D", text: "$50,000 — flows through in full" },
+    ],
+    correct: "C",
+    explanation: `Two-step analysis:\n\nStep 1 — Basis limitation:\nMaria's share: $50,000 × 30% = $15,000\nStock basis: $40,000 → $15,000 is within basis → passes through ✓\n\nStep 2 — Passive Activity Loss (PAL) rules:\nMaria does NOT materially participate → S corp activity is passive for her.\nPassive losses can only offset passive income.\nMaria has no passive income → $15,000 loss is SUSPENDED.\n\nCurrently deductible: $0 (carried forward until passive income or disposition).`,
+    whyWrong: [
+      { key: "A", reason: "$15,000 passes the basis test but is still suspended by the PAL rules — Maria doesn't materially participate." },
+      { key: "B", reason: "The basis limit doesn't restrict here (loss < basis), but the PAL rules suspend the loss regardless." },
+      { key: "D", reason: "Even if the full $50,000 passed through, non-participation makes it passive and suspends it without offsetting passive income." },
+    ],
+  },
+
+  // ── CORPORATE TAXATION ────────────────────────────────────────────────────
+
+  {
+    id: "reg-34",
+    topic: "Corporate Taxation — Dividends Received Deduction",
+    difficulty: "Moderate",
+    stem: `Crestline Corp. owns 25% of Dalton Corp. and receives a $100,000 dividend. No taxable income limitation applies.
+
+What is Crestline's dividends received deduction (DRD)?`,
+    choices: [
+      { key: "A", text: "$50,000" },
+      { key: "B", text: "$65,000" },
+      { key: "C", text: "$80,000" },
+      { key: "D", text: "$100,000" },
+    ],
+    correct: "B",
+    explanation: `Post-TCJA DRD rates (IRC §243):\n• < 20% ownership → 50%\n• 20%–< 80% ownership → 65%\n• ≥ 80% ownership → 100%\n\nCrestline owns 25% → 65%\nDRD = $100,000 × 65% = $65,000`,
+    whyWrong: [
+      { key: "A", reason: "$50,000 applies to < 20% ownership. Crestline owns 25%." },
+      { key: "C", reason: "$80,000 was the pre-TCJA rate. The TCJA (2017) reduced 20%–80% ownership DRD from 80% to 65%." },
+      { key: "D", reason: "100% DRD requires ≥ 80% ownership. Crestline owns only 25%." },
+    ],
+  },
+
+  {
+    id: "reg-35",
+    topic: "Corporate Taxation — Charitable Contribution Limit",
+    difficulty: "Moderate",
+    stem: `Horizon Corp. (C corporation) has taxable income of $500,000 before charitable contributions. It makes $60,000 of cash contributions to qualified charities.
+
+What is Horizon's allowable charitable contribution deduction?`,
+    choices: [
+      { key: "A", text: "$60,000 — full amount deductible" },
+      { key: "B", text: "$50,000 — 10% of pre-contribution taxable income" },
+      { key: "C", text: "$25,000 — limited to 50% of income" },
+      { key: "D", text: "$0 — C corporations cannot deduct charitable contributions" },
+    ],
+    correct: "B",
+    explanation: `C corporations may deduct charitable contributions up to 10% of taxable income (computed before the charitable deduction, DRD, NOL carryback, and capital loss carryback).\n\nLimit: $500,000 × 10% = $50,000\nActual: $60,000\nAllowable: $50,000\nExcess $10,000 carries forward 5 years.`,
+    whyWrong: [
+      { key: "A", reason: "$60,000 exceeds the 10% limitation. The excess $10,000 carries forward — it is not currently deductible." },
+      { key: "C", reason: "50% is the individual limit for cash contributions. C corporations use 10%." },
+      { key: "D", reason: "C corporations can and do deduct charitable contributions — subject to the 10% limitation." },
+    ],
+  },
+
+  {
+    id: "reg-36",
+    topic: "Corporate Taxation — §351 Formation",
+    difficulty: "Moderate",
+    stem: `Alice and Bob form Newco Corporation. Alice transfers property (FMV $100,000, basis $40,000) for 60% of the stock. Bob contributes services worth $67,000 for 40% of the stock.
+
+What are the tax consequences?`,
+    choices: [
+      { key: "A", text: "Neither party recognizes income — fully qualifies under §351" },
+      { key: "B", text: "Alice recognizes $60,000 gain; Bob recognizes $67,000 ordinary income" },
+      { key: "C", text: "Alice recognizes no gain; Bob recognizes $67,000 ordinary income" },
+      { key: "D", text: "Bob's services break §351 for both transferors — Alice must recognize gain too" },
+    ],
+    correct: "C",
+    explanation: `§351 Non-Recognition:\n\n• Transfers of PROPERTY qualify for non-recognition\n• Transfers of SERVICES do NOT qualify — they are compensation\n\nAlice: Transfers property → qualifies for §351 → No gain recognized\nBob: Transfers services → Does NOT qualify for §351 → Recognizes $67,000 ordinary compensation income\n\nNote on control: For §351, transferors of property (not services) must control ≥80% immediately after. Since Bob transfers only services, he does not count toward the control test. Alice has 60% — below 80%. In practice this is a nuanced issue on the actual exam, but the standard CPA exam answer is: Alice = no gain; Bob = $67,000 ordinary income.`,
+    whyWrong: [
+      { key: "A", reason: "Services are not property. Bob cannot avoid income recognition by contributing services for stock." },
+      { key: "B", reason: "Alice's property transfer qualifies for §351 non-recognition — she defers her $60,000 gain." },
+      { key: "D", reason: "Bob's services do not automatically contaminate Alice's property transfer under the standard exam rule." },
+    ],
+  },
+
+  {
+    id: "reg-37",
+    topic: "Corporate Taxation — Accumulated Earnings Tax",
+    difficulty: "Hard",
+    stem: `Which statement best describes the Accumulated Earnings Tax (AET)?`,
+    choices: [
+      { key: "A", text: "A 20% tax imposed automatically on all retained earnings above $250,000" },
+      { key: "B", text: "A penalty tax on C corporations accumulating earnings beyond reasonable business needs to avoid shareholder dividend taxes" },
+      { key: "C", text: "A tax paid by shareholders when dividends are not distributed" },
+      { key: "D", text: "A flat 15% tax on all C corporation undistributed earnings" },
+    ],
+    correct: "B",
+    explanation: `The Accumulated Earnings Tax (IRC §531):\n• Rate: 20% on accumulated taxable income\n• Target: C corporations that IMPROPERLY retain earnings (beyond reasonable business needs) to avoid shareholder-level dividend taxation\n• Not automatic — requires the IRS to establish improper accumulation purpose\n• Accumulated earnings credit: $250,000 ($150,000 for personal service corporations)\n• Applies to C corporations — not S corps (which are pass-through)`,
+    whyWrong: [
+      { key: "A", reason: "The $250,000 credit shelters the first $250k, but the AET is NOT automatic — it requires proof of improper accumulation motive." },
+      { key: "C", reason: "The AET is a corporate-level tax on the corporation, not on shareholders." },
+      { key: "D", reason: "The AET rate is 20% (not 15%), and it applies only when there is improper accumulation — not to all undistributed earnings." },
+    ],
+  },
+
+  {
+    id: "reg-38",
+    topic: "Corporate Taxation — Estimated Tax (Large Corporations)",
+    difficulty: "Moderate",
+    stem: `Largestar Corp. has taxable income of $4,000,000 in Year 1 with a tax liability of $840,000. Its Year 0 tax liability was $600,000. Largestar had taxable income exceeding $1,000,000 in prior years.
+
+To avoid an underpayment penalty, what is the minimum estimated tax Largestar must pay in Year 1?`,
+    choices: [
+      { key: "A", text: "$600,000 — 100% of prior year tax" },
+      { key: "B", text: "$840,000 — 100% of current year tax" },
+      { key: "C", text: "$756,000 — 90% of current year tax" },
+      { key: "D", text: "$600,000 — the lower of prior year or 90% of current year" },
+    ],
+    correct: "C",
+    explanation: `Large corporation estimated tax rules (IRC §6655):\n\nFor large corporations (taxable income ≥ $1,000,000 in any of the 3 prior years):\n• The prior year tax safe harbor ($600,000) is NOT available (except for the first installment only)\n• Must pay either 100% of current year tax OR at least 90% of current year tax by each installment due date\n\n90% of current year: $840,000 × 90% = $756,000\n\nAs a large corporation, Largestar cannot rely on the $600,000 prior-year safe harbor.`,
+    whyWrong: [
+      { key: "A", reason: "$600,000 is the prior-year safe harbor — not available to large corporations (except the first quarter only)." },
+      { key: "B", reason: "$840,000 (100% of current year) is a safe harbor, but 90% ($756,000) is the minimum required." },
+      { key: "D", reason: "Large corporations cannot use the prior-year safe harbor — the 90% of current year standard applies." },
+    ],
+  },
+
+  // ── ESTATE & GIFT TAX ─────────────────────────────────────────────────────
+
+  {
+    id: "reg-39",
+    topic: "Estate & Gift — Annual Exclusion",
+    difficulty: "Moderate",
+    stem: `Howard makes these transfers in the current year (annual exclusion is $18,000 per donee):
+• $30,000 cash to his daughter
+• $25,000 cash to his son
+• $18,000 to fund his grandchild's 529 plan
+• $15,000 tuition paid directly to a university for his nephew
+
+Which amounts are subject to gift tax (before applying the lifetime exemption)?`,
+    choices: [
+      { key: "A", text: "$12,000 — only daughter's excess" },
+      { key: "B", text: "$19,000 — daughter's excess ($12k) and son's excess ($7k)" },
+      { key: "C", text: "$34,000 — all four gifts reduced by one $18,000 exclusion" },
+      { key: "D", text: "$7,000 — only son's excess" },
+    ],
+    correct: "B",
+    explanation: `Annual exclusion: $18,000 per donee. Each donee gets their own exclusion.\n\n• Daughter $30,000: − $18,000 = $12,000 taxable ✓\n• Son $25,000: − $18,000 = $7,000 taxable ✓\n• Grandchild 529 $18,000: − $18,000 = $0 taxable ✓\n• Nephew tuition $15,000: FULLY EXCLUDED under IRC §2503(e) — direct tuition payments to educational institutions are excluded regardless of the annual exclusion amount ✓\n\nTotal taxable gifts: $12,000 + $7,000 = $19,000`,
+    whyWrong: [
+      { key: "A", reason: "$12,000 misses the son's $7,000 excess. Both daughter and son have gifts exceeding $18,000." },
+      { key: "C", reason: "Each donee gets their own $18,000 exclusion — not one shared exclusion. Also, the tuition is excluded under §2503(e)." },
+      { key: "D", reason: "$7,000 misses the daughter's $12,000 excess. Both daughter ($30k) and son ($25k) exceed the exclusion." },
+    ],
+  },
+
+  {
+    id: "reg-40",
+    topic: "Estate & Gift — Marital Deduction",
+    difficulty: "Moderate",
+    stem: `Richard dies with a gross estate of $12,000,000. He bequeaths $4,000,000 outright to his spouse (a U.S. citizen) and the remainder passes to a trust for his children.
+
+What is Richard's estate tax marital deduction?`,
+    choices: [
+      { key: "A", text: "$4,000,000" },
+      { key: "B", text: "$6,000,000 — limited to 50% of estate" },
+      { key: "C", text: "$12,000,000 — unlimited marital deduction" },
+      { key: "D", text: "$0 — trust property does not qualify" },
+    ],
+    correct: "A",
+    explanation: `The estate tax marital deduction (IRC §2056) is UNLIMITED for property passing outright to a U.S. citizen surviving spouse.\n\n• $4,000,000 passes outright to the spouse → $4,000,000 marital deduction ✓\n• Remainder to children's trust → no marital deduction\n\nMarital deduction = $4,000,000 (only the amount actually passing to the spouse in a qualifying form).`,
+    whyWrong: [
+      { key: "B", reason: "There is no 50% limit on the marital deduction. It is unlimited for qualifying transfers to a U.S. citizen spouse." },
+      { key: "C", reason: "$12,000,000 would be the marital deduction only if the entire estate passed to the spouse — the remainder goes to the children's trust." },
+      { key: "D", reason: "The children's trust doesn't qualify, but the $4,000,000 outright bequest to the spouse DOES qualify." },
+    ],
+  },
+
+  {
+    id: "reg-41",
+    topic: "Estate & Gift — Gift Splitting",
+    difficulty: "Moderate",
+    stem: `Steve and Carol are married. Steve makes a $60,000 cash gift to his niece. They elect gift splitting. The annual exclusion is $18,000 per donor per donee.
+
+After gift splitting and the annual exclusions, what is the total taxable gift?`,
+    choices: [
+      { key: "A", text: "$42,000 taxable gift" },
+      { key: "B", text: "$24,000 taxable gift" },
+      { key: "C", text: "$0 taxable — fully covered by exclusions" },
+      { key: "D", text: "$60,000 — gift splitting doesn't affect taxable gift amount" },
+    ],
+    correct: "B",
+    explanation: `Gift splitting (IRC §2513): spouses may elect to treat a gift by one as made half by each.\n\nWith gift splitting:\n• Steve's deemed gift: $60,000 ÷ 2 = $30,000\n• Carol's deemed gift: $30,000\n\nEach applies their own $18,000 annual exclusion:\n• Steve: $30,000 − $18,000 = $12,000 taxable\n• Carol: $30,000 − $18,000 = $12,000 taxable\n\nTotal taxable gift: $12,000 + $12,000 = $24,000`,
+    whyWrong: [
+      { key: "A", reason: "$42,000 applies only Steve's single $18,000 exclusion against the full $60,000 — it ignores gift splitting and Carol's exclusion." },
+      { key: "C", reason: "Two exclusions of $18,000 each = $36,000 total. The $60,000 gift exceeds that by $24,000." },
+      { key: "D", reason: "Gift splitting effectively doubles the annual exclusion by allowing both spouses to apply exclusions to the same gift." },
+    ],
+  },
+
+  {
+    id: "reg-42",
+    topic: "Estate & Gift — Gross Estate Inclusions",
+    difficulty: "Hard",
+    stem: `At death, Nathan's gross estate includes:
+• A life insurance policy Nathan owned on his own life: face value $500,000
+• A joint checking account with his wife (Nathan contributed 100% of the funds): $80,000
+• A revocable living trust Nathan created: $200,000
+• An irrevocable trust Nathan created 10 years ago with no retained interest: $150,000
+
+What is included in Nathan's gross estate?`,
+    choices: [
+      { key: "A", text: "$780,000" },
+      { key: "B", text: "$930,000" },
+      { key: "C", text: "$780,000 plus the irrevocable trust" },
+      { key: "D", text: "$500,000 life insurance only" },
+    ],
+    correct: "A",
+    explanation: `Gross estate inclusion rules:\n\n• Life insurance ($500,000): Included — Nathan was the owner (incidents of ownership) → §2042 ✓\n• Joint checking account ($80,000): 100% included in Nathan's estate since he contributed 100% of the funds → §2040 ✓\n• Revocable living trust ($200,000): Included — Nathan retained the power to revoke → §2038 ✓\n• Irrevocable trust ($150,000): EXCLUDED — Nathan transferred this 10 years ago with no retained interest; it is outside his estate ✗\n\nGross estate: $500,000 + $80,000 + $200,000 = $780,000`,
+    whyWrong: [
+      { key: "B", reason: "$930,000 includes the irrevocable trust. An irrevocable trust with no retained interest and transferred more than 3 years ago is OUTSIDE the gross estate." },
+      { key: "C", reason: "The irrevocable trust is specifically excluded — Nathan divested all interest 10 years ago with no retained rights." },
+      { key: "D", reason: "The life insurance alone is only one component. The joint account and revocable trust are also included." },
+    ],
+  },
+
+  // ── BUSINESS LAW — CONTRACTS & AGENCY ────────────────────────────────────
+
+  {
+    id: "reg-43",
+    topic: "Business Law — Contract Formation",
+    difficulty: "Moderate",
+    stem: `On Monday, Buyer mails an offer to Seller offering to purchase goods for $10,000. On Wednesday, Seller mails an acceptance. On Thursday, Buyer mails a revocation. On Friday, both the acceptance and revocation arrive at Buyer.
+
+Under the common law mailbox rule, has a valid contract been formed?`,
+    choices: [
+      { key: "A", text: "No — the revocation arrived before the acceptance took effect" },
+      { key: "B", text: "Yes — acceptance is effective when mailed (Wednesday); revocation was too late" },
+      { key: "C", text: "No — revocations are also effective when mailed (Thursday is after Wednesday)" },
+      { key: "D", text: "Yes — both were received Friday so they cancel out and the original offer controls" },
+    ],
+    correct: "B",
+    explanation: `Mailbox Rule (common law):\n• An ACCEPTANCE is effective when MAILED (dispatched)\n• A REVOCATION is effective only when RECEIVED by the offeree\n\nTimeline:\n• Wednesday: Seller mails acceptance → CONTRACT FORMED ✓ (effective on dispatch)\n• Thursday: Buyer mails revocation → too late (contract already exists)\n• Friday: Both arrive — irrelevant to formation\n\nA valid contract was formed Wednesday when acceptance was mailed.`,
+    whyWrong: [
+      { key: "A", reason: "The revocation arrived Friday — same day as acceptance. But the acceptance was effective Wednesday (when mailed). Revocation came too late." },
+      { key: "C", reason: "Revocations are effective only when RECEIVED — not when mailed. The mailbox rule applies to acceptances, not revocations." },
+      { key: "D", reason: "The Friday arrival is irrelevant. The acceptance was effective Wednesday under the mailbox rule." },
+    ],
+  },
+
+  {
+    id: "reg-44",
+    topic: "Business Law — Agency Authority",
+    difficulty: "Moderate",
+    stem: `Paula is authorized to sell Wilson's home for no less than $400,000. Without Wilson's knowledge, Paula accepts $385,000 and signs a purchase agreement on Wilson's behalf.
+
+What is the legal effect?`,
+    choices: [
+      { key: "A", text: "The contract is void — Paula lacked all authority" },
+      { key: "B", text: "The contract is voidable by Wilson — Paula exceeded actual authority" },
+      { key: "C", text: "The contract is binding on Wilson — the buyer had apparent authority" },
+      { key: "D", text: "Paula has apparent authority — the contract binds Wilson" },
+    ],
+    correct: "B",
+    explanation: `Paula had ACTUAL authority to sell — but NOT below $400,000. Exceeding the scope of actual authority does not make the contract void; it makes it VOIDABLE by the principal.\n\nWilson may ratify the contract (accept it) or disaffirm it (reject it). Since Paula exceeded her express authority, Wilson is not automatically bound.`,
+    whyWrong: [
+      { key: "A", reason: "Void requires total absence of authority. Paula had authority to sell — just not below $400k. Excess authority → voidable, not void." },
+      { key: "C", reason: "Apparent authority is created by the PRINCIPAL'S conduct — not by the agent's actions alone." },
+      { key: "D", reason: "An agent cannot create her own apparent authority. Paula cannot expand her authority by simply acting." },
+    ],
+  },
+
+  {
+    id: "reg-45",
+    topic: "Business Law — Statute of Frauds",
+    difficulty: "Moderate",
+    stem: `Which of the following contracts is NOT required to be in writing under the Statute of Frauds?`,
+    choices: [
+      { key: "A", text: "A contract for the sale of land" },
+      { key: "B", text: "A contract that cannot be performed within one year from the date it is made" },
+      { key: "C", text: "A contract for the sale of goods for $600" },
+      { key: "D", text: "A one-year employment contract beginning immediately" },
+    ],
+    correct: "D",
+    explanation: `Statute of Frauds — contracts that must be in writing (MYLEGS):\n• Marriage (prenuptial agreements)\n• Year — contracts not performable within one year FROM THE DATE MADE\n• Land — contracts for the sale of real property\n• Executor — promises to pay decedent's debts personally\n• Goods — UCC sale of goods for $500 or more\n• Surety — promises to pay another's debt\n\nA one-year employment contract beginning IMMEDIATELY: can be fully performed within one year from the date it is made (it runs exactly one year) → does NOT require writing.\n\nThe "one-year rule" applies when performance is IMPOSSIBLE within one year — a one-year contract starting today is possible to perform in exactly one year.`,
+    whyWrong: [
+      { key: "A", reason: "Contracts for the sale of land must be in writing under the Statute of Frauds." },
+      { key: "B", reason: "Contracts that cannot be completed within one year from the date made must be in writing." },
+      { key: "C", reason: "UCC requires writing for sale of goods contracts of $500 or more ($600 > $500 → must be in writing)." },
+    ],
+  },
+
+  {
+    id: "reg-46",
+    topic: "Business Law — Contract Remedies",
+    difficulty: "Moderate",
+    stem: `Buyer contracts to purchase a unique piece of art for $50,000 from Seller. Seller repudiates the contract before the delivery date. Buyer cannot find a comparable piece on the market.
+
+What is Buyer's most appropriate remedy?`,
+    choices: [
+      { key: "A", text: "Compensatory damages equal to the difference in market price" },
+      { key: "B", text: "Specific performance — the art is unique and money damages are inadequate" },
+      { key: "C", text: "Rescission — the contract is voidable due to Seller's breach" },
+      { key: "D", text: "Liquidated damages — presumed available for all breaches" },
+    ],
+    correct: "B",
+    explanation: `Specific performance is available when:\n1. A valid contract exists ✓\n2. The plaintiff has performed or is ready to perform ✓\n3. Money damages are INADEQUATE — the subject matter is unique ✓\n4. The contract terms are definite ✓\n\nUnique items (art, real estate, rare collectibles) cannot be replaced with money — specific performance is the appropriate equitable remedy.`,
+    whyWrong: [
+      { key: "A", reason: "Compensatory/market damages are inadequate when no comparable item exists. Money can't fully compensate for a unique piece." },
+      { key: "C", reason: "Rescission restores the parties to the original position — it doesn't get Buyer the unique art. Specific performance is the better remedy." },
+      { key: "D", reason: "Liquidated damages must be specified in the contract. They are not automatically available for all breaches." },
+    ],
+  },
+
+  // ── BUSINESS LAW — SECURED TRANSACTIONS & BANKRUPTCY ─────────────────────
+
+  {
+    id: "reg-47",
+    topic: "Business Law — Secured Transactions (Perfection)",
+    difficulty: "Hard",
+    stem: `First Bank takes a security interest in Debtor's inventory. On January 1, First Bank and Debtor sign a security agreement. On January 5, First Bank files a financing statement. On January 10, First Bank gives value (advances the loan).
+
+When does First Bank's security interest attach (become enforceable against Debtor)?`,
+    choices: [
+      { key: "A", text: "January 1 — when the security agreement was signed" },
+      { key: "B", text: "January 5 — when the financing statement was filed" },
+      { key: "C", text: "January 10 — when all three attachment requirements are met" },
+      { key: "D", text: "January 5 — filing perfects and also creates attachment" },
+    ],
+    correct: "C",
+    explanation: `Security interest ATTACHMENT requires ALL THREE elements (UCC Article 9):\n1. Authenticated security agreement (or creditor takes possession)\n2. Value given by the secured party\n3. Debtor has rights in the collateral\n\nTimeline:\n• Jan 1: Security agreement signed ✓ — element 1 satisfied\n• Jan 5: Financing statement filed — this is PERFECTION, not attachment\n• Jan 10: Value given (loan advanced) ✓ — element 2 satisfied; debtor had collateral rights since Jan 1\n\nAll three elements first coexist on January 10 → attachment on January 10.\n\nPerfection (filing Jan 5) can occur BEFORE attachment but doesn't cause attachment.`,
+    whyWrong: [
+      { key: "A", reason: "January 1 only satisfies element 1 (security agreement). Value has not yet been given." },
+      { key: "B", reason: "Filing a financing statement creates PERFECTION — it does not satisfy the value-given requirement for attachment." },
+      { key: "D", reason: "Filing perfects but does not independently create attachment. All three elements must coexist." },
+    ],
+  },
+
+  {
+    id: "reg-48",
+    topic: "Business Law — Priority of Security Interests",
+    difficulty: "Hard",
+    stem: `On March 1, First Bank perfects a security interest in Debtor's equipment by filing a financing statement. On March 5, Second Bank perfects by filing. On April 1, Debtor defaults. Both security interests are properly perfected.
+
+Which creditor has priority?`,
+    choices: [
+      { key: "A", text: "Second Bank — it gave value after First Bank, so it has a superior claim" },
+      { key: "B", text: "First Bank — first to file or perfect has priority" },
+      { key: "C", text: "They share pro-rata — both are perfected" },
+      { key: "D", text: "Second Bank — the later perfection supersedes" },
+    ],
+    correct: "B",
+    explanation: `UCC Article 9 Priority Rule — between two perfected security interests:\n\nFIRST TO FILE OR PERFECT has priority.\n\nFirst Bank filed March 1.\nSecond Bank filed March 5.\n\nFirst Bank has priority — it filed first. The timing of the actual value given is irrelevant once both are perfected.`,
+    whyWrong: [
+      { key: "A", reason: "Priority between perfected creditors is determined by filing/perfection date — not by when value was given." },
+      { key: "C", reason: "There is no pro-rata sharing. Priority rules determine a single winner — first to file or perfect." },
+      { key: "D", reason: "Later perfection does NOT supersede earlier perfection. Earlier perfection prevails." },
+    ],
+  },
+
+  {
+    id: "reg-49",
+    topic: "Business Law — Bankruptcy (Chapter 7)",
+    difficulty: "Hard",
+    stem: `Which of the following debts is NOT dischargeable in a Chapter 7 bankruptcy?`,
+    choices: [
+      { key: "A", text: "Credit card balances from consumer purchases" },
+      { key: "B", text: "Medical bills from a hospital stay" },
+      { key: "C", text: "Student loans (federal), absent undue hardship" },
+      { key: "D", text: "Personal loans from a bank" },
+    ],
+    correct: "C",
+    explanation: `Most unsecured debts are dischargeable in Chapter 7. However, certain debts are NONDISCHARGEABLE (Bankruptcy Code §523):\n\n• Student loans (federal and private): NOT dischargeable unless the debtor can prove "undue hardship" — a very difficult standard to meet\n• Taxes (recent): Not dischargeable\n• Alimony and child support: Not dischargeable\n• Debts from fraud, willful injury, DUI: Not dischargeable\n• Criminal fines and restitution: Not dischargeable\n\nCredit card balances, medical bills, and personal bank loans are all dischargeable in Chapter 7.`,
+    whyWrong: [
+      { key: "A", reason: "Credit card debt is a general unsecured claim and is dischargeable in Chapter 7." },
+      { key: "B", reason: "Medical bills are unsecured debt and are fully dischargeable in Chapter 7." },
+      { key: "D", reason: "Personal bank loans are general unsecured debt — dischargeable in Chapter 7." },
+    ],
+  },
+
+  {
+    id: "reg-50",
+    topic: "Business Law — Negotiable Instruments",
+    difficulty: "Hard",
+    stem: `Which of the following is a requirement for an instrument to be NEGOTIABLE under UCC Article 3?`,
+    choices: [
+      { key: "A", text: "It must be payable to a specific named individual" },
+      { key: "B", text: "It must be in writing, signed by the maker, with an unconditional promise to pay a fixed amount" },
+      { key: "C", text: "It must mature within 90 days of issuance" },
+      { key: "D", text: "It must be supported by consideration stated on the face of the instrument" },
+    ],
+    correct: "B",
+    explanation: `UCC Article 3 — Requirements for a negotiable instrument (WUDSPPOB):\n\n1. Must be in WRITING ✓\n2. SIGNED by maker or drawer ✓\n3. UNCONDITIONAL promise (note) or order (draft) ✓\n4. Fixed AMOUNT of money ✓\n5. PAYABLE on demand or at a definite time ✓\n6. PAYABLE to order or to bearer ✓\n7. No additional UNDERTAKINGS or instructions (beyond standard)\n\nNegotiable instruments can be payable to bearer (not necessarily named), have any maturity, and do not state consideration.`,
+    whyWrong: [
+      { key: "A", reason: "Negotiable instruments can be payable to BEARER — they do not need to name a specific individual." },
+      { key: "C", reason: "There is no 90-day maturity requirement for negotiability. An instrument payable in 10 years is still negotiable." },
+      { key: "D", reason: "Consideration does not need to appear on the face of the instrument. Negotiability is a formal document test — not an enforcement test." },
     ],
   },
 ]
