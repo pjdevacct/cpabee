@@ -667,33 +667,29 @@ Which fund accounts for debt service on the special assessment bonds?`,
   },
 
   {
-  id: "far-29",
-  topic: "Governmental — Modified Accrual Revenue",
-  difficulty: "Moderate",
-  stem: `Riverton City levies property taxes of $5,000,000 for Year 1. Collections: $4,600,000 in Year 1; $250,000 within 60 days of year-end; $150,000 collected later in Year 2 (beyond 60 days).
-
+    id: "far-29",
+    topic: "Governmental — Modified Accrual Revenue",
+    difficulty: "Moderate",
+    stem: `Riverton City levies property taxes of $5,000,000 for Year 1. Collections: $4,600,000 in Year 1; $250,000 within 60 days of year-end; $150,000 collected later in Year 2 (beyond 60 days).
 Under modified accrual, how much property tax revenue is recognized in Year 1?`,
-  choices: [
-    { key: "A", text: "$5,000,000" },
-    { key: "B", text: "$4,600,000" },
-    { key: "C", text: "$4,850,000" },
-    { key: "D", text: "$4,750,000" },
-  ],
-  correct: "C",
-  explanation: `Modified accrual (GASB): revenues are recognized when "available" — measurable and collectible within the current period OR within 60 days after year-end.
-
+    choices: [
+      { key: "A", text: "$5,000,000" },
+      { key: "B", text: "$4,600,000" },
+      { key: "C", text: "$4,850,000" },
+      { key: "D", text: "$4,750,000" },
+    ],
+    correct: "C",
+    explanation: `Modified accrual (GASB): revenues are recognized when "available" — measurable and collectible within the current period OR within 60 days after year-end.
 • $4,600,000 collected in Year 1 → recognized ✓
 • $250,000 collected within 60 days → recognized ✓
 • $150,000 beyond 60 days → deferred revenue ✗
-
 Year 1 revenue = $4,600,000 + $250,000 = $4,850,000`,
-  whyWrong: [
-    { key: "A", reason: "$5,000,000 is full accrual — modified accrual requires the 'available' criterion." },
-    { key: "B", reason: "$4,600,000 is cash-basis — modified accrual also includes amounts due within 60 days of year-end." },
-    { key: "D", reason: "$4,750,000 does not align with the 60-day cutoff rule." },
-  ],
-},
-
+    whyWrong: [
+      { key: "A", reason: "$5,000,000 is full accrual — modified accrual requires the 'available' criterion." },
+      { key: "B", reason: "$4,600,000 is cash-basis — modified accrual also includes amounts due within 60 days of year-end." },
+      { key: "D", reason: "$4,750,000 does not align with the 60-day cutoff rule." },
+    ],
+  },
 
   {
     id: "far-30",
@@ -1182,13 +1178,16 @@ What is the proper accounting treatment?`,
 ]
 
 // ─────────────────────────────────────────────────────────────────────────────
-// AUD — 5 QUESTIONS (to be expanded in next update)
+// AUD — 50 QUESTIONS
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const AUD_QUESTIONS: MCQ[] = [
+
+  // ── AUDIT RISK (aud-1 to aud-6) ───────────────────────────────────────────
+
   {
     id: "aud-1",
-    topic: "Risk Assessment — Audit Risk Model",
+    topic: "Audit Risk — Risk Model",
     difficulty: "Moderate",
     stem: `An auditor determines that inherent risk is high and control risk is high for accounts receivable.
 
@@ -1200,36 +1199,366 @@ To maintain the same overall audit risk level, what should the auditor do regard
       { key: "D", text: "Rely more on internal controls to reduce detection risk" },
     ],
     correct: "B",
-    explanation: `Audit risk model: AR = IR × CR × DR\n\nIf IR and CR are both high, their product is large. To keep AR at an acceptably low level, DR must be set LOW — meaning extensive substantive procedures are required to catch errors that controls didn't prevent.`,
+    explanation: `Audit risk model: AR = IR x CR x DR
+
+If IR and CR are both high, their product is large. To keep overall audit risk at an acceptable level, detection risk must be set LOW -- achieved by performing more extensive substantive procedures.
+
+DR is the only component the auditor directly controls. When IR and CR are high, the auditor compensates by doing more substantive work.`,
     whyWrong: [
-      { key: "A", reason: "Setting DR high when IR and CR are high results in unacceptably high audit risk." },
-      { key: "C", reason: "DR is the auditor's lever in the model — it is directly affected by IR and CR." },
-      { key: "D", reason: "Control risk is assessed as high — controls are unreliable. You cannot rely more on controls already deemed ineffective." },
+      { key: "A", reason: "Setting DR high when IR and CR are high results in unacceptably high overall audit risk." },
+      { key: "C", reason: "DR is the auditor's lever -- it is directly and inversely affected by IR and CR." },
+      { key: "D", reason: "Control risk is assessed as HIGH -- controls are unreliable. You cannot rely more on controls already deemed ineffective." },
     ],
   },
+
   {
     id: "aud-2",
-    topic: "Audit Evidence — Positive Confirmations",
+    topic: "Audit Risk — Significant Risks",
     difficulty: "Moderate",
-    stem: `An auditor sends positive confirmation requests to 50 customers for accounts receivable. By the deadline, 12 responses are received. The auditor cannot reach the remaining 38 customers by alternative means.
+    stem: `During risk assessment, the auditor identifies a risk requiring special consideration due to its complexity and the likelihood of material misstatement. The risk involves highly subjective revenue recognition judgments.
 
-What is the most appropriate response?`,
+How should the auditor respond?`,
     choices: [
-      { key: "A", text: "Conclude balances are fairly stated — silence implies agreement" },
-      { key: "B", text: "Apply alternative procedures such as examining subsequent cash receipts and shipping documents" },
-      { key: "C", text: "Issue a qualified opinion due to the high non-response rate" },
-      { key: "D", text: "Send a second request and accept the resulting response rate" },
+      { key: "A", text: "Perform only analytical procedures at the financial statement level" },
+      { key: "B", text: "Obtain an understanding of controls related to the risk and perform substantive procedures specifically responsive to it" },
+      { key: "C", text: "Issue a qualified opinion based on the identified risk" },
+      { key: "D", text: "Rely on management representations to address the significant risk" },
     ],
     correct: "B",
-    explanation: `For positive confirmations, a non-response provides NO audit evidence — silence is not agreement.\n\nAU-C Section 505: when positive confirmations are not returned, apply alternative procedures:\n• Examine subsequent cash receipts\n• Inspect shipping documents and sales invoices\n\nIf alternatives cannot be performed and the non-responses are material, consider the audit opinion impact.`,
+    explanation: `AU-C Section 315 -- Significant risks require special audit consideration.
+
+Required responses:
+1. Obtain an understanding of the entity's controls related to the significant risk
+2. Design substantive procedures specifically responsive to the risk -- analytical procedures alone are insufficient
+3. Consider testing operating effectiveness of relevant controls
+
+Management representations alone are never sufficient for significant risks.`,
     whyWrong: [
-      { key: "A", reason: "Silence on a positive confirmation is NOT evidence. Positive confirmations require an explicit response." },
-      { key: "C", reason: "A high non-response rate alone does not trigger qualification — alternative procedures must be attempted first." },
-      { key: "D", reason: "Sending a second request is reasonable, but remaining non-responses still require alternative procedures." },
+      { key: "A", reason: "Analytical procedures alone are insufficient for significant risks. Specifically designed substantive procedures are required." },
+      { key: "C", reason: "Identifying a significant risk shapes the audit approach -- it does not result in a modified opinion." },
+      { key: "D", reason: "Management representations are not sufficient evidence, especially for significant risks involving judgment." },
     ],
   },
+
   {
     id: "aud-3",
+    topic: "Audit Risk — Inherent Risk Factors",
+    difficulty: "Moderate",
+    stem: `Which of the following factors would INCREASE inherent risk for an assertion?`,
+    choices: [
+      { key: "A", text: "Routine, non-complex transactions processed automatically" },
+      { key: "B", text: "A stable economic environment with little industry change" },
+      { key: "C", text: "Management estimates based on highly subjective assumptions" },
+      { key: "D", text: "Strong oversight by an engaged, independent audit committee" },
+    ],
+    correct: "C",
+    explanation: `Inherent risk reflects susceptibility of an assertion to misstatement before considering controls.
+
+Factors that INCREASE inherent risk:
+- Highly subjective management assumptions (valuations, useful lives, contingencies)
+- Complexity of transactions
+- Unusual or non-routine transactions
+- Rapid change in industry or technology
+- Prior history of misstatements
+
+Highly subjective estimates are a classic inherent risk driver.`,
+    whyWrong: [
+      { key: "A", reason: "Routine, automatically processed transactions have LOWER inherent risk -- they are straightforward and less error-prone." },
+      { key: "B", reason: "A stable environment reduces inherent risk. Volatility and change are risk-increasing factors." },
+      { key: "D", reason: "An engaged audit committee is a control environment strength that may REDUCE risk -- not an inherent risk driver." },
+    ],
+  },
+
+  {
+    id: "aud-4",
+    topic: "Audit Risk — Fraud Risk",
+    difficulty: "Hard",
+    stem: `Which of the following is a REQUIRED procedure related to fraud risk in every audit under AU-C Section 240?`,
+    choices: [
+      { key: "A", text: "Perform forensic accounting procedures on all high-risk accounts" },
+      { key: "B", text: "Hold an engagement team discussion about how and where the financial statements could be materially misstated due to fraud" },
+      { key: "C", text: "Obtain a fraud investigation report from law enforcement" },
+      { key: "D", text: "Assume fraud risk is low if management has a strong ethics policy" },
+    ],
+    correct: "B",
+    explanation: `AU-C Section 240 -- Required fraud risk procedures in every audit:
+
+1. Engagement team brainstorming discussion -- how and where could fraud occur?
+2. Inquire of management about known or suspected fraud and controls to address it
+3. Presume fraud risk exists in revenue recognition (rebuttable presumption)
+4. Consider unusual relationships from analytical procedures
+5. Examine journal entries for management override risk
+
+The brainstorming session is specifically required -- not optional.`,
+    whyWrong: [
+      { key: "A", reason: "Forensic procedures are not routinely required in every audit -- they are tailored based on assessed fraud risks." },
+      { key: "C", reason: "Auditors do not obtain law enforcement reports as standard procedure." },
+      { key: "D", reason: "Standards warn against assuming low fraud risk based on management character. Professional skepticism is always required." },
+    ],
+  },
+
+  {
+    id: "aud-5",
+    topic: "Audit Risk — Materiality",
+    difficulty: "Moderate",
+    stem: `An auditor sets overall materiality at $500,000. During the audit, a $420,000 misstatement is discovered that management refuses to correct. What should the auditor do?`,
+    choices: [
+      { key: "A", text: "Accept it -- $420,000 is below overall materiality" },
+      { key: "B", text: "Aggregate it with all other uncorrected misstatements and evaluate the combined effect" },
+      { key: "C", text: "Automatically issue an adverse opinion" },
+      { key: "D", text: "Lower materiality to $400,000 to force correction" },
+    ],
+    correct: "B",
+    explanation: `AU-C Section 450 -- Evaluating misstatements:
+
+Individual misstatements below overall materiality are NOT automatically acceptable. The auditor must:
+1. Accumulate all identified misstatements in a Summary of Uncorrected Misstatements
+2. Evaluate whether the AGGREGATE of uncorrected misstatements is material
+3. Consider both quantitative and qualitative factors
+
+A single $420,000 item is close to the $500,000 threshold. Combined with other misstatements, the aggregate could exceed materiality.`,
+    whyWrong: [
+      { key: "A", reason: "Below-materiality items cannot be accepted without aggregating all uncorrected misstatements -- the combined total might be material." },
+      { key: "C", reason: "One below-materiality misstatement does not automatically trigger an adverse opinion -- aggregation analysis is required first." },
+      { key: "D", reason: "Auditors do not revise materiality downward to force corrections -- it is set based on what matters to financial statement users." },
+    ],
+  },
+
+  {
+    id: "aud-6",
+    topic: "Audit Risk — Risk of Material Misstatement",
+    difficulty: "Hard",
+    stem: `The auditor assesses inherent risk as HIGH and control risk as LOW (controls are effective) for inventory.
+
+Which combination of audit procedures is most appropriate?`,
+    choices: [
+      { key: "A", text: "Extensive substantive procedures with no reliance on controls" },
+      { key: "B", text: "Tests of controls to confirm effectiveness; reduced but focused substantive procedures" },
+      { key: "C", text: "Only analytical procedures -- effective controls reduce required evidence sufficiently" },
+      { key: "D", text: "No audit work needed -- low control risk offsets high inherent risk" },
+    ],
+    correct: "B",
+    explanation: `RMM = IR x CR. High IR x Low CR = Moderate RMM.
+
+When control risk is LOW and the auditor plans to rely on controls:
+1. Must TEST operating effectiveness of those controls
+2. If controls test effective, can REDUCE (but not eliminate) substantive procedures
+3. Substantive work focuses on the higher-inherent-risk areas
+
+The auditor can never skip substantive procedures entirely -- some are always required.`,
+    whyWrong: [
+      { key: "A", reason: "If controls are effective, the auditor should test and rely on them -- ignoring effective controls wastes efficiency." },
+      { key: "C", reason: "Analytical procedures alone are insufficient when inherent risk is high -- more persuasive evidence is needed." },
+      { key: "D", reason: "Some substantive procedures are always required regardless of assessed control risk." },
+    ],
+  },
+
+  // ── EVIDENCE & PROCEDURES (aud-7 to aud-13) ───────────────────────────────
+
+  {
+    id: "aud-7",
+    topic: "Evidence — Reliability Hierarchy",
+    difficulty: "Moderate",
+    stem: `Rank the following from MOST to LEAST reliable:
+
+I. Auditor's direct observation of physical inventory
+II. Confirmations received directly from the client's bank
+III. Copies of vendor invoices obtained from the client
+IV. Management representations letter`,
+    choices: [
+      { key: "A", text: "I, II, III, IV" },
+      { key: "B", text: "II, I, III, IV" },
+      { key: "C", text: "I, II, IV, III" },
+      { key: "D", text: "II, III, I, IV" },
+    ],
+    correct: "A",
+    explanation: `Evidence reliability principles (AU-C Section 500):
+- Evidence obtained directly by the auditor is most reliable
+- External evidence is more reliable than internal
+- Originals are more reliable than copies
+
+I. Auditor observation -- MOST reliable (direct, firsthand)
+II. Bank confirmations -- very reliable (external, direct to auditor)
+III. Client vendor invoices -- less reliable (internal, client-provided copies)
+IV. Management representations -- LEAST reliable (internal, unverifiable)`,
+    whyWrong: [
+      { key: "B", reason: "Direct auditor observation is the gold standard -- it outranks even external confirmations because the auditor is doing it themselves." },
+      { key: "C", reason: "Management representations are the least reliable, not vendor invoice copies." },
+      { key: "D", reason: "Client-provided invoices are more reliable than management representations but rank below auditor observation and external confirmations." },
+    ],
+  },
+
+  {
+    id: "aud-8",
+    topic: "Evidence — Confirmations",
+    difficulty: "Moderate",
+    stem: `An auditor sends positive confirmation requests to 50 customers. By the deadline, 12 respond; 38 do not.
+
+What is the most appropriate next step?`,
+    choices: [
+      { key: "A", text: "Conclude balances are fairly stated -- non-response implies agreement" },
+      { key: "B", text: "Apply alternative procedures such as examining subsequent cash receipts and shipping documents" },
+      { key: "C", text: "Issue a qualified opinion due to the high non-response rate" },
+      { key: "D", text: "Send a second confirmation and accept whatever response rate results" },
+    ],
+    correct: "B",
+    explanation: `AU-C Section 505: For POSITIVE confirmations, non-response provides NO audit evidence -- silence is not agreement.
+
+When positive confirmations are not returned, apply ALTERNATIVE PROCEDURES:
+- Examine subsequent cash receipts (proof of collection)
+- Inspect sales invoices and shipping documents (proof of transaction)
+
+If alternatives cannot be performed and non-responses are material, consider the opinion impact.`,
+    whyWrong: [
+      { key: "A", reason: "Silence on a positive confirmation is NOT evidence. Unlike negative confirmations, positive ones require an explicit response." },
+      { key: "C", reason: "A high non-response rate alone does not trigger a qualified opinion -- alternative procedures must be attempted first." },
+      { key: "D", reason: "Sending a second request is good practice, but remaining non-responses still require alternative procedures." },
+    ],
+  },
+
+  {
+    id: "aud-9",
+    topic: "Evidence — Analytical Procedures",
+    difficulty: "Moderate",
+    stem: `What is the PRIMARY purpose of analytical procedures performed during the PLANNING phase of an audit?`,
+    choices: [
+      { key: "A", text: "To provide substantive evidence about account balances" },
+      { key: "B", text: "To identify areas of potential risk requiring more audit attention" },
+      { key: "C", text: "To eliminate the need for detailed tests of transactions" },
+      { key: "D", text: "To satisfy the substantive testing requirement for revenue" },
+    ],
+    correct: "B",
+    explanation: `Analytical procedures serve different purposes by phase:
+
+PLANNING: Enhance understanding of the entity and identify RISK areas requiring more attention. These are risk assessment procedures -- they help allocate audit resources, not gather evidence.
+
+SUBSTANTIVE phase: Gather evidence about account balances (can replace or supplement detailed tests).
+
+COMPLETION: Overall review to assess whether statements are consistent with understanding.`,
+    whyWrong: [
+      { key: "A", reason: "Substantive evidence is the goal of fieldwork-phase analytical procedures, not planning." },
+      { key: "C", reason: "Planning APs do not reduce testing requirements -- they inform the audit plan." },
+      { key: "D", reason: "Revenue substantive testing is not satisfied by planning-phase analytical procedures." },
+    ],
+  },
+
+  {
+    id: "aud-10",
+    topic: "Evidence — Subsequent Events",
+    difficulty: "Hard",
+    stem: `During the subsequent events review period, an auditor learns a major customer declared bankruptcy, making a $2 million receivable uncollectible. The customer's financial difficulties began BEFORE year-end.
+
+How should this be treated?`,
+    choices: [
+      { key: "A", text: "Type I subsequent event -- adjust the financial statements" },
+      { key: "B", text: "Type II subsequent event -- disclose in a note but do not adjust" },
+      { key: "C", text: "No action -- bankruptcy occurred after year-end" },
+      { key: "D", text: "Disclaim an opinion due to uncertainty" },
+    ],
+    correct: "A",
+    explanation: `Subsequent events (AU-C Section 560):
+
+TYPE I (Recognized -- ADJUST): Conditions that EXISTED at year-end, confirmed afterward.
+The customer's financial difficulties existed before year-end. The bankruptcy merely confirms the uncollectibility condition. Adjust A/R and record bad debt expense.
+
+TYPE II (Non-recognized -- DISCLOSE ONLY): New conditions that arose AFTER year-end.
+
+Key test: Did the condition EXIST at year-end? Yes -- adjust.`,
+    whyWrong: [
+      { key: "B", reason: "Type II events arise AFTER year-end. Since problems existed before year-end, this is Type I -- adjustment required." },
+      { key: "C", reason: "The bankruptcy confirms a pre-existing condition. Auditors must act on Type I events regardless of when the confirming event occurs." },
+      { key: "D", reason: "A disclaimer is not appropriate -- the auditor has sufficient evidence of uncollectibility and the required treatment is clear." },
+    ],
+  },
+
+  {
+    id: "aud-11",
+    topic: "Evidence — Audit of Estimates",
+    difficulty: "Hard",
+    stem: `Management records a $3 million allowance for doubtful accounts. Which approach BEST addresses the auditor's responsibility for this estimate?`,
+    choices: [
+      { key: "A", text: "Accept it if consistent with prior years" },
+      { key: "B", text: "Test management's assumptions, data, and methodology -- or develop an independent estimate to compare" },
+      { key: "C", text: "Rely on management's representation that it is reasonable" },
+      { key: "D", text: "Require management to use the auditor's model" },
+    ],
+    correct: "B",
+    explanation: `AU-C Section 540 -- Auditing Accounting Estimates:
+
+The auditor must obtain sufficient appropriate evidence using one or more approaches:
+1. Test how management made the estimate (assumptions, data, process, model)
+2. Develop an independent auditor's estimate and compare
+3. Review subsequent events that confirm or contradict the estimate
+
+Consistency with prior years is not sufficient -- conditions change. Management representations alone are never sufficient for estimates.`,
+    whyWrong: [
+      { key: "A", reason: "Consistency with prior years alone is not evidence of reasonableness -- the auditor must evaluate the current estimate on its own merits." },
+      { key: "C", reason: "Management representations are the least reliable evidence -- estimates require corroboration through testing." },
+      { key: "D", reason: "Management is responsible for estimates. The auditor evaluates -- not replaces -- management's work." },
+    ],
+  },
+
+  {
+    id: "aud-12",
+    topic: "Evidence — Inventory Procedures",
+    difficulty: "Moderate",
+    stem: `Which combination of procedures provides the BEST evidence for both the existence AND completeness assertions for year-end inventory?`,
+    choices: [
+      { key: "A", text: "Review the client's inventory count instructions only" },
+      { key: "B", text: "Observe the physical count, perform test counts, and trace counts to the final inventory listing (and vice versa)" },
+      { key: "C", text: "Send confirmations to the warehouse manager" },
+      { key: "D", text: "Perform analytical procedures comparing inventory turnover to prior years" },
+    ],
+    correct: "B",
+    explanation: `AU-C Section 501 requires attending the physical count, including:
+1. Observing count procedures
+2. Performing independent test counts
+3. Tracing test counts TO the final listing (existence -- counted items are in the records)
+4. Tracing items ON the listing BACK to the physical count (completeness -- listed items actually exist)
+
+This two-directional testing covers both assertions.`,
+    whyWrong: [
+      { key: "A", reason: "Reviewing count instructions provides evidence only about the design of the count process, not that inventory actually exists." },
+      { key: "C", reason: "Confirmations go to independent third parties -- not the client's own warehouse manager, who is not independent." },
+      { key: "D", reason: "Analytical procedures are indirect evidence insufficient alone for existence and completeness." },
+    ],
+  },
+
+  {
+    id: "aud-13",
+    topic: "Evidence — Going Concern",
+    difficulty: "Hard",
+    stem: `The auditor identifies substantial doubt about the client's going concern. Management prepares a plan to address the doubt that the auditor evaluates as adequately mitigating it.
+
+What is the correct reporting outcome?`,
+    choices: [
+      { key: "A", text: "Disclaimer of opinion -- going concern doubt always requires a disclaimer" },
+      { key: "B", text: "Unmodified opinion with an explanatory paragraph about the going concern uncertainty" },
+      { key: "C", text: "If doubt is alleviated by management's plans, no disclosure is required" },
+      { key: "D", text: "The auditor prepares the going concern plan on management's behalf" },
+    ],
+    correct: "B",
+    explanation: `AU-C Section 570 -- Going Concern:
+
+If management's plans ADEQUATELY ALLEVIATE the substantial doubt:
+- Unmodified opinion (statements are fairly presented)
+- PLUS an explanatory paragraph alerting readers to the going concern uncertainty
+
+Even when doubt is resolved by plans, an explanatory paragraph is still required.
+
+If substantial doubt REMAINS after plans: modify the report.
+If management refuses adequate disclosure: adverse opinion.`,
+    whyWrong: [
+      { key: "A", reason: "Disclaimers apply to scope limitations, not going concern. Going concern requires explanatory paragraphs or modified opinions." },
+      { key: "C", reason: "Even when management's plans alleviate doubt, an explanatory paragraph is still required." },
+      { key: "D", reason: "Management is responsible for going concern assessment. The auditor evaluates -- not prepares -- those plans." },
+    ],
+  },
+
+  // ── INTERNAL CONTROLS (aud-14 to aud-19) ──────────────────────────────────
+
+  {
+    id: "aud-14",
     topic: "Internal Controls — Segregation of Duties",
     difficulty: "Moderate",
     stem: `A company's accounts payable clerk can add new vendors, approve invoices for payment, and initiate wire transfers.
@@ -1238,22 +1567,314 @@ Which internal control weakness does this best describe?`,
     choices: [
       { key: "A", text: "Lack of physical safeguards over assets" },
       { key: "B", text: "Inadequate authorization procedures" },
-      { key: "C", text: "Insufficient segregation of duties, creating fraud opportunity" },
+      { key: "C", text: "Insufficient segregation of duties" },
       { key: "D", text: "Failure to perform independent reconciliations" },
     ],
     correct: "C",
-    explanation: `The clerk controls three incompatible functions:\n1. Setup (adding vendors)\n2. Authorization (approving invoices)\n3. Execution (initiating wire transfers)\n\nOne person controlling all three stages enables fraud: create fictitious vendor → approve invoice → wire funds. Proper SOD separates authorization, recording, and custody.`,
+    explanation: `The clerk controls three incompatible functions:
+1. Setup (adding vendors)
+2. Authorization (approving invoices)
+3. Execution (initiating wire transfers)
+
+One person controlling all three enables fraud: create fictitious vendor, approve fake invoice, wire funds. Proper SOD separates authorization, recording, and custody across different individuals.`,
     whyWrong: [
-      { key: "A", reason: "Physical safeguards protect tangible assets. This is a process/access control issue." },
-      { key: "B", reason: "Inadequate authorization is a symptom, not the root description. The core issue is one person having too many incompatible functions." },
-      { key: "D", reason: "Reconciliations are a compensating control, not the primary weakness identified here." },
+      { key: "A", reason: "Physical safeguards protect tangible assets (locks, safes). This is a process and access control issue." },
+      { key: "B", reason: "Inadequate authorization is a symptom. The root issue is one person having too many incompatible functions." },
+      { key: "D", reason: "Reconciliations are a detective compensating control. The primary weakness is the lack of preventive segregation." },
     ],
   },
+
   {
-    id: "aud-4",
-    topic: "Audit Opinions — Modified Reports",
+    id: "aud-15",
+    topic: "Internal Controls — COSO Framework",
+    difficulty: "Moderate",
+    stem: `Under the COSO Internal Control -- Integrated Framework, which of the following is NOT one of the five components?`,
+    choices: [
+      { key: "A", text: "Control Environment" },
+      { key: "B", text: "Risk Assessment" },
+      { key: "C", text: "Audit Committee Oversight" },
+      { key: "D", text: "Monitoring Activities" },
+    ],
+    correct: "C",
+    explanation: `The five COSO components:
+1. Control Environment
+2. Risk Assessment
+3. Control Activities
+4. Information and Communication
+5. Monitoring Activities
+
+Audit Committee Oversight is NOT a standalone COSO component. It is an important governance mechanism that falls within the Control Environment, not its own separate component.`,
+    whyWrong: [
+      { key: "A", reason: "Control Environment IS a COSO component -- it sets the tone and foundation for all other controls." },
+      { key: "B", reason: "Risk Assessment IS a COSO component -- identifying and analyzing risks to objectives." },
+      { key: "D", reason: "Monitoring Activities IS a COSO component -- ongoing and periodic evaluations of control effectiveness." },
+    ],
+  },
+
+  {
+    id: "aud-16",
+    topic: "Internal Controls — Deficiency Classification",
     difficulty: "Hard",
-    stem: `During an audit of Westmore Corp., the auditor discovers that management did not disclose a material related-party transaction. Management refuses to add the disclosure. The financial statements are otherwise fairly presented.
+    stem: `The auditor finds that the CFO can both approve journal entries and post them to the general ledger with no secondary review. No material misstatements are found as a result.
+
+How should this deficiency be classified?`,
+    choices: [
+      { key: "A", text: "Minor control deficiency -- no material impact detected" },
+      { key: "B", text: "Significant deficiency at minimum; likely a material weakness" },
+      { key: "C", text: "Material weakness automatically -- any SOD issue is a material weakness" },
+      { key: "D", text: "Not reportable -- no actual misstatement occurred" },
+    ],
+    correct: "B",
+    explanation: `Classification is based on POTENTIAL for misstatement, not whether one occurred.
+
+A CFO who both approves and posts journal entries without review is a significant SOD breakdown. Given the CFO's seniority and ability to override controls, there is a reasonable possibility of material misstatement going undetected -- making this at minimum a significant deficiency, and very likely a material weakness.
+
+Absence of a detected misstatement does not change the classification.`,
+    whyWrong: [
+      { key: "A", reason: "Classification is based on potential risk, not actual detected misstatements." },
+      { key: "C", reason: "Not every SOD issue is automatically a material weakness -- severity depends on nature, who is involved, and potential impact." },
+      { key: "D", reason: "Significant deficiencies and material weaknesses are reported based on potential risk, not just actual misstatements." },
+    ],
+  },
+
+  {
+    id: "aud-17",
+    topic: "Internal Controls — Tests of Controls",
+    difficulty: "Moderate",
+    stem: `An auditor plans to rely on controls over cash disbursements to reduce substantive testing. Which procedure type tests whether those controls operated effectively throughout the year?`,
+    choices: [
+      { key: "A", text: "Substantive analytical procedures" },
+      { key: "B", text: "Tests of controls" },
+      { key: "C", text: "Substantive tests of details" },
+      { key: "D", text: "Risk assessment procedures" },
+    ],
+    correct: "B",
+    explanation: `Tests of controls (compliance tests) evaluate whether controls OPERATED EFFECTIVELY throughout the period.
+
+If controls are designed well AND operated effectively, the auditor can reduce substantive procedures.
+
+Tests of controls include:
+- Inspection of documents for control performance evidence (signatures, approvals)
+- Reperformance of control procedures
+- Observation of controls being applied
+
+These differ from substantive procedures, which test account balance fairness.`,
+    whyWrong: [
+      { key: "A", reason: "Substantive analytical procedures compare data to expectations -- they test balances, not control effectiveness." },
+      { key: "C", reason: "Substantive tests of details (vouching, tracing) test balances and transactions -- not controls." },
+      { key: "D", reason: "Risk assessment procedures are performed during planning to understand the entity and identify risks -- not to test operating effectiveness." },
+    ],
+  },
+
+  {
+    id: "aud-18",
+    topic: "Internal Controls — Management Override",
+    difficulty: "Hard",
+    stem: `Which of the following is a REQUIRED procedure in every audit to address management override of internal controls?`,
+    choices: [
+      { key: "A", text: "Interview all finance employees about unusual management instructions" },
+      { key: "B", text: "Examine journal entries and other adjustments for evidence of manipulation" },
+      { key: "C", text: "Review all transactions above a dollar threshold for reasonableness" },
+      { key: "D", text: "Perform a full forensic investigation of the general ledger" },
+    ],
+    correct: "B",
+    explanation: `AU-C Section 240 -- Required anti-override procedures in EVERY audit:
+
+1. Examine journal entries and other adjustments -- looking for unusual entries near period-end, entries by unusual individuals, or vague descriptions
+2. Review accounting estimates for management bias
+3. Evaluate business rationale for unusual significant transactions
+
+Journal entry testing is explicitly required because management override often occurs through entries that bypass normal transaction controls.`,
+    whyWrong: [
+      { key: "A", reason: "Interviewing all finance employees is not specifically required by AU-C 240 for every audit." },
+      { key: "C", reason: "Dollar threshold reviews are not a specifically required anti-override procedure." },
+      { key: "D", reason: "Full forensic investigations are not required in every audit -- only when fraud is specifically suspected." },
+    ],
+  },
+
+  {
+    id: "aud-19",
+    topic: "Internal Controls — Walkthroughs",
+    difficulty: "Moderate",
+    stem: `An auditor performs a walkthrough of the revenue cycle. What is the PRIMARY purpose?`,
+    choices: [
+      { key: "A", text: "To test the operating effectiveness of controls throughout the period" },
+      { key: "B", text: "To confirm that the auditor's understanding of the process and controls is accurate" },
+      { key: "C", text: "To satisfy substantive testing requirements for revenue" },
+      { key: "D", text: "To test the completeness assertion for sales transactions" },
+    ],
+    correct: "B",
+    explanation: `A walkthrough traces a transaction from origination through recording to confirm the auditor's understanding of:
+1. How transactions flow through the system
+2. Where controls are supposed to operate
+3. Whether controls are designed appropriately
+4. Whether the process description matches reality
+
+Walkthroughs are for UNDERSTANDING and DESIGN EVALUATION -- not for testing operating effectiveness (which requires tests of controls over the full period).`,
+    whyWrong: [
+      { key: "A", reason: "Testing operating effectiveness requires tests of controls over the period -- walkthroughs cover only 1-2 transactions and confirm design, not effectiveness." },
+      { key: "C", reason: "Walkthroughs are risk assessment/control understanding procedures -- they do not satisfy substantive testing requirements." },
+      { key: "D", reason: "Completeness testing (tracing from shipping docs to sales records) is a substantive procedure, not the purpose of a walkthrough." },
+    ],
+  },
+
+  // ── SAMPLING (aud-20 to aud-24) ───────────────────────────────────────────
+
+  {
+    id: "aud-20",
+    topic: "Sampling — Attribute Sampling",
+    difficulty: "Hard",
+    stem: `An auditor uses attribute sampling with a tolerable deviation rate of 5% and expected deviation rate of 1%. After testing 100 items, 4 deviations are found.
+
+What is the most appropriate conclusion?`,
+    choices: [
+      { key: "A", text: "Control is effective -- 4% sample rate is below the 5% tolerable rate" },
+      { key: "B", text: "Assess control risk as lower -- deviations are minimal" },
+      { key: "C", text: "The sample deviation rate significantly exceeds the expected rate; evaluate the upper deviation limit and consider increasing control risk" },
+      { key: "D", text: "Disregard results and rely on the prior year control assessment" },
+    ],
+    correct: "C",
+    explanation: `The 4% sample rate is below 5% TDR -- but the sample was designed assuming only 1% deviations. Finding 4% means controls operated far worse than expected.
+
+The auditor must compute the UPPER DEVIATION LIMIT (UDL) -- the maximum population rate at the desired confidence level. With 4 deviations in 100 items, the UDL typically exceeds 5%, meaning controls cannot be accepted at the tolerable level.
+
+Result: Increase control risk assessment and expand substantive procedures.`,
+    whyWrong: [
+      { key: "A", reason: "Comparing sample rate to TDR ignores statistical precision. The UDL -- not just the sample rate -- must be below TDR for controls to be accepted." },
+      { key: "B", reason: "More deviations than expected means controls are LESS effective. Control risk should increase, not decrease." },
+      { key: "D", reason: "Current-year evidence must be evaluated. Prior year assessments do not carry forward automatically." },
+    ],
+  },
+
+  {
+    id: "aud-21",
+    topic: "Sampling — Monetary Unit Sampling",
+    difficulty: "Hard",
+    stem: `An auditor uses monetary unit sampling (MUS) to test accounts receivable of $2,000,000. After testing, no misstatements are found.
+
+Which statement best describes the conclusion?`,
+    choices: [
+      { key: "A", text: "The entire $2,000,000 is confirmed as correct" },
+      { key: "B", text: "At the specified confidence level, the true overstatement does not exceed the tolerable misstatement" },
+      { key: "C", text: "No misstatements means no further testing is required" },
+      { key: "D", text: "MUS only works when misstatements are expected -- zero errors invalidate the method" },
+    ],
+    correct: "B",
+    explanation: `Monetary Unit Sampling (MUS):
+
+When no misstatements are found, the auditor can conclude -- at the stated confidence level -- that the projected population overstatement does not exceed the tolerable misstatement (precision boundary).
+
+MUS is especially effective at detecting overstatements. Zero errors found = strong evidence the population is not materially overstated within the precision boundary.
+
+The conclusion is probabilistic at the chosen confidence level (e.g., 95%) -- not absolute certainty.`,
+    whyWrong: [
+      { key: "A", reason: "MUS provides statistical assurance within a confidence level, not absolute proof that every dollar is correct." },
+      { key: "C", reason: "Finding no misstatements is favorable, but the auditor evaluates results against the precision boundary before concluding." },
+      { key: "D", reason: "MUS is most useful when few or no misstatements are expected -- zero misstatements is the optimal MUS outcome." },
+    ],
+  },
+
+  {
+    id: "aud-22",
+    topic: "Sampling — Sample Size Relationships",
+    difficulty: "Moderate",
+    stem: `Which of the following changes would INCREASE the required sample size for a substantive test of details?`,
+    choices: [
+      { key: "A", text: "Decreasing the acceptable risk of incorrect acceptance" },
+      { key: "B", text: "Increasing the tolerable misstatement" },
+      { key: "C", text: "Decreasing the expected amount of misstatement" },
+      { key: "D", text: "Increasing the acceptable risk of incorrect acceptance" },
+    ],
+    correct: "A",
+    explanation: `Sample size relationships for substantive tests:
+
+INCREASES sample size:
+- Lower acceptable risk of incorrect acceptance (more confidence needed)
+- Lower tolerable misstatement (smaller errors must be caught)
+- Higher expected misstatement (more errors anticipated)
+
+DECREASES sample size:
+- Higher tolerable misstatement
+- Lower expected misstatement
+- Higher acceptable risk of incorrect acceptance
+
+Decreasing acceptable risk of incorrect acceptance requires more evidence -- larger sample.`,
+    whyWrong: [
+      { key: "B", reason: "Increasing tolerable misstatement DECREASES sample size -- larger tolerable errors mean less precision needed." },
+      { key: "C", reason: "Decreasing expected misstatement DECREASES sample size -- fewer errors expected means less evidence needed." },
+      { key: "D", reason: "Increasing acceptable risk of incorrect acceptance DECREASES sample size -- willing to accept more risk means less evidence needed." },
+    ],
+  },
+
+  {
+    id: "aud-23",
+    topic: "Sampling — Statistical vs. Non-Statistical",
+    difficulty: "Moderate",
+    stem: `Which of the following BEST distinguishes statistical sampling from non-statistical sampling?`,
+    choices: [
+      { key: "A", text: "Statistical sampling always produces larger sample sizes" },
+      { key: "B", text: "Statistical sampling uses random selection and probability theory to quantify sampling risk" },
+      { key: "C", text: "Non-statistical sampling is not acceptable under auditing standards" },
+      { key: "D", text: "Statistical sampling eliminates sampling risk" },
+    ],
+    correct: "B",
+    explanation: `The key distinction:
+
+STATISTICAL sampling:
+- Uses random (probability-based) selection
+- Allows the auditor to QUANTIFY sampling risk mathematically
+- Results projected to population with measurable confidence
+
+NON-STATISTICAL sampling:
+- Uses auditor judgment to select items
+- Sampling risk exists but CANNOT be mathematically quantified
+- Results still projected to population, without statistical measurement
+
+Both are acceptable under auditing standards.`,
+    whyWrong: [
+      { key: "A", reason: "Statistical sampling does not always produce larger samples. Size depends on risk, tolerable misstatement, and expected errors -- not method type." },
+      { key: "C", reason: "Non-statistical sampling IS acceptable under AU-C Section 530. Both approaches are permitted." },
+      { key: "D", reason: "No sampling method eliminates sampling risk. Statistical sampling quantifies it; non-statistical has it too but cannot measure it." },
+    ],
+  },
+
+  {
+    id: "aud-24",
+    topic: "Sampling — Selection Methods",
+    difficulty: "Moderate",
+    stem: `An auditor selects items 'without any conscious bias or predictability' but without using random number generation. This is best described as:`,
+    choices: [
+      { key: "A", text: "Simple random sampling" },
+      { key: "B", text: "Systematic sampling" },
+      { key: "C", text: "Haphazard selection" },
+      { key: "D", text: "Stratified sampling" },
+    ],
+    correct: "C",
+    explanation: `Selection methods:
+
+HAPHAZARD: Items selected without conscious bias, but without a formal random process. Used with non-statistical sampling. NOT the same as random.
+
+RANDOM (probability): Uses random number tables/generators -- every item has a known, non-zero probability. Required for statistical sampling.
+
+SYSTEMATIC: Select every nth item from a list starting at a random point.
+
+STRATIFIED: Population divided into subgroups, then sampled within each stratum.
+
+Haphazard lacks the formal probability mechanism required for true random selection.`,
+    whyWrong: [
+      { key: "A", reason: "Simple random sampling requires every item to have an equal probability of selection via random number generation -- not informal picking." },
+      { key: "B", reason: "Systematic sampling selects every nth item -- it has structure that haphazard selection lacks." },
+      { key: "D", reason: "Stratified sampling divides the population into subgroups before sampling -- completely different from haphazard selection." },
+    ],
+  },
+
+  // ── AUDIT REPORTS (aud-25) ─────────────────────────────────────────────────
+
+  {
+    id: "aud-25",
+    topic: "Audit Reports — Qualified Opinion",
+    difficulty: "Hard",
+    stem: `The auditor discovers management did not disclose a material related-party transaction. Management refuses to add the disclosure. The statements are otherwise fairly presented.
 
 What audit opinion is appropriate?`,
     choices: [
@@ -1263,32 +1884,770 @@ What audit opinion is appropriate?`,
       { key: "D", text: "Disclaimer of opinion" },
     ],
     correct: "B",
-    explanation: `Decision framework:\n• Misstatement is MATERIAL (required disclosure omitted) ✓\n• Misstatement is NOT pervasive — statements are otherwise fairly presented ✓\n• Management refuses to correct\n\nMaterial but NOT pervasive → Qualified opinion ("except for" the specific omission).\nMaterial AND pervasive → Adverse.\nScope limitation → Disclaimer.`,
+    explanation: `Modified opinion decision framework:
+
+Nature: Material misstatement (required disclosure omitted)
+Pervasiveness: NOT pervasive -- statements otherwise fairly presented
+
+Material but NOT pervasive: QUALIFIED opinion ('except for' the specific omission)
+Material AND pervasive: ADVERSE
+Scope limitation, material: QUALIFIED
+Scope limitation, pervasive: DISCLAIMER
+
+The missing disclosure is material but isolated -- qualified opinion.`,
     whyWrong: [
-      { key: "A", reason: "Unmodified means no material misstatements. A missing required disclosure is a misstatement." },
-      { key: "C", reason: "Adverse opinions apply to pervasive misstatements. Here only one disclosure is missing." },
-      { key: "D", reason: "Disclaimers apply to scope limitations (inability to obtain evidence), not disclosure issues." },
+      { key: "A", reason: "Unmodified means no material misstatements. A missing required disclosure IS a material misstatement." },
+      { key: "C", reason: "Adverse opinions require pervasive misstatements. One missing disclosure is not pervasive." },
+      { key: "D", reason: "Disclaimers address scope limitations (inability to get evidence), not disclosure omissions." },
     ],
   },
-  {
-    id: "aud-5",
-    topic: "Sampling — Attribute Sampling",
-    difficulty: "Hard",
-    stem: `An auditor uses attribute sampling with a tolerable deviation rate of 5% and expected deviation rate of 1%. After testing 100 items, 4 deviations are found (4% sample rate).
 
-What is the most appropriate conclusion?`,
+  // ── AUDIT REPORTS cont. (aud-26 to aud-30) ───────────────────────────────
+
+  {
+    id: "aud-26",
+    topic: "Audit Reports — Emphasis-of-Matter Paragraphs",
+    difficulty: "Moderate",
+    stem: `An auditor issues an unmodified opinion. The auditor wants to draw attention to a note about significant pending litigation that, while properly disclosed, could materially affect the company.
+
+What paragraph type should the auditor add?`,
     choices: [
-      { key: "A", text: "Control is effective — 4% is below the tolerable rate of 5%" },
-      { key: "B", text: "Assess control risk as lower — deviations are minimal" },
-      { key: "C", text: "Sample rate (4%) significantly exceeds expected rate (1%); evaluate whether to increase control risk assessment" },
-      { key: "D", text: "Disregard results and rely on prior year control assessment" },
+      { key: "A", text: "Other-matter paragraph" },
+      { key: "B", text: "Explanatory paragraph replacing the opinion paragraph" },
+      { key: "C", text: "Emphasis-of-matter paragraph" },
+      { key: "D", text: "A separate adverse opinion paragraph" },
     ],
     correct: "C",
-    explanation: `The 4% sample rate is below the 5% TDR — technically within tolerable limits. However, it significantly exceeds the 1% expected rate, meaning controls are operating worse than assumed when designing the sample.\n\nThe auditor should:\n1. Consider the upper deviation limit (confidence interval)\n2. Evaluate whether to increase the assessed control risk level\n3. Potentially expand substantive procedures`,
+    explanation: `AU-C Section 706:
+
+EMPHASIS-OF-MATTER paragraph: Draws attention to a matter ALREADY PRESENTED in the financial statements that the auditor believes is fundamental to users' understanding. Does NOT modify the opinion.
+
+Uses: Going concern uncertainty, significant litigation (properly disclosed), new accounting standards, major subsequent events.
+
+OTHER-MATTER paragraph: Draws attention to matters NOT in the financial statements (e.g., supplementary information, prior period comparative statements).`,
     whyWrong: [
-      { key: "A", reason: "Simply concluding 4% < 5% = effective ignores that the sample was designed assuming 1%. The auditor must consider the upper deviation limit and reassess." },
-      { key: "B", reason: "Finding MORE deviations than expected means controls are LESS effective — control risk should potentially increase, not decrease." },
-      { key: "D", reason: "Current-year evidence must be evaluated. Relying on prior year assessment ignores current findings." },
+      { key: "A", reason: "Other-matter paragraphs address items NOT presented in the financial statements. The litigation is already disclosed -- emphasis-of-matter is appropriate." },
+      { key: "B", reason: "The emphasis-of-matter paragraph supplements the opinion paragraph -- it does not replace it." },
+      { key: "D", reason: "An adverse opinion is not appropriate -- the statements are fairly presented with proper disclosure." },
+    ],
+  },
+
+  {
+    id: "aud-27",
+    topic: "Audit Reports — Component Auditors",
+    difficulty: "Hard",
+    stem: `A group auditor uses a component auditor for a subsidiary and decides to TAKE RESPONSIBILITY for the component auditor's work. How does this affect the group auditor's report?`,
+    choices: [
+      { key: "A", text: "The report names the component auditor and the portion they audited" },
+      { key: "B", text: "The report makes no reference to the component auditor" },
+      { key: "C", text: "The report includes a scope limitation paragraph" },
+      { key: "D", text: "The group auditor must issue a separate opinion on the subsidiary" },
+    ],
+    correct: "B",
+    explanation: `When the group auditor TAKES RESPONSIBILITY for the component auditor's work:
+- Performs oversight procedures on the component work
+- Issues a standard report with NO reference to the component auditor
+- The report reads as if the group auditor audited everything
+
+When NOT taking responsibility (division of responsibility):
+- The report references the component auditor and the portion they audited
+- This is not a scope limitation -- it is a division of responsibility
+
+Taking responsibility = silence in the report.`,
+    whyWrong: [
+      { key: "A", reason: "Naming the component auditor applies when the group auditor does NOT take responsibility. Taking responsibility means no reference." },
+      { key: "C", reason: "No scope limitation paragraph is added when the group auditor takes responsibility -- the report is standard." },
+      { key: "D", reason: "The group auditor issues one consolidated report -- not separate opinions on each component." },
+    ],
+  },
+
+  {
+    id: "aud-28",
+    topic: "Audit Reports — Adverse vs. Disclaimer",
+    difficulty: "Moderate",
+    stem: `Which scenario results in a DISCLAIMER of opinion rather than an adverse opinion?`,
+    choices: [
+      { key: "A", text: "Financial statements contain a pervasive material misstatement management refuses to correct" },
+      { key: "B", text: "The auditor cannot obtain sufficient appropriate evidence about a pervasive portion of the financial statements" },
+      { key: "C", text: "Financial statements omit a required disclosure that is material but not pervasive" },
+      { key: "D", text: "The auditor disagrees with a management accounting policy that has a material and pervasive effect" },
+    ],
+    correct: "B",
+    explanation: `Modified opinion matrix:
+
+MATERIAL MISSTATEMENT:
+- Material, not pervasive: Qualified
+- Material AND pervasive: ADVERSE
+
+SCOPE LIMITATION (cannot get sufficient evidence):
+- Material, not pervasive: Qualified
+- Material AND pervasive: DISCLAIMER
+
+A disclaimer arises from INABILITY to obtain evidence -- the auditor cannot form an opinion. An adverse opinion is a positive statement that the statements ARE NOT fairly presented.`,
+    whyWrong: [
+      { key: "A", reason: "Pervasive material misstatement = ADVERSE -- the auditor knows enough to say the statements are wrong." },
+      { key: "C", reason: "Material but not pervasive omission = QUALIFIED opinion." },
+      { key: "D", reason: "Material and pervasive disagreement with accounting policy = ADVERSE -- the auditor knows the statements are misstated." },
+    ],
+  },
+
+  {
+    id: "aud-29",
+    topic: "Audit Reports — Other Information",
+    difficulty: "Moderate",
+    stem: `The client includes an MD&A in its annual report alongside audited financial statements. The auditor finds a material inconsistency between the MD&A and the audited statements. Management refuses to correct it.
+
+What should the auditor do?`,
+    choices: [
+      { key: "A", text: "Issue an adverse opinion on the financial statements" },
+      { key: "B", text: "Withhold the audit report until the MD&A is corrected" },
+      { key: "C", text: "Describe the inconsistency in the auditor's report or withdraw from the engagement" },
+      { key: "D", text: "Ignore it -- auditors have no responsibility for MD&A" },
+    ],
+    correct: "C",
+    explanation: `AU-C Section 720 -- Other Information:
+
+Auditors read other information included with audited statements and respond to material inconsistencies.
+
+If a material inconsistency exists and management refuses to correct:
+- Describe the inconsistency in an Other-matter paragraph in the auditor's report, OR
+- Withdraw from the engagement in extreme cases
+
+The financial statement opinion is NOT automatically modified -- the statements themselves may still be fairly presented. The inconsistency is flagged in the report.`,
+    whyWrong: [
+      { key: "A", reason: "An adverse opinion addresses the financial statements. The statements may be fairly presented even if the MD&A is inconsistent." },
+      { key: "B", reason: "Auditing standards do not give the auditor authority to 'withhold' the report. Describing the inconsistency in the report is the proper response." },
+      { key: "D", reason: "Auditors DO have responsibility for other information -- they must read it and respond to material inconsistencies." },
+    ],
+  },
+
+  {
+    id: "aud-30",
+    topic: "Audit Reports — Restated Comparative Statements",
+    difficulty: "Hard",
+    stem: `A continuing auditor discovers a material misstatement in the prior year comparative statements. Management corrects the prior year figures with a restatement.
+
+What should the auditor do regarding the prior year opinion?`,
+    choices: [
+      { key: "A", text: "Reissue the original prior year opinion unchanged" },
+      { key: "B", text: "Issue an updated report on the restated prior year statements, with an emphasis-of-matter paragraph describing the restatement" },
+      { key: "C", text: "Disclaim an opinion on the prior year statements" },
+      { key: "D", text: "Issue an adverse opinion on the current year statements" },
+    ],
+    correct: "B",
+    explanation: `When prior year financial statements are restated:
+1. Management corrects the prior year figures
+2. The auditor issues a NEW (updated) report on the restated statements
+3. The new report includes an emphasis-of-matter paragraph explaining: (a) the restatement was made, (b) its nature, and (c) that the previously issued report has been superseded
+
+The original report cannot simply be reissued -- it related to the uncorrected statements.`,
+    whyWrong: [
+      { key: "A", reason: "The original report covered uncorrected statements. Since statements have been restated, a new report on the corrected amounts is required." },
+      { key: "C", reason: "A disclaimer is not appropriate -- the auditor has audited the restated figures and can express an opinion on them." },
+      { key: "D", reason: "A prior year restatement that has been corrected does not trigger an adverse current year opinion." },
+    ],
+  },
+
+  // ── ETHICS & INDEPENDENCE (aud-31 to aud-35) ──────────────────────────────
+
+  {
+    id: "aud-31",
+    topic: "Ethics — Independence: Direct Financial Interest",
+    difficulty: "Moderate",
+    stem: `An audit partner owns 100 shares of stock in an audit client. The holding is immaterial relative to the partner's net worth.
+
+How does this affect independence under AICPA rules?`,
+    choices: [
+      { key: "A", text: "Independence is not impaired -- the holding is immaterial" },
+      { key: "B", text: "Independence is impaired -- any direct financial interest in an attest client impairs independence regardless of materiality" },
+      { key: "C", text: "Independence is impaired only if purchased during the engagement period" },
+      { key: "D", text: "The partner discloses the holding but may continue on the engagement" },
+    ],
+    correct: "B",
+    explanation: `AICPA Independence Rule (ET Section 1.240):
+
+A DIRECT financial interest in an attest client impairs independence regardless of materiality for partners and professional employees on the engagement.
+
+Key: Materiality is IRRELEVANT for direct financial interests. Even one share of stock impairs independence.
+
+INDIRECT interests (e.g., mutual funds) may be evaluated for materiality.
+
+The partner must divest the shares -- disclosure alone does not cure the impairment.`,
+    whyWrong: [
+      { key: "A", reason: "Materiality does NOT apply to direct financial interests. Any direct ownership -- even immaterial -- impairs independence." },
+      { key: "C", reason: "The timing of purchase is irrelevant. A direct financial interest impairs independence whenever it exists during the period covered by the report." },
+      { key: "D", reason: "Disclosure alone does not cure the independence impairment. The interest must be divested." },
+    ],
+  },
+
+  {
+    id: "aud-32",
+    topic: "Ethics — Non-Attest Services",
+    difficulty: "Moderate",
+    stem: `A CPA firm provides bookkeeping services to an audit client, recording journal entries. Management reviews and approves all entries.
+
+Does this impair independence?`,
+    choices: [
+      { key: "A", text: "No -- management approval preserves independence for all clients" },
+      { key: "B", text: "Yes -- bookkeeping always impairs independence regardless of client type" },
+      { key: "C", text: "It depends on whether the client is a public or nonpublic entity" },
+      { key: "D", text: "No -- as long as fees are billed separately from the audit" },
+    ],
+    correct: "C",
+    explanation: `The answer depends on entity type:
+
+PUBLIC (SEC registrants): SOX/PCAOB prohibits bookkeeping and other non-audit services. Always impairs independence.
+
+NONPUBLIC (private): AICPA allows non-attest services IF management:
+- Makes all significant decisions (reviews and approves entries)
+- Takes responsibility for the results
+- Does not delegate authority to the CPA
+
+Since management reviews and approves all entries, this could be acceptable for a nonpublic client but impairs independence for a public company.`,
+    whyWrong: [
+      { key: "A", reason: "For PUBLIC companies, no amount of management approval cures the independence impairment from bookkeeping services." },
+      { key: "B", reason: "For NONPUBLIC clients, bookkeeping CAN be performed without impairing independence if management safeguards are in place." },
+      { key: "D", reason: "Billing separately has no effect on independence analysis. The nature of the service -- not billing -- determines independence." },
+    ],
+  },
+
+  {
+    id: "aud-33",
+    topic: "Ethics — Confidentiality",
+    difficulty: "Moderate",
+    stem: `A CPA learns during an audit that the client is engaged in illegal activity. A court subpoena is then issued requiring the CPA to disclose client information related to the illegal activity.
+
+What should the CPA do?`,
+    choices: [
+      { key: "A", text: "Refuse -- client confidentiality is absolute" },
+      { key: "B", text: "Comply with the subpoena -- a valid legal order overrides the confidentiality obligation" },
+      { key: "C", text: "Seek client permission before complying" },
+      { key: "D", text: "Notify the client and then refuse to comply" },
+    ],
+    correct: "B",
+    explanation: `AICPA ET Section 1.700 -- Confidential Client Information:
+
+General rule: CPAs must not disclose confidential client information without client consent.
+
+EXCEPTIONS (disclosure IS permitted or required):
+1. Court order / valid subpoena / legal process
+2. Professional peer review
+3. Ethics investigations by authorized bodies
+4. Compliance with applicable standards
+
+A valid court subpoena is a legal order -- the CPA must comply. Client confidentiality does not override lawful court orders.`,
+    whyWrong: [
+      { key: "A", reason: "Confidentiality is NOT absolute. Court subpoenas are a recognized exception -- the CPA must comply." },
+      { key: "C", reason: "A court order does not require client consent. The CPA may notify the client as a courtesy, but compliance is mandatory." },
+      { key: "D", reason: "Refusing to comply with a valid subpoena could expose the CPA to contempt of court." },
+    ],
+  },
+
+  {
+    id: "aud-34",
+    topic: "Ethics — Contingent Fees",
+    difficulty: "Moderate",
+    stem: `A CPA charges a contingent fee for preparing a client's federal income tax return -- payable only if the IRS accepts it without adjustment.
+
+Is this permissible under AICPA rules?`,
+    choices: [
+      { key: "A", text: "Yes -- contingent fees for tax preparation are always permitted" },
+      { key: "B", text: "No -- contingent fees for preparing original tax returns are prohibited" },
+      { key: "C", text: "Yes -- contingent fees are prohibited only for attest engagements" },
+      { key: "D", text: "Yes -- if the fee arrangement is disclosed to the IRS" },
+    ],
+    correct: "B",
+    explanation: `AICPA ET Section 1.510 -- Contingent Fees:
+
+Contingent fees are PROHIBITED for:
+1. Any attest engagement
+2. Preparing an ORIGINAL tax return
+3. Preparing an amended return filed to avoid penalties
+4. Services where a third party uses results and the CPA must be independent
+
+Contingent fees ARE permitted for:
+- Tax claims and refund requests (IRS appeals)
+- Representation before tax authorities
+- Certain non-attest services
+
+Preparing an original return is specifically prohibited.`,
+    whyWrong: [
+      { key: "A", reason: "Contingent fees for preparing ORIGINAL returns are specifically prohibited. Tax claim refunds are different -- those are permitted." },
+      { key: "C", reason: "The prohibition extends beyond attest -- original tax return preparation is also specifically prohibited." },
+      { key: "D", reason: "Disclosure to the IRS is irrelevant to AICPA ethics rules on contingent fees." },
+    ],
+  },
+
+  {
+    id: "aud-35",
+    topic: "Ethics — Client Records",
+    difficulty: "Moderate",
+    stem: `A CPA retains a client's records after completing work because the client has not paid fees. The client demands return of all records.
+
+What must the CPA do under AICPA rules?`,
+    choices: [
+      { key: "A", text: "Return all records immediately, regardless of unpaid fees" },
+      { key: "B", text: "Retain all records indefinitely until fees are paid in full" },
+      { key: "C", text: "Return client-provided records but may retain CPA work product pending fee payment, subject to state law" },
+      { key: "D", text: "Destroy the records after 3 years" },
+    ],
+    correct: "C",
+    explanation: `AICPA ET Section 1.400 -- Acts Discreditable (record retention):
+
+CLIENT-PROVIDED records: Must be returned to the client on request, even if fees are unpaid. Withholding client-owned records is an act discreditable to the profession.
+
+CPA-PREPARED work product (workpapers, tax analyses, firm records): The CPA may retain these -- they are the firm's property. Whether fee non-payment justifies retaining work product depends on state law.
+
+Rule of thumb: Return what the client gave you; keep what you prepared.`,
+    whyWrong: [
+      { key: "A", reason: "Not all records must be returned regardless of fees -- CPA work product belongs to the firm and can be retained." },
+      { key: "B", reason: "CLIENT-PROVIDED records cannot be withheld pending fee payment -- that is an act discreditable." },
+      { key: "D", reason: "Destroying client records is never an appropriate response to unpaid fees." },
+    ],
+  },
+
+  // ── IT AUDIT (aud-36 to aud-39) ───────────────────────────────────────────
+
+  {
+    id: "aud-36",
+    topic: "IT Audit — General vs. Application Controls",
+    difficulty: "Moderate",
+    stem: `Which of the following is an IT GENERAL control (ITGC) rather than an IT application control?`,
+    choices: [
+      { key: "A", text: "An automated credit limit check that prevents saving a sales order" },
+      { key: "B", text: "System-generated sequential invoice numbering" },
+      { key: "C", text: "Access controls restricting who can modify the payroll application's source code" },
+      { key: "D", text: "A programmatic three-way match comparing POs, receiving reports, and invoices" },
+    ],
+    correct: "C",
+    explanation: `IT General Controls (ITGCs): Govern the overall IT environment supporting reliable operation of all applications.
+Examples: Access management, change management (program change controls), operations, data backup
+
+IT Application Controls: Embedded within specific applications, operating on individual transactions.
+Examples: Input validation, edit checks, sequential numbering, three-way matching, credit limit checks
+
+Restricting who can modify payroll source code = change management / access control = ITGC (it governs the environment, not a specific transaction).`,
+    whyWrong: [
+      { key: "A", reason: "Credit limit verification during order entry is an application control -- embedded within the sales application for specific transactions." },
+      { key: "B", reason: "Sequential invoice numbering is an application control -- operates within the billing application." },
+      { key: "D", reason: "Automated three-way matching is a classic application control embedded in accounts payable." },
+    ],
+  },
+
+  {
+    id: "aud-37",
+    topic: "IT Audit — Change Management",
+    difficulty: "Hard",
+    stem: `An auditor is evaluating IT general controls over program changes. Which represents a KEY control the auditor would look for?`,
+    choices: [
+      { key: "A", text: "Developers have direct production access to quickly fix bugs" },
+      { key: "B", text: "All program changes are tested in a separate environment and formally approved before migration to production" },
+      { key: "C", text: "Users can self-implement small changes without IT approval" },
+      { key: "D", text: "Changes are deployed to production first and tested afterward if time permits" },
+    ],
+    correct: "B",
+    explanation: `Change management ITGC key elements:
+1. Separate environments: Development / Test / Production (no developer access to production)
+2. Formal testing: All changes tested in a dedicated test environment before deployment
+3. Authorization: Management or change advisory board approves all changes
+4. Migration controls: Only authorized changes moved to production by personnel independent of development
+5. Documentation: Change requests, test results, and approvals documented
+
+Developers with production access, self-service changes, and post-deployment testing all represent significant ITGC weaknesses.`,
+    whyWrong: [
+      { key: "A", reason: "Developer access to production is a major control weakness -- it enables unauthorized changes without review." },
+      { key: "C", reason: "Self-implemented changes without approval bypass the authorization control." },
+      { key: "D", reason: "Testing after production deployment defeats the purpose -- errors reach live data before being caught." },
+    ],
+  },
+
+  {
+    id: "aud-38",
+    topic: "IT Audit — Data Analytics",
+    difficulty: "Moderate",
+    stem: `An auditor uses CAATs to identify all payments made to vendors NOT on the approved vendor master list. Which assertion is BEST tested?`,
+    choices: [
+      { key: "A", text: "Completeness" },
+      { key: "B", text: "Valuation and allocation" },
+      { key: "C", text: "Occurrence (existence)" },
+      { key: "D", text: "Rights and obligations" },
+    ],
+    correct: "C",
+    explanation: `Identifying payments to unapproved vendors tests whether those transactions ACTUALLY OCCURRED for legitimate business purposes.
+
+Occurrence/existence for payables: Did the liability arise from a real, authorized transaction?
+
+Payments to unapproved vendors may indicate:
+- Fictitious vendor fraud
+- Unauthorized disbursements
+- Transactions that should not have occurred
+
+This directly tests the occurrence assertion -- whether recorded transactions represent real, authorized events.`,
+    whyWrong: [
+      { key: "A", reason: "Completeness tests whether ALL transactions are recorded. Testing unapproved vendors checks whether recorded transactions are legitimate (occurrence)." },
+      { key: "B", reason: "Valuation tests whether amounts are recorded at the correct dollar value -- not whether the transaction should have occurred." },
+      { key: "D", reason: "Rights and obligations tests whether the company has legal obligation for liabilities -- not whether transactions were authorized." },
+    ],
+  },
+
+  {
+    id: "aud-39",
+    topic: "IT Audit — SOC Reports",
+    difficulty: "Hard",
+    stem: `An audit client processes payroll through a third-party service organization. Which SOC report provides the auditor with information about the DESIGN AND OPERATING EFFECTIVENESS of controls over a full period?`,
+    choices: [
+      { key: "A", text: "SOC 1 Type I report" },
+      { key: "B", text: "SOC 1 Type II report" },
+      { key: "C", text: "SOC 2 Type I report" },
+      { key: "D", text: "SOC 3 report" },
+    ],
+    correct: "B",
+    explanation: `SOC report types:
+
+SOC 1: Controls relevant to user entities' FINANCIAL REPORTING
+- Type I: Design of controls at a POINT IN TIME only
+- Type II: Design AND OPERATING EFFECTIVENESS over a PERIOD (6-12 months) -- most useful for auditors
+
+SOC 2: Trust services criteria (security, availability, etc.) -- not specific to financial reporting
+SOC 3: Public summary of SOC 2 -- no detail, not useful for auditors
+
+For a payroll service organization's impact on financial reporting: SOC 1 Type II.`,
+    whyWrong: [
+      { key: "A", reason: "SOC 1 Type I covers design only at a point in time -- no evidence about operating effectiveness over a period." },
+      { key: "C", reason: "SOC 2 covers trust services criteria (security, etc.) -- not controls relevant to financial statement processing." },
+      { key: "D", reason: "SOC 3 is a public summary with no detail -- not usable audit evidence." },
+    ],
+  },
+
+  // ── GOVERNMENT AUDITING STANDARDS (aud-40 to aud-43) ─────────────────────
+
+  {
+    id: "aud-40",
+    topic: "Government Auditing — Yellow Book Additional Reports",
+    difficulty: "Moderate",
+    stem: `A CPA conducts a financial statement audit of a state agency under Government Auditing Standards (Yellow Book). What ADDITIONAL report is required beyond the standard GAAS financial statement opinion?`,
+    choices: [
+      { key: "A", text: "A report on the auditor's qualifications and experience" },
+      { key: "B", text: "A report on internal control over financial reporting and on compliance with laws and regulations" },
+      { key: "C", text: "A report on the efficiency and effectiveness of government programs" },
+      { key: "D", text: "A separate report on auditor independence" },
+    ],
+    correct: "B",
+    explanation: `Yellow Book (GAGAS) financial statement audits require two additional reports:
+
+1. Report on INTERNAL CONTROL over financial reporting -- describing significant deficiencies and material weaknesses identified
+
+2. Report on COMPLIANCE with laws, regulations, and provisions of contracts or grant agreements -- reporting material noncompliance
+
+These are in addition to the standard financial statement opinion. Yellow Book also has additional CPE, independence, and quality control requirements.`,
+    whyWrong: [
+      { key: "A", reason: "A report on auditor qualifications is not required. Yellow Book has CPE requirements, but not a separate qualifications report." },
+      { key: "C", reason: "Performance audits assess program efficiency -- this is a different Yellow Book engagement type from financial statement audits." },
+      { key: "D", reason: "A separate independence report is not required under Yellow Book." },
+    ],
+  },
+
+  {
+    id: "aud-41",
+    topic: "Government Auditing — Single Audit",
+    difficulty: "Hard",
+    stem: `A nonprofit organization receives $1,200,000 in federal awards during the year. What is required under the Uniform Guidance (Single Audit requirements)?`,
+    choices: [
+      { key: "A", text: "No single audit -- only a GAAS financial statement audit" },
+      { key: "B", text: "A single audit including financial statements, internal control over compliance, and compliance with major federal programs" },
+      { key: "C", text: "A program-specific audit of the largest federal grant only" },
+      { key: "D", text: "Single audits apply only to state and local governments, not nonprofits" },
+    ],
+    correct: "B",
+    explanation: `Single Audit Requirements (Uniform Guidance -- 2 CFR Part 200):
+
+Threshold: Non-federal entities expending $750,000 or more in federal awards must have a single audit.
+
+$1,200,000 > $750,000 -- single audit required.
+
+A single audit includes:
+1. Financial statement audit (GAAS/GAGAS)
+2. Audit of internal controls over compliance for major federal programs
+3. Compliance audit of major federal programs
+4. Schedule of Expenditures of Federal Awards (SEFA)
+
+Applies to state/local governments AND nonprofits.`,
+    whyWrong: [
+      { key: "A", reason: "Exceeding $750,000 triggers the single audit requirement -- a financial statement audit alone is insufficient." },
+      { key: "C", reason: "Program-specific audits are an alternative only for entities with a single federal program. Full single audit is needed here." },
+      { key: "D", reason: "Nonprofits meeting the expenditure threshold are subject to single audit requirements just like governments." },
+    ],
+  },
+
+  {
+    id: "aud-42",
+    topic: "Government Auditing — Compliance Opinion",
+    difficulty: "Moderate",
+    stem: `During a single audit, the auditor finds material noncompliance with a major federal program requirement. Management is aware and has not corrected it.
+
+What type of opinion does the auditor issue on compliance for that program?`,
+    choices: [
+      { key: "A", text: "Unmodified compliance opinion with an emphasis-of-matter paragraph" },
+      { key: "B", text: "Qualified or adverse compliance opinion" },
+      { key: "C", text: "Disclaimer on the entire financial statements" },
+      { key: "D", text: "No opinion -- compliance opinions are informational only" },
+    ],
+    correct: "B",
+    explanation: `Single audit compliance opinions follow a similar framework to financial statement opinions:
+
+UNMODIFIED: No material noncompliance found.
+QUALIFIED: Material noncompliance found, NOT pervasive.
+ADVERSE: Material noncompliance, pervasive.
+DISCLAIMER: Scope limitation -- cannot obtain sufficient compliance evidence.
+
+Material uncorrected noncompliance = Qualified or adverse compliance opinion on that major program. The financial statement opinion is separate and may remain unmodified.`,
+    whyWrong: [
+      { key: "A", reason: "Unmodified states there is no material noncompliance. Material noncompliance requires a modified (qualified or adverse) opinion." },
+      { key: "C", reason: "The compliance opinion is separate from the financial statement opinion -- noncompliance affects compliance opinion, not automatically the financial statement opinion." },
+      { key: "D", reason: "Compliance opinions are real, binding opinions -- not informational summaries." },
+    ],
+  },
+
+  {
+    id: "aud-43",
+    topic: "Government Auditing — Independence (Yellow Book)",
+    difficulty: "Hard",
+    stem: `A staff auditor on a government audit engagement previously worked for the audited agency as a financial analyst two years ago. Under Yellow Book independence standards, what is required?`,
+    choices: [
+      { key: "A", text: "No impact -- two years eliminates any independence concern" },
+      { key: "B", text: "The staff auditor must be removed -- prior employment always impairs independence" },
+      { key: "C", text: "The firm must evaluate the threat and determine whether safeguards reduce it to an acceptable level" },
+      { key: "D", text: "Independence is impaired only if the staff auditor held a management role at the agency" },
+    ],
+    correct: "C",
+    explanation: `Yellow Book (GAGAS) uses a THREATS AND SAFEGUARDS conceptual framework for independence.
+
+Prior employment creates a FAMILIARITY THREAT. The firm must:
+1. Identify the threat
+2. Evaluate its significance (recency, nature of role, access to sensitive information)
+3. Apply safeguards if needed (enhanced review, restricting duties, removing from engagement)
+4. Determine if residual threat is at an acceptable level
+
+No automatic rule -- professional judgment is required. Two years may or may not be sufficient depending on the nature of the prior role.`,
+    whyWrong: [
+      { key: "A", reason: "There is no bright-line '2 years is fine' rule under Yellow Book -- the threat must be evaluated using the conceptual framework." },
+      { key: "B", reason: "Prior employment does not automatically impair independence -- GAGAS requires threat evaluation and consideration of safeguards." },
+      { key: "D", reason: "Even non-management prior roles can create familiarity threats requiring evaluation." },
+    ],
+  },
+
+  // ── ATTESTATION & REVIEW (aud-44 to aud-47) ───────────────────────────────
+
+  {
+    id: "aud-44",
+    topic: "Attestation — Examination vs. Review vs. AUP",
+    difficulty: "Moderate",
+    stem: `A client wants the HIGHEST level of assurance available from a CPA on the company's internal controls over financial reporting.
+
+Which engagement type should the CPA perform?`,
+    choices: [
+      { key: "A", text: "Agreed-upon procedures engagement" },
+      { key: "B", text: "Review of internal controls" },
+      { key: "C", text: "Examination of internal controls" },
+      { key: "D", text: "Compilation of internal controls documentation" },
+    ],
+    correct: "C",
+    explanation: `Attestation engagement levels (AT-C):
+
+EXAMINATION (highest assurance):
+- Positive assurance: 'Based on our examination, internal controls are effective...'
+- Extensive procedures analogous to an audit
+
+REVIEW (limited assurance):
+- Negative assurance: 'Nothing came to our attention...'
+- Primarily inquiry and analytical procedures
+
+AGREED-UPON PROCEDURES:
+- No assurance expressed -- only findings reported
+
+COMPILATION:
+- No assurance -- not an attestation engagement
+
+For HIGHEST assurance: Examination.`,
+    whyWrong: [
+      { key: "A", reason: "AUP provides NO assurance -- the CPA only reports findings from specified procedures." },
+      { key: "B", reason: "A review provides only LIMITED (negative) assurance -- lower than an examination." },
+      { key: "D", reason: "Compilation is not an attestation engagement and provides no assurance whatsoever." },
+    ],
+  },
+
+  {
+    id: "aud-45",
+    topic: "Attestation — Review Engagement Procedures",
+    difficulty: "Moderate",
+    stem: `A CPA performs a review of a nonpublic company's financial statements. What are the PRIMARY procedures performed?`,
+    choices: [
+      { key: "A", text: "Physical inventory observation and receivables confirmations" },
+      { key: "B", text: "Tests of controls over financial reporting" },
+      { key: "C", text: "Inquiry and analytical procedures" },
+      { key: "D", text: "Vouching transactions to supporting documents" },
+    ],
+    correct: "C",
+    explanation: `AR-C Section 90 -- Review Engagements:
+
+A review provides LIMITED assurance. Primary procedures are:
+1. INQUIRY of management and key personnel
+2. ANALYTICAL PROCEDURES (comparing current to prior periods, industry data, expectations)
+
+Reviews do NOT include:
+- Tests of controls
+- Physical inventory observation
+- External confirmations
+- Detailed vouching of transactions
+
+Because limited procedures are used, the conclusion uses negative assurance: 'Nothing came to our attention that suggests the statements are not in conformity with GAAP.'`,
+    whyWrong: [
+      { key: "A", reason: "Physical inventory observation and confirmations are AUDIT procedures -- not performed in a review." },
+      { key: "B", reason: "Tests of controls are audit procedures. Reviews do not include control testing." },
+      { key: "D", reason: "Vouching transactions is an audit substantive procedure -- not part of a review engagement." },
+    ],
+  },
+
+  {
+    id: "aud-46",
+    topic: "Attestation — Prospective Financial Information",
+    difficulty: "Hard",
+    stem: `A CPA examines a company's financial forecast (management's best estimate of expected results) and issues a report with positive assurance. Which statement correctly describes this engagement?`,
+    choices: [
+      { key: "A", text: "The CPA is responsible for the accuracy of the forecast" },
+      { key: "B", text: "The report provides assurance on the reasonableness of assumptions and that the forecast is prepared in accordance with AICPA guidelines" },
+      { key: "C", text: "The CPA must update the forecast when actual results differ" },
+      { key: "D", text: "An examination of a forecast provides the same assurance as a compilation" },
+    ],
+    correct: "B",
+    explanation: `AT-C Section 305 -- Prospective Financial Information:
+
+A financial forecast examination provides positive assurance on:
+1. Whether assumptions provide a REASONABLE BASIS for the forecast
+2. Whether the forecast is prepared in accordance with AICPA presentation guidelines
+3. Whether computations are mathematically accurate
+
+The CPA does NOT guarantee accuracy -- future events are inherently uncertain. Management is responsible for the assumptions and the forecast.`,
+    whyWrong: [
+      { key: "A", reason: "The CPA provides assurance on reasonableness of assumptions -- not a guarantee of accuracy. Future results may differ." },
+      { key: "C", reason: "The CPA has no ongoing obligation to update as actual results come in -- the engagement covers a specific point in time." },
+      { key: "D", reason: "An examination provides the HIGHEST assurance level for prospective information. A compilation of prospective information provides NO assurance." },
+    ],
+  },
+
+  {
+    id: "aud-47",
+    topic: "Attestation — Agreed-Upon Procedures",
+    difficulty: "Moderate",
+    stem: `A CPA performs an agreed-upon procedures engagement on a company's accounts receivable. Which statement BEST describes the CPA's report?`,
+    choices: [
+      { key: "A", text: "The CPA expresses an opinion that accounts receivable is fairly stated" },
+      { key: "B", text: "The CPA provides negative assurance that nothing came to their attention indicating misstatement" },
+      { key: "C", text: "The CPA describes the procedures performed and the findings -- no assurance is expressed" },
+      { key: "D", text: "The CPA confirms the receivable balance directly with customers as the primary procedure" },
+    ],
+    correct: "C",
+    explanation: `Agreed-Upon Procedures (AT-C Section 215):
+
+The CPA:
+1. Performs only the SPECIFIC procedures agreed upon with the engaging party
+2. Reports the FINDINGS from those procedures
+3. Expresses NO opinion and provides NO assurance
+
+The report is restricted to specified parties (those who agreed to the procedures). Users interpret findings themselves -- the CPA does not opine on whether the balance is fairly stated.`,
+    whyWrong: [
+      { key: "A", reason: "AUP engagements provide NO opinion. Expressing an opinion would make this an examination." },
+      { key: "B", reason: "Negative assurance is provided in REVIEW engagements. AUP provides no assurance of any kind." },
+      { key: "D", reason: "Customer confirmations might be one of the agreed-upon procedures, but they are not a defining characteristic of all AUP reports." },
+    ],
+  },
+
+  // ── SPECIAL PURPOSE FRAMEWORKS (aud-48 to aud-50) ────────────────────────
+
+  {
+    id: "aud-48",
+    topic: "Special Purpose Frameworks — Cash Basis",
+    difficulty: "Moderate",
+    stem: `A CPA audits financial statements prepared on the cash basis of accounting. How does the audit report differ from a standard GAAP report?`,
+    choices: [
+      { key: "A", text: "Identical wording to a standard GAAP audit report" },
+      { key: "B", text: "Must include an emphasis-of-matter paragraph describing the cash basis and how it differs from GAAP" },
+      { key: "C", text: "Must express an adverse opinion because cash basis is not GAAP" },
+      { key: "D", text: "Must include a disclaimer because GAAP was not followed" },
+    ],
+    correct: "B",
+    explanation: `AU-C Section 800 -- Special Purpose Frameworks:
+
+When statements are prepared on a special purpose framework (cash basis, tax basis, regulatory, contractual), the auditor's report must:
+1. Describe the special purpose framework used
+2. Include an EMPHASIS-OF-MATTER paragraph explaining the basis of accounting and how it differs from GAAP
+3. Use a modified report title (e.g., 'Financial Statements Prepared on the Cash Basis of Accounting')
+
+An unmodified opinion CAN be issued if statements are fairly presented under the cash basis -- no adverse opinion required.`,
+    whyWrong: [
+      { key: "A", reason: "The report language is modified to describe the special purpose framework -- it is not identical to a GAAP report." },
+      { key: "C", reason: "Special purpose framework statements are not automatically adverse. The auditor evaluates fair presentation under THAT framework." },
+      { key: "D", reason: "A disclaimer applies to scope limitations -- not to the use of a special purpose framework." },
+    ],
+  },
+
+  {
+    id: "aud-49",
+    topic: "Special Purpose Frameworks — Omitted Disclosures in Compilations",
+    difficulty: "Moderate",
+    stem: `A CPA compiles financial statements for a small business. The owner asks the CPA to omit substantially all disclosures. The CPA agrees.
+
+Which statement is correct?`,
+    choices: [
+      { key: "A", text: "The CPA must decline -- omitting disclosures is prohibited in a compilation" },
+      { key: "B", text: "The CPA may compile statements with omitted disclosures if disclosed in the compilation report and not intended to mislead" },
+      { key: "C", text: "The CPA must issue a qualified opinion on the compiled statements" },
+      { key: "D", text: "Omitting disclosures is acceptable only if the client signs a waiver" },
+    ],
+    correct: "B",
+    explanation: `AR-C Section 80 -- Compilation Engagements:
+
+A CPA may compile statements that OMIT substantially all disclosures, provided:
+1. The omission is disclosed in the compilation report
+2. The omission is not, to the CPA's knowledge, intended to mislead users
+3. The engagement letter addresses this
+
+The compilation report notes that disclosures required by the framework have been omitted.
+
+Compilations involve no verification and provide no assurance -- they are a presentation assistance service.`,
+    whyWrong: [
+      { key: "A", reason: "Omitting disclosures IS allowed in compilations -- AR-C Section 80 specifically permits it with proper disclosure in the report." },
+      { key: "C", reason: "Compilations do not result in any opinion. The CPA provides no assurance in a compilation." },
+      { key: "D", reason: "A client waiver is not the mechanism. The CPA discloses the omission in the compilation report itself." },
+    ],
+  },
+
+  {
+    id: "aud-50",
+    topic: "Special Purpose Frameworks — Comfort Letters",
+    difficulty: "Hard",
+    stem: `An underwriter requests a comfort letter from an auditor in connection with a securities offering. Which of the following can the auditor typically include?`,
+    choices: [
+      { key: "A", text: "A positive opinion that unaudited interim statements are fairly presented in accordance with GAAP" },
+      { key: "B", text: "Negative assurance on whether unaudited interim financial statements comply with SEC requirements" },
+      { key: "C", text: "A guarantee that no material adverse changes have occurred since the last audit" },
+      { key: "D", text: "An opinion on the company's future profitability" },
+    ],
+    correct: "B",
+    explanation: `Comfort letters (AU-C Section 920):
+
+Addressed to underwriters in connection with securities offerings. Typically include:
+1. CPA independence statement
+2. Positive assurance on audited financial statements' SEC compliance (based on the audit)
+3. NEGATIVE ASSURANCE on unaudited interim statements ('nothing came to our attention')
+4. Negative assurance on changes in selected data since the audit date
+5. Comments on tables and statistics in registration statements
+
+The auditor provides NEGATIVE (not positive) assurance on unaudited periods because only limited procedures were applied.`,
+    whyWrong: [
+      { key: "A", reason: "Positive opinions on unaudited periods are not provided in comfort letters -- only negative assurance is possible on unaudited statements." },
+      { key: "C", reason: "The auditor cannot guarantee no material adverse changes -- only negative assurance based on limited procedures." },
+      { key: "D", reason: "Opinions on future profitability are never given in comfort letters or any standard engagement." },
     ],
   },
 ]
