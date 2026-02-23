@@ -151,29 +151,29 @@ export default function LandingPage() {
             </div>
             <span className="text-xl font-bold tracking-tight">CPABee</span>
           </div>
-          <nav className="hidden md:flex gap-6">
-            <Link href="#features" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-              Reports
-            </Link>
-            <Link href="#trending" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-              Trending Topics
-            </Link>
-            <Link href="#why" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-              Why CPABee
-            </Link>
-            <Link href="#pricing" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-              Pricing
-            </Link>
-            <Link href="/study-plan" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-              Study Plan
-            </Link>
-            <Link href="/practice-mcq" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-              Practice MCQs
-            </Link>
-            <Link href="/practice-sims" className="text-sm font-medium hover:text-yellow-600 transition-colors">
-              Practice SIMs
-            </Link>
-          </nav>
+<nav className="hidden md:flex gap-6">
+  <Link href="#features" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+    Reports
+  </Link>
+  <Link href="#trending" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+    Trending Topics
+  </Link>
+  <Link href="#why" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+    Why CPABee
+  </Link>
+  <Link href="#pricing" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+    Pricing
+  </Link>
+  <Link href="/study-plan" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+    Study Plan
+  </Link>
+  <Link href="/practice-mcq" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+    Practice MCQs
+  </Link>
+  <Link href="/practice-sims" className="text-sm font-medium hover:text-yellow-600 transition-colors">
+    Practice SIMs
+  </Link>
+</nav>
           <div>
             <Button
               className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
