@@ -80,7 +80,7 @@ export async function createPayment(data: PaymentData) {
       console.log("Processing manual payment request")
 
       // Calculate amount based on payment type
-      const amount = data.paymentType === "SINGLE" ? 19 : 49 // in dollars
+      const amount = data.paymentType === "SINGLE" ? 199 : 399 // in dollars
       const itemName =
         data.paymentType === "BUNDLE" ? "CPA Reports: Full Access Bundle" : `CPA Report: ${data.reportType}`
 
