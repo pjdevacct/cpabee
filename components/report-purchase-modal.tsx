@@ -112,16 +112,16 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
     if (isSubmitting) return "Processing..."
     switch (type) {
       case "FREE":    return "Send Me the Free Sample"
-      case "SINGLE":  return "Continue to Payment — $19"
-      case "BUNDLE":  return "Continue to Payment — $49"
+      case "SINGLE":  return "Continue to Payment — $199"
+      case "BUNDLE":  return "Continue to Payment — $399"
       default:        return "Submit"
     }
   }
 
   const getPaymentAmount = () => {
     switch (type) {
-      case "SINGLE": return "19.00"
-      case "BUNDLE": return "49.00"
+      case "SINGLE": return "199.00"
+      case "BUNDLE": return "399.00"
       default:       return "0.00"
     }
   }
@@ -319,8 +319,8 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
                       <div className="flex items-baseline justify-between mb-3">
                         <h4 className="font-semibold text-sm">All 6 sections included:</h4>
                         <div className="text-right">
-                          <span className="text-xs text-gray-400 line-through mr-1">$114</span>
-                          <span className="text-sm font-bold text-yellow-700">$49</span>
+                          <span className="text-xs text-gray-400 line-through mr-1">$796</span>
+                          <span className="text-sm font-bold text-yellow-700">$399</span>
                         </div>
                       </div>
                       <ul className="space-y-1.5">
@@ -337,8 +337,8 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
                     {/* Bundle value nudge */}
                     <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-800">
                       <strong>Why most candidates choose the bundle:</strong> Every CPA candidate must pass
-                      all 4 sections. Buying individually costs $76. The bundle covers all 6 reports —
-                      all 4 required sections plus all 3 discipline options, including any retakes — for $49.
+                      all 4 sections. Buying individually costs $796. The bundle covers all 6 reports —
+                      all 3 required Core sections plus all 3 Discipline options, including any retakes — for $399.
                     </div>
                   </div>
                 )}
