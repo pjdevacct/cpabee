@@ -438,7 +438,7 @@ export default function LandingPage() {
               <div className="text-center space-y-4">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tighter">Pricing</h2>
                 <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-                  Every CPA candidate must pass all 4 sections. The bundle covers your entire exam for less than the cost of two individual reports.
+                  Every CPA candidate must pass all 4 sections. The bundle covers your entire exam for half the cost of buying individually.
                 </p>
               </div>
             </AnimatedSection>
@@ -451,7 +451,7 @@ export default function LandingPage() {
                   <div className="flex-1">
                     <h3 className="text-xl font-bold mb-1">Single Report</h3>
                     <p className="text-sm text-gray-500 mb-3">Best if you're laser-focused on one section right now</p>
-                    <div className="text-3xl font-bold mb-4">$19</div>
+                    <div className="text-3xl font-bold mb-4">$199</div>
                     <ul className="space-y-2 mb-6">
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
@@ -471,7 +471,7 @@ export default function LandingPage() {
                     className="bg-yellow-500 hover:bg-yellow-600 text-black w-full mt-auto font-semibold"
                     onClick={() => setIsSingleReportModalOpen(true)}
                   >
-                    Buy Single Report — $19
+                    Buy Single Report — $199
                   </Button>
                 </Card>
               </AnimatedSection>
@@ -488,10 +488,10 @@ export default function LandingPage() {
                     <h3 className="text-xl font-bold mb-1">Full Access Bundle</h3>
                     <p className="text-sm text-gray-500 mb-3">Best for candidates who still have multiple sections ahead</p>
                     <div className="flex items-baseline gap-2 mb-1">
-                      <span className="text-3xl font-bold">$49</span>
-                      <span className="text-gray-400 line-through text-sm">$114</span>
+                      <span className="text-3xl font-bold">$399</span>
+                      <span className="text-gray-400 line-through text-sm">$796</span>
                     </div>
-                    <p className="text-sm text-green-600 font-medium mb-4">You save $65 — all 6 sections included</p>
+                    <p className="text-sm text-green-600 font-medium mb-4">You save $397 — all 6 sections included</p>
                     <ul className="space-y-2 mb-6">
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="h-5 w-5 text-yellow-500 mt-0.5 shrink-0" />
@@ -515,7 +515,7 @@ export default function LandingPage() {
                     className="bg-yellow-500 hover:bg-yellow-600 text-black w-full mt-auto font-bold"
                     onClick={() => setIsBundleModalOpen(true)}
                   >
-                    Get Full Bundle — $49
+                    Get Full Bundle — $399
                   </Button>
                 </Card>
               </AnimatedSection>
@@ -570,8 +570,8 @@ export default function LandingPage() {
                   💡 Every CPA candidate must pass all 4 sections.
                 </p>
                 <p className="text-amber-800 text-sm">
-                  Buying sections one at a time costs $76. The Full Bundle is $49 — covers all 3 required sections
-                  plus all 3 discipline options, including any retakes. Simple math.
+                  Buying sections one at a time costs $796. The Full Bundle is $399 — covers all 3 required Core sections
+                  plus all 3 Discipline options, including any retakes. Simple math.
                 </p>
                 <Button
                   variant="outline"
@@ -827,7 +827,7 @@ export default function LandingPage() {
         isOpen={isSingleReportModalOpen}
         onClose={() => setIsSingleReportModalOpen(false)}
         type="SINGLE"
-        title="Purchase a Single Report — $19"
+        title="Purchase a Single Report — $199"
         description="Choose one section. Get a ranked breakdown of the most highly tested topics."
       />
 
@@ -835,8 +835,8 @@ export default function LandingPage() {
         isOpen={isBundleModalOpen}
         onClose={() => setIsBundleModalOpen(false)}
         type="BUNDLE"
-        title="Full Access Bundle — $49"
-        description="All 6 section reports. Covers your entire CPA exam journey — including retakes. Save $65 vs. buying individually."
+        title="Full Access Bundle — $399"
+        description="All 6 section reports. Covers your entire CPA exam journey — including retakes. Save $397 vs. buying individually."
       />
 
       {/* Admin Panel — press Ctrl+Alt+A to open */}
