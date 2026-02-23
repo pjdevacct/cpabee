@@ -3,7 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import React from "react"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,92 @@ import EmailSignupModal from "@/components/email-signup-modal"
 import ReportPurchaseModal from "@/components/report-purchase-modal"
 import AdminPanel from "@/components/admin-panel"
 import { sendEmailNotification } from "./actions"
+
+function MobileNav({ onSampleClick }: { onSampleClick: () => void }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener("mousedown", handleClick)
+    return () => document.removeEventListener("mousedown", handleClick)
+  }, [])
+
+  const navLinks = [
+    { href: "#features",      label: "Reports" },
+    { href: "#trending",      label: "Trending Topics" },
+    { href: "#why",           label: "Why CPABee" },
+    { href: "#pricing",       label: "Pricing" },
+    { href: "/study-plan",    label: "Study Plan" },
+    { href: "/practice-mcq",  label: "Practice MCQs" },
+    { href: "/practice-sims", label: "Practice SIMs" },
+  ]
+
+  return (
+    <header className="sticky top-0 z-40 border-b bg-white shadow-sm" ref={ref}>
+      <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+
+        {/* Logo */}
+        <div
+          className="flex items-center gap-2 cursor-pointer shrink-0"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          <div className="relative h-8 w-8 overflow-hidden">
+            <Image src="/images/cpabee-logo.png" alt="CPABee Logo" width={32} height={32} className="object-contain" />
+          </div>
+          <span className="text-xl font-bold tracking-tight">CPABee</span>
+        </div>
+
+        {/* Desktop nav */}
+        <nav className="hidden md:flex gap-x-4 justify-center flex-wrap">
+          {navLinks.map(({ href, label }) => (
+            <Link key={href} href={href} className="text-sm font-medium hover:text-yellow-600 transition-colors">
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Right side: Free Sample + hamburger */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold text-xs md:text-sm px-3 md:px-4"
+            onClick={onSampleClick}
+          >
+            Free Sample
+          </Button>
+          {/* Hamburger — mobile only */}
+          <button
+            className="md:hidden flex flex-col justify-center items-center h-8 w-8 gap-1.5"
+            onClick={() => setOpen(o => !o)}
+            aria-label="Toggle menu"
+          >
+            <span className={`block h-0.5 w-5 bg-gray-700 transition-transform ${open ? "rotate-45 translate-y-2" : ""}`} />
+            <span className={`block h-0.5 w-5 bg-gray-700 transition-opacity ${open ? "opacity-0" : ""}`} />
+            <span className={`block h-0.5 w-5 bg-gray-700 transition-transform ${open ? "-rotate-45 -translate-y-2" : ""}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile dropdown */}
+      {open && (
+        <div className="md:hidden border-t bg-white px-4 py-3 flex flex-col gap-3">
+          {navLinks.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className="text-sm font-medium text-gray-700 hover:text-yellow-600 transition-colors py-1"
+              onClick={() => setOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </header>
+  )
+}
 
 export default function LandingPage() {
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false)
@@ -134,42 +220,7 @@ export default function LandingPage() {
       `}</style>
 
 {/* ── Header ── */}
-      <header className="sticky top-0 z-40 border-b bg-white shadow-sm">
-        <div className="container flex h-16 items-center justify-between py-4 px-4 md:px-6">
-          <div
-            className="flex items-center gap-2 cursor-pointer shrink-0"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          >
-            <div className="relative h-8 w-8 overflow-hidden">
-              <Image
-                src="/images/cpabee-logo.png"
-                alt="CPABee Logo"
-                width={32}
-                height={32}
-                className="object-contain"
-              />
-            </div>
-            <span className="text-xl font-bold tracking-tight">CPABee</span>
-          </div>
-          <nav className="hidden md:flex gap-x-4 justify-center flex-wrap">
-            <Link href="#features" className="text-sm font-medium hover:text-yellow-600 transition-colors">Reports</Link>
-            <Link href="#trending" className="text-sm font-medium hover:text-yellow-600 transition-colors">Trending Topics</Link>
-            <Link href="#why" className="text-sm font-medium hover:text-yellow-600 transition-colors">Why CPABee</Link>
-            <Link href="#pricing" className="text-sm font-medium hover:text-yellow-600 transition-colors">Pricing</Link>
-            <Link href="/study-plan" className="text-sm font-medium hover:text-yellow-600 transition-colors">Study Plan</Link>
-            <Link href="/practice-mcq" className="text-sm font-medium hover:text-yellow-600 transition-colors">Practice MCQs</Link>
-            <Link href="/practice-sims" className="text-sm font-medium hover:text-yellow-600 transition-colors">Practice SIMs</Link>
-          </nav>
-          <div className="shrink-0">
-            <Button
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold text-xs md:text-sm px-3 md:px-4"
-              onClick={() => setIsFreeSampleModalOpen(true)}
-            >
-              Free Sample
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Mobilenav onSampleClick={() => setIsFreeSampleModalOpen(true)} />
 
       <main className="flex-1">
 
