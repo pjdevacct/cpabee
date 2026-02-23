@@ -263,7 +263,7 @@ export default function PracticeMCQPage() {
             </div>
             <span className="text-xl font-bold tracking-tight">CPABee</span>
           </Link>
-<nav className="hidden md:flex gap-6">
+  <nav className="flex flex-wrap gap-x-4 gap-y-2 justify-center">
   <Link href="/#features" className="text-sm font-medium hover:text-yellow-600 transition-colors">
     Reports
   </Link>
