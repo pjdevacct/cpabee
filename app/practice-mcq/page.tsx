@@ -256,7 +256,7 @@ export default function PracticeMCQPage() {
 
       {/* Header */}
       <header className="sticky top-0 z-40 border-b bg-white shadow-sm">
-        <div className="container flex h-16 items-center justify-between py-4 px-4 md:px-6">
+        <div className="container flex flex-wrap gap-y-2 min-h-16 items-center justify-between py-3 px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2">
             <div className="relative h-8 w-8 overflow-hidden shrink-0">
               <Image src="/images/cpabee-logo.png" alt="CPABee Logo" width={32} height={32} className="object-contain" />
