@@ -667,26 +667,33 @@ Which fund accounts for debt service on the special assessment bonds?`,
   },
 
   {
-    id: "far-29",
-    topic: "Governmental — Modified Accrual Revenue",
-    difficulty: "Moderate",
-    stem: `Riverton City levies property taxes of $5,000,000 for Year 1. Collections: $4,600,000 in Year 1; $250,000 within 60 days of year-end; $150,000 collected later in Year 2 (beyond 60 days).
+  id: "far-29",
+  topic: "Governmental — Modified Accrual Revenue",
+  difficulty: "Moderate",
+  stem: `Riverton City levies property taxes of $5,000,000 for Year 1. Collections: $4,600,000 in Year 1; $250,000 within 60 days of year-end; $150,000 collected later in Year 2 (beyond 60 days).
 
 Under modified accrual, how much property tax revenue is recognized in Year 1?`,
-    choices: [
-      { key: "A", text: "$5,000,000" },
-      { key: "B", text: "$4,600,000" },
-      { key: "C", text: "$4,850,000" },
-      { key: "D", text: "$4,750,000" },
-    ],
-    correct: "C",
-    explanation: `Modified accrual (GASB): revenues are recognized when "available" — measurable and collectible within the current period OR within 60 days after year-end.\n\n• $4,600,000 collected in Year 1 → recognized ✓\n• $250,000 collected within 60 days → recognized ✓ (meets "available")\n• $150,000 beyond 60 days → deferred revenue ✗\n\nYear 1 revenue = $4,600,000 + $250,000 = $4,850,000`,
-    whyWrong: [
-      { key: "A", reason: "$5,000,000 is full accrual — modified accrual requires the "available" criterion." },
-      { key: "B", reason: "$4,600,000 is cash-basis — modified accrual also includes amounts due within 60 days of year-end." },
-      { key: "D", reason: "$4,750,000 does not align with the 60-day cutoff rule." },
-    ],
-  },
+  choices: [
+    { key: "A", text: "$5,000,000" },
+    { key: "B", text: "$4,600,000" },
+    { key: "C", text: "$4,850,000" },
+    { key: "D", text: "$4,750,000" },
+  ],
+  correct: "C",
+  explanation: `Modified accrual (GASB): revenues are recognized when "available" — measurable and collectible within the current period OR within 60 days after year-end.
+
+• $4,600,000 collected in Year 1 → recognized ✓
+• $250,000 collected within 60 days → recognized ✓
+• $150,000 beyond 60 days → deferred revenue ✗
+
+Year 1 revenue = $4,600,000 + $250,000 = $4,850,000`,
+  whyWrong: [
+    { key: "A", reason: "$5,000,000 is full accrual — modified accrual requires the 'available' criterion." },
+    { key: "B", reason: "$4,600,000 is cash-basis — modified accrual also includes amounts due within 60 days of year-end." },
+    { key: "D", reason: "$4,750,000 does not align with the 60-day cutoff rule." },
+  ],
+},
+
 
   {
     id: "far-30",
