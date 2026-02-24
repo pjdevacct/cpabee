@@ -18,6 +18,8 @@ import ReportPurchaseModal from "@/components/report-purchase-modal"
 import AdminPanel from "@/components/admin-panel"
 import { sendEmailNotification } from "./actions"
 
+// ⭐ This is your MobileNav component — defined right here.
+// ⭐ Because it's defined in this file, you DO NOT import it.
 function MobileNav({ onSampleClick }: { onSampleClick: () => void }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -220,7 +222,7 @@ export default function LandingPage() {
       `}</style>
 
 {/* ── Header ── */}
-      <Mobilenav onSampleClick={() => setIsFreeSampleModalOpen(true)} />
+      <MobileNav onSampleClick={() => setIsFreeSampleModalOpen(true)} />
 
       <main className="flex-1">
 
