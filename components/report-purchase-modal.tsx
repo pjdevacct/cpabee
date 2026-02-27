@@ -50,9 +50,12 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
             paymentType: "FREE",
           })
 
-          if (result.success) {
+         if (result.success) {
             setSuccessMessage(result.message || "Your free sample report has been sent to your email.")
             setShowSuccess(true)
+            if (typeof window !== "undefined" && (window as any).fbq) {
+              (window as any).fbq('track', 'Lead', { content_name: 'Free Sample Report' })
+            }
           } else {
             setError(result.message || "Failed to process your request. Please try again.")
             setIsSubmitting(false)
@@ -92,6 +95,13 @@ export default function ReportPurchaseModal({ isOpen, onClose, type, title, desc
       if (result.success) {
         setSuccessMessage(result.message || "Payment successful! Your report will be delivered to your email shortly.")
         setShowSuccess(true)
+        if (typeof window !== "undefined" && (window as any).fbq) {
+          (window as any).fbq('track', 'Purchase', {
+            value: type === "BUNDLE" ? 399.00 : 199.00,
+            currency: 'USD',
+            content_name: type === "BUNDLE" ? 'Full Access Bundle' : 'Single Report',
+          })
+        }
       } else {
         setError(result.message || "There was an issue processing your payment. Please contact support.")
       }
