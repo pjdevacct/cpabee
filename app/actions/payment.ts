@@ -20,10 +20,6 @@ interface PayPalPaymentRecord {
   amount: string
 }
 
-// Mock database for tracking free samples (in a real app, use a database)
-// This is just for demonstration - in production use a real database
-const freeSampleEmails = new Set<string>()
-
 interface PaymentData {
   email: string
   reportType: ReportType | "ALL" | "SAMPLE"
@@ -39,22 +35,9 @@ export async function createPayment(data: PaymentData) {
   })
 
   try {
-    // For free samples, check if email has already received one
+   // For free samples, allow unlimited requests
     if (data.paymentType === "FREE") {
       console.log("Processing free sample request")
-
-      // In a real app, query your database here
-      if (freeSampleEmails.has(data.email)) {
-        console.log("Email already received a free sample:", data.email)
-        return {
-          success: false,
-          message: "This email has already received a free sample report.",
-        }
-      }
-
-      // Mark this email as having received a free sample
-      freeSampleEmails.add(data.email)
-      console.log("Added email to free sample list:", data.email)
 
       try {
         // Always use SAMPLE report type for free samples
