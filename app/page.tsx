@@ -16,7 +16,6 @@ import ScrollToTop from "@/components/scroll-to-top"
 import EmailSignupModal from "@/components/email-signup-modal"
 import ReportPurchaseModal from "@/components/report-purchase-modal"
 import AdminPanel from "@/components/admin-panel"
-import { sendEmailNotification } from "./actions"
 
 // ⭐ This is your MobileNav component — defined right here.
 // ⭐ Because it's defined in this file, you DO NOT import it.
@@ -134,42 +133,32 @@ export default function LandingPage() {
     { name: "Other Topics", value: 9 },
   ]
 
-  const handleFooterSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubscribeError("")
+const handleFooterSubscribe = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setIsSubmitting(true)
+  setSubscribeError("")
 
-    try {
-      try {
-        const signups = JSON.parse(localStorage.getItem("cpabee_signups") || "[]")
-        signups.push({
-          email,
-          source: "Footer Subscribe Form",
-          timestamp: new Date().toISOString(),
-        })
-        localStorage.setItem("cpabee_signups", JSON.stringify(signups))
-      } catch (error) {
-        console.error("Failed to store signup locally:", error)
-      }
+  try {
+    const { createPayment } = await import("@/app/actions/payment")
+    const result = await createPayment({
+      email,
+      reportType: "SAMPLE",
+      paymentType: "FREE",
+    })
 
-      const result = await sendEmailNotification(email, "Footer Subscribe Form")
-
-      if (result.success) {
-        setSubscribeSuccess(true)
-        setEmail("")
-      } else {
-        console.error("API error but continuing:", result.message)
-        setSubscribeSuccess(true)
-        setEmail("")
-      }
-    } catch (err) {
-      console.error("Error in submission:", err)
+    if (result.success) {
       setSubscribeSuccess(true)
       setEmail("")
-    } finally {
-      setIsSubmitting(false)
+    } else {
+      setSubscribeError(result.message || "Something went wrong. Please try again.")
     }
+  } catch (err) {
+    console.error("Error in submission:", err)
+    setSubscribeError("Something went wrong. Please try again.")
+  } finally {
+    setIsSubmitting(false)
   }
+}
 
   return (
     <div className="flex min-h-screen flex-col">
